@@ -1,0 +1,10 @@
+{
+  "name": "monthly-password-generator",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Public, stateless, client-side monthly password list generator",
+  "scripts": {
+    "test": "node --test test/"
+  }
+}
