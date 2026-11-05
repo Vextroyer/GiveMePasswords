@@ -1,0 +1,153 @@
+{
+  "spec": "HPG-1",
+  "frozen": "2026-11-04",
+  "notes": "Frozen public test vectors for the HPG-1 monthly password derivation and the HPG1 recovery-code format. Do not edit existing vectors; a change in any value here is a breaking algorithm change and requires a new version (HPG-2).",
+  "hkdf_sha256_rfc5869_a1": {
+    "ikm_hex": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b",
+    "salt_hex": "000102030405060708090a0b0c",
+    "info_hex": "f0f1f2f3f4f5f6f7f8f9",
+    "okm_hex": "3cb25f25faacd57a90434f64d0362f2a2d2d0a90cf1a5a4c5db02d56ecc4c5bf34007208d5b887185865"
+  },
+  "passwords": [
+    {
+      "seed_hex": "000102030405060708090a0b0c0d0e0f",
+      "month": "2026-11",
+      "day": 1,
+      "attempt": 0,
+      "password8": "52296676"
+    },
+    {
+      "seed_hex": "000102030405060708090a0b0c0d0e0f",
+      "month": "2026-11",
+      "day": 2,
+      "attempt": 0,
+      "password8": "59443424"
+    },
+    {
+      "seed_hex": "000102030405060708090a0b0c0d0e0f",
+      "month": "2026-11",
+      "day": 30,
+      "attempt": 0,
+      "password8": "07134458"
+    },
+    {
+      "seed_hex": "000102030405060708090a0b0c0d0e0f",
+      "month": "2026-12",
+      "day": 1,
+      "attempt": 0,
+      "password8": "78951395"
+    },
+    {
+      "seed_hex": "000102030405060708090a0b0c0d0e0f",
+      "month": "2020-02",
+      "day": 14,
+      "attempt": 1,
+      "password8": "81039139",
+      "note": "attempt 0 is rejected (see rejection vector); this pins the retry path"
+    }
+  ],
+  "rejection": {
+    "seed_hex": "000102030405060708090a0b0c0d0e0f",
+    "month": "2020-02",
+    "day": 14,
+    "attempt0_x": 4261244084,
+    "limit": 4200000000,
+    "note": "attempt 0 produces x >= LIMIT, so the first four bytes are discarded and attempt 1 is used"
+  },
+  "months": [
+    {
+      "seed_hex": "000102030405060708090a0b0c0d0e0f",
+      "month": "2026-11",
+      "passwords": [
+        "52296676",
+        "59443424",
+        "83846756",
+        "70111090",
+        "98821760",
+        "81755616",
+        "09289275",
+        "00452683",
+        "23441541",
+        "42716621",
+        "08991196",
+        "35078059",
+        "94751121",
+        "18087714",
+        "23771102",
+        "06905453",
+        "00198549",
+        "48151335",
+        "14824600",
+        "31441917",
+        "67280183",
+        "55744060",
+        "41368153",
+        "46284955",
+        "50969767",
+        "74632828",
+        "95289424",
+        "87041675",
+        "35278526",
+        "07134458"
+      ]
+    },
+    {
+      "seed_hex": "ffeeddccbbaa99887766554433221100",
+      "month": "2026-11",
+      "passwords": [
+        "74165350",
+        "94755027",
+        "86503243",
+        "28782268",
+        "70352735",
+        "17897158",
+        "48989919",
+        "54051631",
+        "72579453",
+        "60136349",
+        "27034547",
+        "63481345",
+        "92737993",
+        "24665839",
+        "39076323",
+        "81190185",
+        "10725619",
+        "35804629",
+        "08168391",
+        "02995117",
+        "14470501",
+        "39842257",
+        "66395012",
+        "53818913",
+        "64055757",
+        "05432899",
+        "33989396",
+        "24566722",
+        "25342436",
+        "38562805"
+      ]
+    }
+  ],
+  "recovery_codes": [
+    {
+      "seed_hex": "000102030405060708090a0b0c0d0e0f",
+      "code": "HPG1-0004-1061-050R-3GG2-8A1C-60T3-GF2F",
+      "fingerprint": "CA7EF2C3"
+    },
+    {
+      "seed_hex": "ffeeddccbbaa99887766554433221100",
+      "code": "HPG1-7ZXV-EWSE-XAK6-47ES-JN8G-SJ44-806E",
+      "fingerprint": "E4B7A402"
+    },
+    {
+      "seed_hex": "00000000000000000000000000000000",
+      "code": "HPG1-0000-0000-0000-0000-0000-0000-00DP",
+      "fingerprint": "5CD6CAA7"
+    },
+    {
+      "seed_hex": "ffffffffffffffffffffffffffffffff",
+      "code": "HPG1-7ZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZ8",
+      "fingerprint": "8EE77860"
+    }
+  ]
+}
