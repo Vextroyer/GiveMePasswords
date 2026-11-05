@@ -106,7 +106,7 @@ export async function restoreSession(code, month) {
 /** Render a session as a plain-text table; never includes seed or code. */
 export function sessionToText(session) {
   const lines = [
-    `Monthly passwords — ${session.monthLabel}`,
+    `Monthly passwords — ${session.monthLabel} (${session.days.length} days)`,
     `Fingerprint: ${session.fingerprint}`,
     "Algorithm: HPG-1. Keep this list private.",
     "",
