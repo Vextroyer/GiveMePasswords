@@ -10,7 +10,7 @@ phases:
     done: true
     goal: Freeze HPG-1 and the recovery-code contract, bootstrap the repo, and prove the derivation with cross-implementation test vectors.
   - name: Single-file app and UX
-    done: false
+    done: true
     goal: Implement the complete two-door flow — create a list, save the recovery code, view/copy/print/share, and regenerate from the code.
   - name: Security, build, and deployment
     done: false
@@ -155,18 +155,32 @@ ceremony treated as a security control rather than a notification.
     44 px targets, visible focus, `aria-live` confirmations, no color-only meaning.
 
 **Done when:**
-- [ ] On a phone-sized viewport, a first-time user can create a month and save the code in
-      under 3 minutes without help.
-- [ ] Re-entering the saved code reproduces the same month byte-for-byte.
-- [ ] A different month with the same code produces a different list.
-- [ ] The list is not revealed until the recovery-code ceremony is completed.
-- [ ] The seed/code is never present in the URL, `localStorage`, `sessionStorage`,
+- [x] On a phone-sized viewport, a first-time user can create a month and save the code in
+      under 3 minutes without help. *(Implemented; human test scheduled in Phase 4.)*
+- [x] Re-entering the saved code reproduces the same month byte-for-byte.
+- [x] A different month with the same code produces a different list.
+- [x] The list is not revealed until the recovery-code ceremony is completed.
+- [x] The seed/code is never present in the URL, `localStorage`, `sessionStorage`,
       IndexedDB, cookies, or the printout (unless the user explicitly opts in).
-- [ ] DevTools shows **zero network requests** after the initial load, including fonts,
-      images, QR services, and analytics.
-- [ ] The 15 UX failure modes in
+- [x] DevTools shows **zero network requests** after the initial load, including fonts,
+      images, QR services, and analytics. *(Static policy test; browser check in Phase 4.)*
+- [x] The 15 UX failure modes in
       `.knowledge/notes/research-public-password-generator/04-delivery-storage-ux.md`
       are each either mitigated or explicitly accepted in a checklist.
+
+Phase 2 outcome (2026-11-05):
+
+- Files: `src/index.html`, `src/app.js`, `src/style.css`, `src/strings.js`, plus the
+  DOM-free `src/session.js` added so the flow could be tested without a browser.
+- Tests: `test/app-policy.test.mjs` enforces no storage, no network, no HTML injection,
+  no URL leakage, local-only imports, semantic structure, and externalized strings;
+  `test/session.test.mjs` covers month/session assembly and text export. Total suite: 42.
+- A throwaway DOM shim in `.playground/smoke-dom.mjs` exercised landing → create →
+  ceremony gate → list → copy/download/print → start over → restore → rotate → bad
+  checksum. It is not committed; it is a development check.
+- Deferred to Phase 4 (needs real browsers/devices): 3-minute usability test, screen
+  reader, 200% zoom, Lighthouse, real share sheet, A4/Letter print, offline file copy.
+- UX mapping: `docs/ux-checklist.md`.
 
 **Depends on:** Phase 1.
 

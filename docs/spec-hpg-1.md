@@ -190,7 +190,8 @@ An implementation must accept human transcription. Normalization, in order:
 
 1. Reject non-string input (`BAD_CHAR`).
 2. Uppercase the input.
-3. Remove all Unicode whitespace and all `-` characters.
+3. Remove all Unicode whitespace, zero-width characters (`U+200B`, `U+200C`,
+   `U+200D`, `U+FEFF`), and all `-` characters.
 4. If the result is empty, fail with `EMPTY`.
 5. If the result starts with `HPG1`, remove those 4 characters. Otherwise, if
    it starts with `HPG` followed by a digit other than `1`, fail with
