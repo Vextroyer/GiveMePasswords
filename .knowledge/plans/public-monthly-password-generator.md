@@ -1,13 +1,13 @@
 ---
 id: public-monthly-password-generator
 created: 2026-11-04
-modified: 2026-11-04
+modified: 2026-11-05
 type: plan
 status: active
 expires: 2026-11-11
 phases:
   - name: Foundation and derivation spec
-    done: false
+    done: true
     goal: Freeze HPG-1 and the recovery-code contract, bootstrap the repo, and prove the derivation with cross-implementation test vectors.
   - name: Single-file app and UX
     done: false
@@ -73,6 +73,30 @@ findings into a build sequence.
 If 1 is unknown, implement conservatively: allow leading zeros in the canonical string but
 add an optional "first digit 1–9" generation mode for routers that reject them.
 
+### Phase 1 resolution (2026-11-05)
+
+| # | Decision | Resolution |
+|---|---|---|
+| 1 | Router constraints | **Deferred to Phase 4.** Default: canonical 8 digits with leading zeros allowed. The per-day primitive and list builder stay fixed; a "first digit 1–9" mode is an additive UX option and must not change `HPG-1` vectors. Test the real router in Phase 4 before launch. |
+| 2 | Language | **English only in v1.** All UI strings live in `src/strings.js` (Phase 2) with no RTL-specific layout assumptions, so Arabic/RTL is additive later. |
+| 3 | Seed lifetime | **Long-lived seed plus an explicit rotate action** (confirmed as the v1 default; cousin confirmation is a Phase 4 usability check, not a blocker). Per-month codes remain a v2 option. |
+| 4 | Public vs. private | **Deferred to Phase 5.** Build so either works: `noindex`/`robots.txt` are a deployment switch, not an architecture change. |
+
+Phase 1 outcome:
+
+- [x] Spec is unambiguous and independently reproducible: `docs/spec-hpg-1.md`.
+- [x] `make test` passes: RFC 5869 A.1, pinned vectors, the `2020-02-14` rejection case,
+      full `2026-11` month, and code round-trip (21 tests).
+- [x] `node --test test/` and `python3 tools/reference.py` agree byte-for-byte
+      (`make cross-check`).
+- [x] A recovery code round-trips through normalize → decode → derive → same list.
+- [x] The four open decisions are answered or explicitly deferred with a default (above).
+- [x] `test-vectors.json` is published and machine-checked by `test/vectors.test.mjs`.
+- [x] The repo has baseline and feature commits; `make test` and `make cross-check` are green.
+
+Not in Phase 1 (moved to their phases): `make build` and `src/index.html` (Phase 3 and
+Phase 2 respectively). Phase 1 ships test/derive tooling only.
+
 ## Phases
 
 ### Phase 1: Foundation and derivation spec
@@ -93,14 +117,14 @@ the derivation with two independent implementations before any UI exists.
   `make build`), `.gitignore`, `README.md` skeleton, initial commit.
 
 **Done when:**
-- [ ] The spec is unambiguous enough that an independent implementer can reproduce the
+- [x] The spec is unambiguous enough that an independent implementer can reproduce the
       vectors without reading the app code.
-- [ ] `make test` passes: RFC 5869 A.1, all pinned vectors, the `2020-02-14` rejection case,
+- [x] `make test` passes: RFC 5869 A.1, all pinned vectors, the `2020-02-14` rejection case,
       full `2026-11` month, and code round-trip.
-- [ ] `node test/derive.test.mjs` and `python3 tools/reference.py` agree byte-for-byte.
-- [ ] A recovery code round-trips through normalize → decode → derive → same list.
-- [ ] The four open decisions are answered or explicitly deferred with a default.
-- [ ] The repo has an initial commit and a clean `git status`.
+- [x] `node test/derive.test.mjs` and `python3 tools/reference.py` agree byte-for-byte.
+- [x] A recovery code round-trips through normalize → decode → derive → same list.
+- [x] The four open decisions are answered or explicitly deferred with a default.
+- [x] The repo has an initial commit and a clean `git status`.
 
 **Depends on:** nothing.
 
