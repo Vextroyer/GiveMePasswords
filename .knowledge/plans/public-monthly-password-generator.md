@@ -324,6 +324,13 @@ and freeze the algorithm so old lists keep working.
 
 **Depends on:** Phase 4.
 
+**Decision status (2026-11-05):** the public/private launch surface and the
+post-launch review date are deliberately **not decided here**. They belong to a
+separate research/design step after the external Phase 4 gates (deployment,
+real-device QA, cousin usability, router record). Do not add indexing files,
+`security.txt`, or a canonical URL until that step chooses a surface and a
+canonical host.
+
 ## Success Criteria
 
 The plan is complete when:
