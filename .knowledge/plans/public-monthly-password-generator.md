@@ -261,11 +261,39 @@ stranger can decide whether to trust it.
 - [ ] Print output fits one A4/Letter page, preserves leading zeros, and includes the month
       and seed fingerprint but not the seed itself.
 - [ ] Keyboard-only and screen-reader passes are recorded; Lighthouse accessibility ≥ 95.
-- [ ] The threat model states the residual risks plainly: host compromise, browser
+- [x] The threat model states the residual risks plainly: host compromise, browser
       extensions, device compromise, 8-digit entropy, no recovery.
-- [ ] The privacy policy says what the host logs and what the app does not collect.
-- [ ] `make test` and `make build && make verify-build` are green from a clean checkout.
-- [ ] No P0/P1 issues remain open.
+- [x] The privacy policy says what the host logs and what the app does not collect.
+- [x] `make test` and `make build && make verify-build` are green from a clean checkout.
+- [x] No P0/P1 issues remain open in the implementation. *(No live-user or router issue can
+      be known until the external checks run.)*
+
+Phase 4 outcome (2026-11-05):
+
+Documentation and trust artifacts are complete and committed:
+
+- `docs/threat-model.md`, `docs/privacy.md`, `docs/faq.md`, `docs/verification.md`,
+  `docs/qa-record.md`, `docs/router-compatibility.md`, `docs/usability-record.md`,
+  `SECURITY.md`, `CHANGELOG.md`, `LICENSE` (MIT), and the finished `README.md`.
+- `package.json` version is `0.1.0`, the first public release candidate; the changelog
+  records it as the initial release (there was no earlier public version).
+- The threat model and privacy policy explicitly cover host logs, chat/cloud backups,
+  clipboard history, browser extensions, device compromise, the ≈26.6-bit entropy, and the
+  absence of recovery or forward secrecy.
+- `docs/qa-record.md` lists the automated evidence (49 tests, Python cross-check,
+  byte-identical rebuild, built-bundle DOM flow) and the full pending manual matrix.
+- `docs/usability-record.md` is the ready-to-run four-part test script; results, not just
+  the script, are still required for sign-off.
+- `docs/router-compatibility.md` is the ready-to-fill router policy and change-operation
+  record, including the leading-zero and admin-logout questions.
+
+Still external and blocking Phase 4 completion:
+
+- Cloudflare Pages deployment (no account, no git remote) and the live header/hash checks.
+- Real-browser and device QA: keyboard, screen reader, 200% zoom, Lighthouse, print,
+  share sheet, offline `file://`.
+- The cousin usability runs and the router record.
+- The public/private launch decision is Phase 5.
 
 **Depends on:** Phase 3.
 

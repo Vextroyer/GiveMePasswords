@@ -4,10 +4,11 @@ A public, stateless, client-side tool that turns a 16-byte seed into a month of
 8-digit daily passwords. Nothing is sent to a server, nothing is stored, and the
 same seed always produces the same list.
 
-> **Status:** Phase 3 of 5 — the app and the hardened single-file build are
-> complete and committed. Deployment is pending a Cloudflare account and a git
-> remote; the exact steps and checks are in
-> [`docs/deployment.md`](docs/deployment.md). See
+> **Status:** Phase 4 of 5 — the app, the hardened build, and the trust
+> documentation are complete and committed. Remaining work is external:
+> deployment, real-browser/device QA, the cousin usability runs, the router
+> record, and the public/private launch decision. See
+> [`docs/qa-record.md`](docs/qa-record.md) and
 > [`.knowledge/plans/public-monthly-password-generator.md`](.knowledge/plans/public-monthly-password-generator.md).
 
 ## What it does
@@ -26,6 +27,9 @@ same seed always produces the same list.
 - Each 8-digit password has only about 26.6 bits of entropy. It is a convenience
   format, not a high-security secret.
 
+Read [`docs/threat-model.md`](docs/threat-model.md) before relying on it for
+anything other than a home network.
+
 ## Specification
 
 The frozen contract is [`docs/spec-hpg-1.md`](docs/spec-hpg-1.md). The public
@@ -40,11 +44,11 @@ HPG1-0004-1061-050R-3GG2-8A1C-60T3-GF2F
 
 ## Development
 
-Requirements: Node.js 26+ (built-in test runner, global WebCrypto) and Python
+Requirements: Node.js 20+ (built-in test runner, global WebCrypto) and Python
 3.10+ for the independent reference. No dependencies are installed.
 
 ```sh
-make test          # Node implementation + published vectors + build (49 tests)
+make test          # derivation, vectors, recovery codes, session, policy, build (49 tests)
 make cross-check   # independent Python reference vs. test-vectors.json
 make check         # both
 make build         # regenerate dist/index.html, dist/_headers, dist/SHA256SUMS
@@ -58,7 +62,38 @@ python3 -m http.server 8080 --directory src
 # open http://localhost:8080/
 ```
 
-Repository layout:
+## Verifying a deployed copy
+
+The reviewed artifact and its hash are committed. Compare the served page with
+`dist/SHA256SUMS`:
+
+```sh
+curl -s https://<project>.pages.dev/ | sha256sum
+cat dist/SHA256SUMS
+```
+
+The full procedure, including header and CSP checks, is in
+[`docs/verification.md`](docs/verification.md).
+
+## Documentation
+
+| Document | What it covers |
+|---|---|
+| [`docs/spec-hpg-1.md`](docs/spec-hpg-1.md) | Frozen algorithm and recovery-code contract |
+| [`docs/faq.md`](docs/faq.md) | Using it, security questions, router problems, offline use |
+| [`docs/threat-model.md`](docs/threat-model.md) | Assets, attackers, mitigations, residual risks |
+| [`docs/privacy.md`](docs/privacy.md) | What is collected (nothing), what the host logs |
+| [`docs/verification.md`](docs/verification.md) | How to check the artifact, headers, and rebuild |
+| [`docs/deployment.md`](docs/deployment.md) | Cloudflare Pages setup, post-deploy checks, rollback |
+| [`docs/qa-record.md`](docs/qa-record.md) | Automated evidence and pending manual checks |
+| [`docs/ux-checklist.md`](docs/ux-checklist.md) | The 15 UX failure modes and their status |
+| [`docs/usability-record.md`](docs/usability-record.md) | Cousin usability test script and results |
+| [`docs/router-compatibility.md`](docs/router-compatibility.md) | Real-router password policy record |
+| [`SECURITY.md`](SECURITY.md) | Supported versions, reporting, scope |
+| [`CHANGELOG.md`](CHANGELOG.md) | Release history |
+| [`LICENSE`](LICENSE) | MIT |
+
+## Repository layout
 
 ```
 src/index.html           the two-door UI and ceremony dialog
@@ -75,9 +110,7 @@ dist/SHA256SUMS          committed artifact hash
 test/                    Node test runner suites
 test-vectors.json        frozen public vectors
 tools/reference.py       independent standard-library implementation
-docs/spec-hpg-1.md       the specification
-docs/ux-checklist.md     the 15 UX failure modes and their status
-docs/deployment.md       Cloudflare Pages setup and post-deploy checks
+docs/                    specification, trust, QA, and operational records
 .knowledge/              research notes and the implementation plan
 ```
 
@@ -86,11 +119,11 @@ docs/deployment.md       Cloudflare Pages setup and post-deploy checks
 | Phase | Deliverable |
 |---|---|
 | 1 | Derivation spec, recovery codes, vectors — done |
-| 2 | Single-file mobile-first app and recovery ceremony — done (browser QA in Phase 4) |
-| 3 | Hardened build, CSP headers, Cloudflare Pages, offline copy |
-| 4 | Threat model, privacy/FAQ docs, usability and router verification |
+| 2 | Single-file mobile-first app and recovery ceremony — done |
+| 3 | Hardened build and CSP headers — done; deployment pending external access |
+| 4 | Threat model, privacy/FAQ docs, usability and router verification — docs done, live checks pending |
 | 5 | Public/private launch decision and maintenance contract |
 
 ## License
 
-Not chosen yet; a permissive license (MIT or Apache-2.0) is planned for Phase 4.
+[MIT](LICENSE).
