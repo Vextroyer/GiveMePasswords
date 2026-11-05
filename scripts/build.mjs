@@ -179,7 +179,14 @@ function headersFor(csp) {
 `;
 }
 
-function inlineHtml(csp, css, bundle) {
+function replacePlaceholder(html, needle, replacement, label) {
+  if (!html.includes(needle)) {
+    throw new Error(`index.html: ${label} placeholder not found`);
+  }
+  return html.replace(needle, replacement);
+}
+
+function inlineHtml(csp, css, bundle, version, buildId) {
   let html = readSource("index.html");
 
   const styleLink = /[ \t]*<link\s+rel="stylesheet"\s+href="style\.css"\s*\/?>\s*/i;
@@ -190,6 +197,31 @@ function inlineHtml(csp, css, bundle) {
 
   html = html.replace(styleLink, () => `<style>${css}</style>`);
   html = html.replace(scriptTag, () => `<script>${bundle}</script>`);
+
+  html = replacePlaceholder(
+    html,
+    '<meta name="app-version" content="dev" />',
+    `<meta name="app-version" content="${version}" />`,
+    "app-version meta",
+  );
+  html = replacePlaceholder(
+    html,
+    '<meta name="build-id" content="dev" />',
+    `<meta name="build-id" content="${buildId}" />`,
+    "build-id meta",
+  );
+  html = replacePlaceholder(
+    html,
+    '<span id="app-version">dev</span>',
+    `<span id="app-version">${version}</span>`,
+    "app-version label",
+  );
+  html = replacePlaceholder(
+    html,
+    '<code id="build-id">dev</code>',
+    `<code id="build-id">${buildId}</code>`,
+    "build-id label",
+  );
 
   return html.replace(
     /(<meta charset="utf-8"\s*\/>)/i,
@@ -230,11 +262,13 @@ function assertSafeOutDir(outDir) {
 export async function build({ outDir = resolve(ROOT, "dist") } = {}) {
   const target = assertSafeOutDir(outDir);
 
+  const { version } = JSON.parse(readFileSync(resolve(ROOT, "package.json"), "utf8"));
   const css = readSource("style.css");
   const bundle = bundleModules();
+  const buildId = sha256(bundle).slice(0, 16);
   const csp = cspFor(sha256(css, "base64"), sha256(bundle, "base64"));
 
-  const html = inlineHtml(csp, css, bundle);
+  const html = inlineHtml(csp, css, bundle, version, buildId);
   checkArtifact(html);
 
   const hash = sha256(html);
@@ -246,7 +280,7 @@ export async function build({ outDir = resolve(ROOT, "dist") } = {}) {
   writeFileSync(resolve(target, "_headers"), headers);
   writeFileSync(resolve(target, "SHA256SUMS"), `${hash}  index.html\n`);
 
-  return { outDir: target, html, hash, csp };
+  return { outDir: target, html, hash, csp, version, buildId };
 }
 
 const isMain =
@@ -266,6 +300,8 @@ if (isMain) {
   try {
     const result = await build({ outDir: resolve(ROOT, outDir) });
     console.log(`built ${relative(ROOT, result.outDir)}`);
+    console.log(`version ${result.version}`);
+    console.log(`build ${result.buildId}`);
     console.log(`sha256 ${result.hash}`);
   } catch (error) {
     console.error(`build failed: ${error.message}`);

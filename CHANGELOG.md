@@ -47,6 +47,9 @@ no earlier public version.
   or network APIs.
 - Committed deployable artifact `dist/` and `make verify-build` to prove it
   matches the source.
+- The page footer and meta tags show the product version and a build id (the
+  first 16 hex characters of the SHA-256 of the inline script), so a user can
+  confirm which release they are running.
 - Threat model, privacy policy, FAQ, verification guide, QA record, UX
   checklist, router compatibility record, usability record, deployment guide,
   and this changelog.

@@ -22,8 +22,14 @@ from the reviewed build. Do not enter or use a recovery code.
 The committed value at the time of writing:
 
 ```
-d4b89db74d6bed04db78b7e4e48931508e46f6638800bcd1277eb790068f49c8  index.html
+1acaba57ed1c3f7fbfd9f1934e4e67dee560e327f1421650db7c65e808f84786  index.html
 ```
+
+The footer of the page also shows a **build id**: the first 16 hex characters
+of the SHA-256 of the inline script. The current build id is
+`8e732a49ddd4ddb7`. Unlike the full-file hash, the build id can be displayed
+inside the page because the script cannot contain its own digest. It changes
+when the app logic changes, not when only the HTML or CSS changes.
 
 ## 2. Confirm the page makes no requests
 

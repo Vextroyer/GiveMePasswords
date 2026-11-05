@@ -72,8 +72,9 @@ curl -s https://<project>.pages.dev/ | sha256sum
 cat dist/SHA256SUMS
 ```
 
-The full procedure, including header and CSP checks, is in
-[`docs/verification.md`](docs/verification.md).
+The page footer shows the product version and a build id (the first 16 hex
+characters of the SHA-256 of the inline script). The full procedure, including
+header and CSP checks, is in [`docs/verification.md`](docs/verification.md).
 
 ## Documentation
 

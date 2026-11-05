@@ -60,6 +60,7 @@ Also confirm:
 - [ ] No CSP violations in the console.
 - [ ] No mixed-content warnings.
 - [ ] The served HTML hash matches `dist/SHA256SUMS`.
+- [ ] The footer version and build id match the output of `make build`.
 - [ ] The page works with JavaScript enabled on iOS Safari and Android Chrome.
 - [ ] The offline copy opens from `file://` in one Chromium and one WebKit
       browser, or the limitation is recorded (WebCrypto may be unavailable on

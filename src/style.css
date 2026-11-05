@@ -188,6 +188,22 @@ a {
   font-size: 0.9375rem;
 }
 
+.site-footer {
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+.site-footer code {
+  color: var(--text);
+}
+
 .fine-print {
   margin-top: 2rem;
   padding-top: 1rem;
@@ -596,6 +612,11 @@ dialog::backdrop {
     margin-top: 0.75rem;
     font-size: 8.5pt;
     color: #333333;
+  }
+
+  .site-footer {
+    margin-top: 0.75rem;
+    font-size: 8pt;
   }
 
   .table-wrap {

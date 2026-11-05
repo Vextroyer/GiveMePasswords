@@ -1,6 +1,7 @@
 # QA Record
 
-- **Build:** `HPG-1`, artifact `d4b89db74d6bed04db78b7e4e48931508e46f6638800bcd1277eb790068f49c8`
+- **Build:** `HPG-1`, version `0.1.0`, build id `8e732a49ddd4ddb7`, artifact
+  `1acaba57ed1c3f7fbfd9f1934e4e67dee560e327f1421650db7c65e808f84786`
 - **Date:** 2026-11-05
 - **Environment:** Linux container, Node.js 26.13.0, Python 3.15.2, GNU Make 4.3.
   No Docker, no browser available in the build environment.
