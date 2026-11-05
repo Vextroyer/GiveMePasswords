@@ -4,9 +4,10 @@ A public, stateless, client-side tool that turns a 16-byte seed into a month of
 8-digit daily passwords. Nothing is sent to a server, nothing is stored, and the
 same seed always produces the same list.
 
-> **Status:** Phase 2 of 5 — the derivation, recovery-code format, and the
-> browser UI are implemented and tested. The hardened single-file build and
-> deployment are next. See
+> **Status:** Phase 3 of 5 — the app and the hardened single-file build are
+> complete and committed. Deployment is pending a Cloudflare account and a git
+> remote; the exact steps and checks are in
+> [`docs/deployment.md`](docs/deployment.md). See
 > [`.knowledge/plans/public-monthly-password-generator.md`](.knowledge/plans/public-monthly-password-generator.md).
 
 ## What it does
@@ -43,9 +44,11 @@ Requirements: Node.js 26+ (built-in test runner, global WebCrypto) and Python
 3.10+ for the independent reference. No dependencies are installed.
 
 ```sh
-make test          # Node implementation + published vectors (42 tests)
+make test          # Node implementation + published vectors + build (49 tests)
 make cross-check   # independent Python reference vs. test-vectors.json
 make check         # both
+make build         # regenerate dist/index.html, dist/_headers, dist/SHA256SUMS
+make verify-build  # rebuild and prove dist/ is byte-for-byte current
 ```
 
 Run the UI locally (ES modules need HTTP, not `file://`):
@@ -65,11 +68,16 @@ src/strings.js           runtime copy (translation entry point)
 src/session.js           month validation and list assembly
 src/derive.js            HPG-1 password derivation (WebCrypto)
 src/recovery-code.js     HPG1 encode/decode, checksum, fingerprint
+scripts/build.mjs        single-file bundler + CSP hashes + artifact checks
+dist/index.html          committed, self-contained artifact
+dist/_headers            committed Cloudflare Pages security headers
+dist/SHA256SUMS          committed artifact hash
 test/                    Node test runner suites
 test-vectors.json        frozen public vectors
 tools/reference.py       independent standard-library implementation
 docs/spec-hpg-1.md       the specification
 docs/ux-checklist.md     the 15 UX failure modes and their status
+docs/deployment.md       Cloudflare Pages setup and post-deploy checks
 .knowledge/              research notes and the implementation plan
 ```
 

@@ -204,16 +204,38 @@ internet with the correct headers and an offline copy.
   the committed `dist/` copy.
 
 **Done when:**
-- [ ] `make build` produces one `index.html` with no external requests and no unresolved
+- [x] `make build` produces one `index.html` with no external requests and no unresolved
       placeholders.
-- [ ] `make verify-build` passes from a clean checkout (same bytes, same hash).
+- [x] `make verify-build` passes from a clean checkout (same bytes, same hash).
 - [ ] The deployed URL serves over HTTPS and returns the expected CSP and security headers
-      (`curl -I` evidence).
-- [ ] The browser console shows no CSP violations and no mixed-content warnings.
-- [ ] The published `SHA256SUMS` matches the deployed artifact.
+      (`curl -I` evidence). *(Blocked: no Cloudflare account or git remote.)*
+- [ ] The browser console shows no CSP violations and no mixed-content warnings. *(Needs the
+      deployed URL or a local server in a real browser.)*
+- [ ] The published `SHA256SUMS` matches the deployed artifact. *(Blocked with deployment.)*
 - [ ] An offline copy of `index.html` works when opened from `file://` in at least one
-      Chromium browser and one WebKit browser, or the limitation is documented.
+      Chromium browser and one WebKit browser, or the limitation is documented. *(Limitation
+      documented in `docs/deployment.md`; device check pending.)*
 - [ ] Cloudflare preview deployments are either disabled or clearly marked as non-production.
+      *(Blocked with deployment.)*
+
+Phase 3 outcome (2026-11-05):
+
+- `scripts/build.mjs` bundles the ES-module graph into one classic script, inlines the
+  stylesheet, pins CSP hashes for the exact inline style and script, writes `_headers`
+  (CSP, HSTS, `no-referrer`, `nosniff`, frame denial, Permissions-Policy, Cache-Control),
+  computes `SHA256SUMS`, and refuses to emit an artifact containing external URLs,
+  `eval`, `innerHTML`, dynamic imports, storage APIs, or network APIs.
+- `test/build.test.mjs` (7 tests) checks self-containment, module order, the no-persistence
+  and no-network policy in the artifact, CSP hash correctness, header presence, the
+  checksum format, and byte-for-byte determinism. Total suite: 49 tests.
+- `dist/index.html`, `dist/_headers`, and `dist/SHA256SUMS` are committed.
+  Current hash: `d4b89db74d6bed04db78b7e4e48931508e46f6638800bcd1277eb790068f49c8`.
+- `make verify-build` rebuilds into `.build/verify` and diffs against `dist/` successfully.
+- The built bundle was exercised through the throwaway DOM shim (create → ceremony gate →
+  list → restore → rotate → error), not just the source modules.
+- Deployment instructions and verification commands: `docs/deployment.md`.
+- Remaining work is external: create the Pages project, push to a remote, deploy, and run
+  the header/console/offline checks on real devices.
 
 **Depends on:** Phase 2.
 
