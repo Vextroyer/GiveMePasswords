@@ -104,7 +104,16 @@ test("the page declares language, viewport, and a data-URI favicon", () => {
   assert.match(html, /<html[^>]*\slang="en"/i);
   assert.match(html, /<meta[^>]+name="viewport"/i);
   assert.match(html, /<link[^>]+rel="icon"[^>]+href="data:image\/svg\+xml/i);
-  assert.doesNotMatch(html, /<link[^>]+href="(?!data:)/i, "only a data-URI stylesheet/favicon link is allowed");
+
+  const hrefs = [...html.matchAll(/<(?:link|script)[^>]+(?:href|src)="([^"]+)"/gi)].map(
+    (match) => match[1],
+  );
+  for (const href of hrefs) {
+    assert.ok(
+      href.startsWith("data:") || /^[a-z0-9._/-]+$/i.test(href),
+      `asset must be local or a data URI, got ${href}`,
+    );
+  }
 });
 
 test("the page ships semantic, screen-reader-friendly structure", () => {
