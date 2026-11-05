@@ -214,8 +214,9 @@ export function normalizeRecoveryCode(input) {
     throw new RecoveryCodeError("BAD_CHAR", "recovery code must be a string");
   }
 
-  // Fold case and remove any whitespace or hyphens, wherever they appear.
-  let text = input.toUpperCase().replace(/[\s-]/gu, "");
+  // Fold case and remove any whitespace, zero-width characters, or hyphens,
+  // wherever they appear. Pasted codes often drag these in invisibly.
+  let text = input.toUpperCase().replace(/[\s\u200b\u200c\u200d\ufeff-]/gu, "");
 
   if (text === "") {
     throw new RecoveryCodeError("EMPTY", "recovery code is empty");
