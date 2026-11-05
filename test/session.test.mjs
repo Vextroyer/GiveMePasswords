@@ -85,6 +85,7 @@ test("the exported text keeps leading zeros, omits the seed, and names the month
   const text = await sessionToText(await createSession(SEED, "2026-11"));
 
   assert.match(text, /November 2026/);
+  assert.match(text, /November 2026 \(30 days\)/);
   assert.match(text, /CA7EF2C3/);
   assert.match(text, /07134458/);
   assert.match(text, /52296676/);
