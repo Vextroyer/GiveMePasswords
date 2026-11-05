@@ -9,10 +9,10 @@ import { build } from "../scripts/build.mjs";
 const sha256 = (value, encoding = "hex") =>
   createHash("sha256").update(value).digest(encoding);
 
-function withTempDir(run) {
+async function withTempDir(run) {
   const dir = mkdtempSync(join(tmpdir(), "hpg-build-"));
   try {
-    return run(dir);
+    return await run(dir);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

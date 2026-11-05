@@ -1,0 +1,1945 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-jnMqSd3U3bcQ2i/XX+g/1e9LRi6ZaFMSYL3Vtvt1NiE='; style-src 'sha256-tQPutbGmVMy1MX8LIRpEqTrbo+QrZ2qwisXRQbrA42w='; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; connect-src 'none'; font-src 'none'; manifest-src 'none'; media-src 'none'; worker-src 'none'" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="Generate a month of daily 8-digit passwords in your browser. No account, no server, no storage."
+    />
+    <title>Monthly Password Generator</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0iIzE0NTMyZCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgZm9udC1mYW1pbHk9InVpLW1vbm9zcGFjZSxtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTUiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPjg8L3RleHQ+PC9zdmc+"
+    />
+<style>/* Monthly Password Generator — mobile-first, no external assets. */
+
+:root {
+  color-scheme: light dark;
+
+  --bg: #f6f5f1;
+  --surface: #ffffff;
+  --surface-2: #efeee8;
+  --text: #1b1b19;
+  --muted: #5d5d57;
+  --line: #d7d6cd;
+  --accent: #14532d;
+  --accent-text: #ffffff;
+  --accent-soft: #e3efe5;
+  --danger: #8a1c1c;
+  --warning-bg: #fdf3d7;
+  --warning-line: #d9b45a;
+  --focus: #1d4ed8;
+  --radius: 12px;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 8px 24px rgb(0 0 0 / 0.06);
+
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  font-size: 100%;
+  line-height: 1.5;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141513;
+    --surface: #1d1f1c;
+    --surface-2: #262923;
+    --text: #f1f0ea;
+    --muted: #b3b3a9;
+    --line: #3a3d35;
+    --accent: #7fd39a;
+    --accent-text: #10241a;
+    --accent-soft: #203529;
+    --danger: #ff9b9b;
+    --warning-bg: #3a2f14;
+    --warning-line: #8a6d2a;
+    --focus: #93b4ff;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.35);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+main {
+  width: min(100% - 2rem, 46rem);
+  margin-inline: auto;
+  padding-block: 1.25rem 3rem;
+}
+
+h1,
+h2 {
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(1.6rem, 5vw, 2.1rem);
+}
+
+h2 {
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+a {
+  color: inherit;
+}
+
+/* Visible, non-color-only focus for every interactive element. */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 0.75rem;
+  top: -3rem;
+  z-index: 20;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  transition: top 120ms ease-in;
+}
+
+.skip-link:focus {
+  top: 0.75rem;
+}
+
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 1rem;
+  padding-block: 0.5rem 1.25rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 1.5rem;
+}
+
+.wordmark {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.privacy-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.lede {
+  font-size: 1.0625rem;
+  max-width: 38rem;
+  color: var(--muted);
+}
+
+.doors {
+  display: grid;
+  gap: 0.875rem;
+  margin-block: 1.5rem;
+}
+
+@media (min-width: 40rem) {
+  .doors {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.door {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  min-height: 44px;
+  padding: 1rem 1.125rem;
+  text-align: left;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.door:hover {
+  border-color: var(--accent);
+}
+
+.door-title {
+  font-weight: 700;
+  font-size: 1.0625rem;
+}
+
+.door-copy {
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.fine-print {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.view > h1 {
+  margin-top: 0.5rem;
+}
+
+.panel {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  padding: 1.125rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+label {
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+input[type="month"],
+textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.625rem 0.75rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+textarea {
+  min-height: 5.5rem;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  letter-spacing: 0.04em;
+}
+
+input[type="month"]:focus-visible,
+textarea:focus-visible {
+  outline-offset: 0;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.875rem;
+  margin: 0.25rem 0 0.5rem;
+}
+
+.error {
+  margin: 0.5rem 0;
+  padding: 0.625rem 0.75rem;
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent);
+  border-radius: 8px;
+  font-size: 0.9375rem;
+}
+
+.notice {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--warning-bg);
+  border: 1px solid var(--warning-line);
+  border-radius: var(--radius);
+  font-size: 0.9375rem;
+}
+
+button {
+  min-height: 44px;
+  padding: 0.625rem 1rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+button.primary {
+  color: var(--accent-text);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+button.danger {
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 50%, var(--line));
+}
+
+.link-button {
+  min-height: 44px;
+  padding: 0.25rem 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block: 1rem;
+}
+
+.list-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.fingerprint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.fingerprint code {
+  color: var(--text);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+caption {
+  padding: 0.75rem 1rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+
+th,
+td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+
+thead th {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--surface-2);
+}
+
+tbody tr:last-child th,
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+tbody th {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+td.password {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 1.0625rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+td.password code {
+  font-size: inherit;
+}
+
+tr.today {
+  background: var(--accent-soft);
+}
+
+.today-badge {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.35rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  border-radius: 999px;
+}
+
+.copy-button {
+  min-height: 44px;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.save-code {
+  margin-top: 1.5rem;
+  padding: 0.875rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.save-code summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.code-block {
+  display: block;
+  overflow-wrap: anywhere;
+  padding: 0.875rem 1rem;
+  margin-block: 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: clamp(0.9375rem, 3.5vw, 1.125rem);
+  letter-spacing: 0.06em;
+  user-select: all;
+}
+
+dialog {
+  width: min(100% - 2rem, 34rem);
+  padding: 1.25rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 24px 64px rgb(0 0 0 / 0.35);
+}
+
+dialog::backdrop {
+  background: rgb(0 0 0 / 0.55);
+}
+
+.step {
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.confirm {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  margin-block: 1rem;
+  padding: 0.75rem;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.confirm input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.15rem;
+  flex: none;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.25rem;
+  z-index: 30;
+  max-width: min(100% - 2rem, 30rem);
+  padding: 0.75rem 1rem;
+  color: var(--accent-text);
+  background: var(--accent);
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  font-size: 0.9375rem;
+  text-align: center;
+  transform: translate(-50%, 2rem);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.print-only {
+  display: none;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+@page {
+  margin: 12mm;
+}
+
+@media print {
+  :root {
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-2: #ffffff;
+    --text: #000000;
+    --muted: #333333;
+    --line: #999999;
+    --accent: #000000;
+    --accent-text: #000000;
+    --accent-soft: #ffffff;
+    --shadow: none;
+  }
+
+  body {
+    background: #ffffff;
+    color: #000000;
+    font-size: 10.5pt;
+  }
+
+  main {
+    width: 100%;
+    padding: 0;
+  }
+
+  .no-print,
+  dialog,
+  .toast,
+  .skip-link {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block;
+  }
+
+  .print-note {
+    margin-top: 0.75rem;
+    font-size: 8.5pt;
+    color: #333333;
+  }
+
+  .table-wrap {
+    border: 1px solid #999999;
+    box-shadow: none;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr {
+    break-inside: avoid;
+  }
+
+  td,
+  th {
+    padding: 0.2rem 0.4rem;
+  }
+
+  .today-badge {
+    border: 0;
+    padding: 0;
+  }
+
+  .fingerprint code {
+    color: #000000;
+  }
+
+  .badge {
+    border: 1px solid #999999;
+    color: #000000;
+    background: #ffffff;
+  }
+}
+</style></head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <main id="main">
+      <header class="site-header no-print">
+        <p class="wordmark">Monthly passwords</p>
+        <p class="privacy-note">
+          Runs entirely in your browser. Nothing is sent, saved, or tracked.
+        </p>
+      </header>
+
+      <section id="view-landing" class="view" aria-labelledby="landing-title">
+        <h1 id="landing-title" tabindex="-1">A month of daily passwords</h1>
+        <p class="lede">
+          Turn one recovery code into a full month of 8-digit passwords. Use the
+          same code next time to get the same list back.
+        </p>
+
+        <div class="doors">
+          <button id="door-create" class="door" type="button">
+            <span class="door-title">Create a new list</span>
+            <span class="door-copy">Start with a fresh recovery code.</span>
+          </button>
+
+          <button id="door-restore" class="door" type="button">
+            <span class="door-title">I have a recovery code</span>
+            <span class="door-copy">Rebuild a list you saved earlier.</span>
+          </button>
+        </div>
+
+        <p class="fine-print">
+          An 8-digit password is convenient, not strong. This tool does not
+          protect against someone who captures your Wi-Fi traffic or has your
+          device. Keep your recovery code private. Chat and notes apps may sync
+          copies to the cloud; a downloaded file or a printout is safer.
+        </p>
+      </section>
+
+      <section id="view-setup" class="view" aria-labelledby="setup-title" hidden>
+        <button id="setup-back" class="link-button no-print" type="button">
+          &larr; Back
+        </button>
+
+        <h1 id="setup-title" tabindex="-1">Create a new list</h1>
+
+        <form id="create-form" class="panel" novalidate hidden>
+          <label for="create-month">Month</label>
+          <input
+            id="create-month"
+            name="month"
+            type="month"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="YYYY-MM"
+            required
+          />
+          <p class="hint" id="create-month-hint">
+            The list covers every day in this month. A new list gets a new code,
+            so it will not match an earlier list.
+          </p>
+          <p class="error" id="create-error" role="alert" hidden></p>
+          <button id="create-submit" class="primary" type="submit">
+            Create list
+          </button>
+        </form>
+
+        <form id="restore-form" class="panel" novalidate hidden>
+          <label for="restore-month">Month</label>
+          <input
+            id="restore-month"
+            name="month"
+            type="month"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="YYYY-MM"
+            required
+          />
+
+          <label for="restore-code">Recovery code</label>
+          <textarea
+            id="restore-code"
+            name="code"
+            rows="3"
+            autocapitalize="characters"
+            autocomplete="off"
+            autocorrect="off"
+            spellcheck="false"
+            placeholder="HPG1-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX"
+            required
+          ></textarea>
+          <p class="hint">
+            Hyphens, spaces, and lowercase are fine. The code's checksum catches
+            most typos, but a valid code can still describe a different list.
+          </p>
+          <p class="fingerprint" id="restore-fingerprint" hidden></p>
+          <p class="error" id="restore-error" role="alert" hidden></p>
+          <button id="restore-submit" class="primary" type="submit">
+            Show my list
+          </button>
+        </form>
+      </section>
+
+      <section id="view-list" class="view" aria-labelledby="list-title" hidden>
+        <div class="list-heading">
+          <div>
+            <h1 id="list-title" tabindex="-1">Month</h1>
+            <p class="fingerprint">
+              Fingerprint <code id="list-fingerprint"></code>
+            </p>
+          </div>
+          <span class="badge" id="list-mode">New list</span>
+        </div>
+
+        <p class="notice" id="restore-warning" hidden></p>
+
+        <div class="toolbar no-print">
+          <button id="copy-all" type="button">Copy all</button>
+          <button id="download-txt" type="button">Download .txt</button>
+          <button id="print" type="button">Print</button>
+          <button id="share" type="button" hidden>Share</button>
+        </div>
+
+        <div class="table-wrap">
+          <table id="list-table">
+            <caption id="list-caption"></caption>
+            <thead>
+              <tr>
+                <th scope="col">Day</th>
+                <th scope="col">Weekday</th>
+                <th scope="col">Password</th>
+                <th scope="col" class="no-print">
+                  <span class="visually-hidden">Copy password</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="list-body"></tbody>
+          </table>
+        </div>
+
+        <p class="print-only print-note">
+          Generated with HPG-1. Keep this list private. The fingerprint is a
+          confirmation aid, not a secret.
+        </p>
+
+        <details class="save-code no-print" id="save-code">
+          <summary>Your recovery code</summary>
+          <p>
+            This is the only way to rebuild this list. Store it in a password
+            manager or print it and keep it somewhere safe.
+          </p>
+          <code id="list-code" class="code-block"></code>
+          <div class="toolbar">
+            <button id="copy-code" type="button">Copy code</button>
+            <button id="download-code" type="button">Download code</button>
+          </div>
+        </details>
+
+        <div class="toolbar no-print">
+          <button id="rotate" class="danger" type="button">Rotate code</button>
+          <button id="start-over" type="button">Start over</button>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="ceremony" aria-labelledby="ceremony-title" aria-describedby="ceremony-intro">
+      <h2 id="ceremony-title">Save your recovery code</h2>
+      <p class="step" id="ceremony-step"></p>
+      <p id="ceremony-intro"></p>
+
+      <code id="ceremony-code" class="code-block"></code>
+      <p class="fingerprint">
+        Fingerprint <code id="ceremony-fingerprint"></code>
+      </p>
+
+      <div class="toolbar">
+        <button id="ceremony-copy" type="button">Copy code</button>
+        <button id="ceremony-download" type="button">Download code</button>
+      </div>
+
+      <label class="confirm" for="ceremony-confirm">
+        <input id="ceremony-confirm" type="checkbox" />
+        <span>I have saved this code somewhere I can find it.</span>
+      </label>
+
+      <div class="toolbar">
+        <button id="ceremony-cancel" type="button">Cancel and discard</button>
+        <button id="ceremony-continue" class="primary" type="button" disabled>
+          Show my list
+        </button>
+      </div>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>(() => {
+"use strict";
+
+// --- strings.js ---
+const __m_strings = (() => {
+// All user-facing copy that the app inserts at runtime.
+// Static markup lives in index.html; this file keeps dynamic strings in one
+// place so a future translation or RTL pass has a single entry point.
+
+const strings = {
+  headings: {
+    create: "Create a new list",
+    restore: "I have a recovery code",
+  },
+
+  errors: {
+    month: "Choose a month in YYYY-MM format.",
+    codeEmpty: "Enter the recovery code.",
+    codeVersion: "This code is from a different version. Only HPG1 codes work here.",
+    codeChar: "The code has a character that is not allowed. Check it against your saved copy.",
+    codeLength: "The code is the wrong length. It should have 28 characters after the HPG1 prefix.",
+    codeChecksum: "The code's checksum does not match. Re-check it against your saved copy.",
+    codeUnknown: "That recovery code could not be read.",
+    crypto:
+      "This browser cannot generate passwords here. Use a current browser over HTTPS (or localhost).",
+    generic: "Something went wrong. Reload the page and try again.",
+    monthInvalid: "That month is not valid. Use four digits, a hyphen, and two digits, for example 2026-11.",
+  },
+
+  mode: {
+    create: "New list",
+    restore: "Restored from code",
+    rotate: "Rotated code",
+  },
+
+  restoreWarning:
+    "This list was rebuilt from a recovery code. Compare the fingerprint below with your saved copy before using these passwords.",
+
+  ceremony: {
+    createIntro:
+      "This code is the only way to get this list again. We cannot recover it for you.",
+    rotateIntro:
+      "This is a new code. Lists made with the old code cannot be recreated from this one.",
+    step: "Step 1 of 2: save the code. Step 2: show the list.",
+  },
+
+  toast: {
+    copiedPassword: (day) => `Password for day ${day} copied.`,
+    copiedAll: "All passwords copied.",
+    copiedCode: "Recovery code copied.",
+    listDownloaded: "List downloaded.",
+    codeDownloaded: "Recovery code downloaded.",
+    copyFailed: "Could not copy automatically. Select the text and copy it manually.",
+    shareFailed: "Sharing is not available in this browser.",
+    rotated: "New code created. Save it before showing the new list.",
+  },
+
+  filenames: {
+    list: (month) => `passwords-${month}.txt`,
+    code: (fingerprint) => `recovery-code-${fingerprint}.txt`,
+  },
+
+  codeFile: {
+    header: (fingerprint) =>
+      `HPG1 recovery code\nFingerprint: ${fingerprint}\n\n` +
+      "Keep this file private. Anyone with this code can derive your passwords.\n\n",
+  },
+
+  rotateConfirm:
+    "Rotate the code? Lists you already saved stay valid on the router, but this new code will not recreate them. You will need to save the new code.",
+};
+return { strings };
+})();
+
+// --- derive.js ---
+const __m_derive = (() => {
+// HPG-1: stateless, client-side monthly password derivation.
+// Pure ESM; uses the WebCrypto global so it runs in both Node and browsers.
+
+const VERSION = "HPG-1";
+const SALT = new TextEncoder().encode(`${VERSION}|seed`);
+const LIMIT = 4_200_000_000; // unsigned 32-bit rejection bound
+const MOD = 100_000_000;
+
+/** Normalize a Uint8Array/ArrayBuffer to a Uint8Array. */
+function bytes(value) {
+  return value instanceof Uint8Array ? value : new Uint8Array(value);
+}
+
+/** HKDF info string for a given month, day and attempt. */
+function info(month, day, attempt) {
+  return new TextEncoder().encode(
+    `${VERSION}|${month}|${String(day).padStart(2, "0")}|${attempt}`,
+  );
+}
+
+/**
+ * HKDF-SHA-256 (RFC 5869).
+ *
+ * WebCrypto's single `deriveBits` call with an HKDF key is spec-equivalent to
+ * HKDF-Extract followed by HKDF-Expand, so no manual two-step is needed.
+ */
+async function hkdf(ikm, salt, infoBytes, lengthBytes) {
+  const key = await globalThis.crypto.subtle.importKey(
+    "raw",
+    bytes(ikm),
+    "HKDF",
+    false,
+    ["deriveBits"],
+  );
+  const result = await globalThis.crypto.subtle.deriveBits(
+    {
+      name: "HKDF",
+      hash: "SHA-256",
+      salt: bytes(salt),
+      info: bytes(infoBytes),
+    },
+    key,
+    lengthBytes * 8,
+  );
+  return new Uint8Array(result);
+}
+
+/** Derive the 8-digit password for a single day. */
+async function derivePassword8(seed, month, day, attempt = 0) {
+  const seedBytes = bytes(seed);
+  if (seedBytes.length !== 16) {
+    throw new TypeError("seed must be 16 bytes");
+  }
+
+  for (;;) {
+    const okm = await hkdf(seedBytes, SALT, info(month, day, attempt), 64);
+    // Big-endian unsigned 32-bit value from the first four bytes.
+    const x =
+      ((okm[0] << 24) | (okm[1] << 16) | (okm[2] << 8) | okm[3]) >>> 0;
+
+    // Rejection sampling keeps the output uniform over [0, MOD); if the value
+    // is at or above LIMIT, bump the attempt counter and try again.
+    if (x < LIMIT) {
+      return String(x % MOD).padStart(8, "0");
+    }
+    attempt += 1;
+  }
+}
+
+/** Derive every day's password for a "YYYY-MM" month, in day order. */
+async function deriveMonth(seed, month) {
+  const match = /^(\d{4})-(0[1-9]|1[0-2])$/.exec(month);
+  if (!match) {
+    throw new RangeError("month must be in YYYY-MM format");
+  }
+
+  const year = Number(match[1]);
+  const monthNumber = Number(match[2]);
+  // Date.UTC(year, monthNumber, 0) is the last day of the 1-based month.
+  const days = new Date(Date.UTC(year, monthNumber, 0)).getUTCDate();
+
+  const result = [];
+  for (let day = 1; day <= days; day += 1) {
+    result.push(await derivePassword8(seed, month, day));
+  }
+  return result;
+}
+return { hkdf, derivePassword8, deriveMonth };
+})();
+
+// --- recovery-code.js ---
+const __m_recovery_code = (() => {
+// HPG1 recovery codes: printable, checksummed backups of a 16-byte seed.
+// Pure ESM; uses only TextEncoder and a small synchronous SHA-256 so the API
+// stays synchronous in browsers (WebCrypto's digest is async-only).
+
+const PREFIX = "HPG1";
+const SEED_BYTES = 16;
+const PAYLOAD_CHARS = 26; // 130 bits of capacity for a 128-bit seed
+const CHECKSUM_CHARS = 2; // 10 bits
+const CODE_CHARS = PAYLOAD_CHARS + CHECKSUM_CHARS;
+
+// Crockford Base32: no I, L, O or U.
+const ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+const DIGITS = new Map([...ALPHABET].map((char, index) => [char, index]));
+
+const CHECKSUM_CONTEXT = new TextEncoder().encode("HPG1");
+const FINGERPRINT_CONTEXT = new TextEncoder().encode("HPG1|fingerprint");
+
+/** Error carrying a stable machine-readable reason. */
+class RecoveryCodeError extends Error {
+  constructor(reason, message = reason) {
+    super(message);
+    this.name = "RecoveryCodeError";
+    this.reason = reason;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Synchronous SHA-256 (FIPS 180-4)
+// ---------------------------------------------------------------------------
+
+const SHA256_K = new Uint32Array([
+  0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1,
+  0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
+  0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786,
+  0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+  0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147,
+  0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13,
+  0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b,
+  0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+  0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a,
+  0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
+  0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
+]);
+
+const SHA256_IV = new Uint32Array([
+  0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c,
+  0x1f83d9ab, 0x5be0cd19,
+]);
+
+const rotr = (value, bits) => (value >>> bits) | (value << (32 - bits));
+
+/** SHA-256 digest of a byte array, returned as 32 bytes. */
+function sha256(input) {
+  const length = input.length;
+  const bitLength = length * 8;
+  // 0x80 terminator, zero padding, then the 64-bit length.
+  const paddedLength = ((length + 9 + 63) >> 6) << 6;
+  const buffer = new Uint8Array(paddedLength);
+  buffer.set(input);
+  buffer[length] = 0x80;
+
+  const view = new DataView(buffer.buffer);
+  view.setUint32(paddedLength - 8, Math.floor(bitLength / 0x100000000), false);
+  view.setUint32(paddedLength - 4, bitLength >>> 0, false);
+
+  const hash = SHA256_IV.slice();
+  const words = new Uint32Array(64);
+
+  for (let offset = 0; offset < paddedLength; offset += 64) {
+    for (let i = 0; i < 16; i += 1) {
+      words[i] = view.getUint32(offset + i * 4, false);
+    }
+    for (let i = 16; i < 64; i += 1) {
+      const x = words[i - 15];
+      const y = words[i - 2];
+      const sigma0 = rotr(x, 7) ^ rotr(x, 18) ^ (x >>> 3);
+      const sigma1 = rotr(y, 17) ^ rotr(y, 19) ^ (y >>> 10);
+      words[i] =
+        (words[i - 16] + sigma0 + words[i - 7] + sigma1) >>> 0;
+    }
+
+    let [a, b, c, d, e, f, g, h] = hash;
+
+    for (let i = 0; i < 64; i += 1) {
+      const sum1 = rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25);
+      const choose = (e & f) ^ (~e & g);
+      const temp1 = (h + sum1 + choose + SHA256_K[i] + words[i]) >>> 0;
+      const sum0 = rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22);
+      const majority = (a & b) ^ (a & c) ^ (b & c);
+      const temp2 = (sum0 + majority) >>> 0;
+
+      h = g;
+      g = f;
+      f = e;
+      e = (d + temp1) >>> 0;
+      d = c;
+      c = b;
+      b = a;
+      a = (temp1 + temp2) >>> 0;
+    }
+
+    hash[0] = (hash[0] + a) >>> 0;
+    hash[1] = (hash[1] + b) >>> 0;
+    hash[2] = (hash[2] + c) >>> 0;
+    hash[3] = (hash[3] + d) >>> 0;
+    hash[4] = (hash[4] + e) >>> 0;
+    hash[5] = (hash[5] + f) >>> 0;
+    hash[6] = (hash[6] + g) >>> 0;
+    hash[7] = (hash[7] + h) >>> 0;
+  }
+
+  const digest = new Uint8Array(32);
+  const digestView = new DataView(digest.buffer);
+  for (let i = 0; i < 8; i += 1) {
+    digestView.setUint32(i * 4, hash[i], false);
+  }
+  return digest;
+}
+
+/** Concatenate byte arrays into a fresh Uint8Array. */
+function concat(...parts) {
+  const total = parts.reduce((sum, part) => sum + part.length, 0);
+  const result = new Uint8Array(total);
+  let offset = 0;
+  for (const part of parts) {
+    result.set(part, offset);
+    offset += part.length;
+  }
+  return result;
+}
+
+// ---------------------------------------------------------------------------
+// Byte / Base32 helpers
+// ---------------------------------------------------------------------------
+
+/** Validate a seed and return it as a Uint8Array. */
+function assertSeed(seed) {
+  if (seed instanceof Uint8Array) {
+    if (seed.byteLength !== SEED_BYTES) {
+      throw new TypeError(`seed must be ${SEED_BYTES} bytes`);
+    }
+    return seed;
+  }
+  if (seed instanceof ArrayBuffer) {
+    if (seed.byteLength !== SEED_BYTES) {
+      throw new TypeError(`seed must be ${SEED_BYTES} bytes`);
+    }
+    return new Uint8Array(seed);
+  }
+  throw new TypeError("seed must be a Uint8Array or ArrayBuffer");
+}
+
+/** Big-endian bytes to a BigInt. */
+function toBigInt(bytes) {
+  let value = 0n;
+  for (const byte of bytes) {
+    value = (value << 8n) | BigInt(byte);
+  }
+  return value;
+}
+
+/** BigInt to exactly `size` big-endian bytes. */
+function fromBigInt(value, size) {
+  const result = new Uint8Array(size);
+  for (let i = size - 1; i >= 0; i -= 1) {
+    result[i] = Number(value & 0xffn);
+    value >>= 8n;
+  }
+  return result;
+}
+
+/** Encode a BigInt as exactly `length` Base32 characters, most significant first. */
+function toBase32(value, length) {
+  let result = "";
+  for (let i = length - 1; i >= 0; i -= 1) {
+    const digit = Number((value >> BigInt(5 * i)) & 31n);
+    result += ALPHABET[digit];
+  }
+  return result;
+}
+
+/** Decode Base32 characters to a BigInt. Assumes characters are in the alphabet. */
+function fromBase32(text) {
+  let value = 0n;
+  for (const char of text) {
+    value = (value << 5n) | BigInt(DIGITS.get(char));
+  }
+  return value;
+}
+
+/** 10-bit checksum of a 16-byte seed. */
+function checksum(seed) {
+  const digest = sha256(concat(CHECKSUM_CONTEXT, seed));
+  return (digest[0] << 2) | (digest[1] >> 6);
+}
+
+// ---------------------------------------------------------------------------
+// Public API
+// ---------------------------------------------------------------------------
+
+/** Encode a 16-byte seed as a canonical grouped recovery code. */
+function encodeRecoveryCode(seed) {
+  const bytes = assertSeed(seed);
+  const payload = toBase32(toBigInt(bytes), PAYLOAD_CHARS);
+  const check = toBase32(BigInt(checksum(bytes)), CHECKSUM_CHARS);
+  const body = payload + check;
+  const groups = body.match(/.{4}/g);
+  return `${PREFIX}-${groups.join("-")}`;
+}
+
+/** Normalize user input to a 28-character uppercase payload without separators. */
+function normalizeRecoveryCode(input) {
+  if (typeof input !== "string") {
+    throw new RecoveryCodeError("BAD_CHAR", "recovery code must be a string");
+  }
+
+  // Fold case and remove any whitespace, zero-width characters, or hyphens,
+  // wherever they appear. Pasted codes often drag these in invisibly.
+  let text = input.toUpperCase().replace(/[\s\u200b\u200c\u200d\ufeff-]/gu, "");
+
+  if (text === "") {
+    throw new RecoveryCodeError("EMPTY", "recovery code is empty");
+  }
+
+  if (text.startsWith(PREFIX)) {
+    text = text.slice(PREFIX.length);
+  } else {
+    const version = /^HPG(\d)/.exec(text);
+    if (version && version[1] !== "1") {
+      throw new RecoveryCodeError(
+        "BAD_VERSION",
+        `unsupported recovery code version: ${version[1]}`,
+      );
+    }
+  }
+
+  // Fold the ambiguous Crockford characters.
+  text = text.replace(/[IL]/gu, "1").replace(/O/gu, "0");
+
+  if (text === "") {
+    throw new RecoveryCodeError("EMPTY", "recovery code is empty");
+  }
+
+  for (const char of text) {
+    if (!DIGITS.has(char)) {
+      throw new RecoveryCodeError("BAD_CHAR", `invalid character: ${char}`);
+    }
+  }
+
+  if (text.length !== CODE_CHARS) {
+    throw new RecoveryCodeError(
+      "BAD_LENGTH",
+      `recovery code must contain ${CODE_CHARS} characters`,
+    );
+  }
+
+  return text;
+}
+
+/** Verify and decode a recovery code into its 16-byte seed. */
+function parseRecoveryCode(input) {
+  const normalized = normalizeRecoveryCode(input);
+  const payload = normalized.slice(0, PAYLOAD_CHARS);
+  const check = normalized.slice(PAYLOAD_CHARS);
+
+  const value = fromBase32(payload);
+  if (value >> 128n !== 0n) {
+    throw new RecoveryCodeError("BAD_LENGTH", "recovery code overflows 128 bits");
+  }
+
+  const seed = fromBigInt(value, SEED_BYTES);
+  const expected = checksum(seed);
+  const actual = Number(fromBase32(check));
+
+  if (actual !== expected) {
+    throw new RecoveryCodeError("BAD_CHECKSUM", "recovery code checksum mismatch");
+  }
+
+  return seed;
+}
+
+/** Short stable fingerprint of a seed, for confirming a backup visually. */
+function seedFingerprint(seed) {
+  const bytes = assertSeed(seed);
+  const digest = sha256(concat(FINGERPRINT_CONTEXT, bytes));
+  let hex = "";
+  for (let i = 0; i < 4; i += 1) {
+    hex += digest[i].toString(16).padStart(2, "0").toUpperCase();
+  }
+  return hex;
+}
+return { encodeRecoveryCode, normalizeRecoveryCode, parseRecoveryCode, seedFingerprint, RecoveryCodeError };
+})();
+
+// --- session.js ---
+const __m_session = (() => {
+const { deriveMonth } = __m_derive;
+const { encodeRecoveryCode, parseRecoveryCode, seedFingerprint } = __m_recovery_code;
+// HPG-1 session assembly: month validation, labels, and printable lists.
+// Pure ESM; no storage, DOM, network, or Node imports.
+
+
+
+
+const MONTH_PATTERN = /^\d{4}-(0[1-9]|1[0-2])$/;
+
+const MONTH_NAMES = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+const WEEKDAY_NAMES = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+
+/** True for a canonical "YYYY-MM" string. */
+function isValidMonth(value) {
+  return typeof value === "string" && MONTH_PATTERN.test(value);
+}
+
+/** Current local month as "YYYY-MM". A UI default, never used for derivation. */
+function currentMonth(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  return `${year}-${month}`;
+}
+
+/** Human month label, e.g. "November 2026". Locale-independent. */
+function monthLabel(month) {
+  if (!isValidMonth(month)) {
+    throw new RangeError("month must be YYYY-MM");
+  }
+  const year = Number(month.slice(0, 4));
+  const monthIndex = Number(month.slice(5, 7)) - 1;
+  return `${MONTH_NAMES[monthIndex]} ${year}`;
+}
+
+/** Normalize and validate a 16-byte seed without exposing it. */
+function seedBytes(seed) {
+  if (seed instanceof Uint8Array || seed instanceof ArrayBuffer) {
+    if (seed.byteLength !== 16) {
+      throw new TypeError("seed must be 16 bytes");
+    }
+    return seed instanceof Uint8Array ? seed : new Uint8Array(seed);
+  }
+  throw new TypeError("seed must be a Uint8Array or ArrayBuffer");
+}
+
+/** Build a month's full password session from a seed. */
+async function createSession(seed, month) {
+  if (!isValidMonth(month)) {
+    throw new RangeError("month must be YYYY-MM");
+  }
+  const bytes = seedBytes(seed);
+
+  const year = Number(month.slice(0, 4));
+  const monthNumber = Number(month.slice(5, 7));
+  const dayCount = new Date(Date.UTC(year, monthNumber, 0)).getUTCDate();
+  const passwords = await deriveMonth(bytes, month);
+
+  const days = Array.from({ length: dayCount }, (_, index) => {
+    const day = index + 1;
+    const weekday = new Date(
+      Date.UTC(year, monthNumber - 1, day),
+    ).getUTCDay();
+    return { day, weekday: WEEKDAY_NAMES[weekday], password: passwords[index] };
+  });
+
+  return {
+    month,
+    monthLabel: monthLabel(month),
+    fingerprint: seedFingerprint(bytes),
+    recoveryCode: encodeRecoveryCode(bytes),
+    days,
+  };
+}
+
+/** Restore a session from a recovery code. Parse errors propagate unchanged. */
+async function restoreSession(code, month) {
+  const seed = parseRecoveryCode(code);
+  return createSession(seed, month);
+}
+
+/** Render a session as a plain-text table; never includes seed or code. */
+function sessionToText(session) {
+  const lines = [
+    `Monthly passwords — ${session.monthLabel} (${session.days.length} days)`,
+    `Fingerprint: ${session.fingerprint}`,
+    "Algorithm: HPG-1. Keep this list private.",
+    "",
+    "Day  Weekday   Password",
+  ];
+
+  for (const entry of session.days) {
+    lines.push(
+      `${String(entry.day).padStart(2, "0")}   ${entry.weekday.padEnd(9)} ${entry.password}`,
+    );
+  }
+
+  lines.push("", "End of list.");
+  return `${lines.join("\n")}\n`;
+}
+return { isValidMonth, currentMonth, monthLabel, createSession, restoreSession, sessionToText };
+})();
+
+// --- app.js ---
+const __m_app = (() => {
+const { createSession, currentMonth, isValidMonth, restoreSession, sessionToText } = __m_session;
+const { parseRecoveryCode, seedFingerprint } = __m_recovery_code;
+const { strings: t } = __m_strings;
+// Browser wiring for the Monthly Password Generator.
+//
+// This file owns the DOM only. Derivation lives in derive.js, the recovery-code
+// format in recovery-code.js, and month assembly in session.js. Nothing here
+// persists, requests, or injects HTML: all dynamic values go through
+// textContent.
+
+
+
+
+
+const el = (id) => document.getElementById(id);
+
+const VIEWS = ["landing", "setup", "list"];
+const state = {
+  session: null,
+  pending: null,
+  pendingReason: "create",
+};
+
+// ---------------------------------------------------------------------------
+// View and form helpers
+// ---------------------------------------------------------------------------
+
+function showView(name, focusId) {
+  for (const view of VIEWS) {
+    el(`view-${view}`).hidden = view !== name;
+  }
+  window.scrollTo(0, 0);
+  if (focusId) {
+    el(focusId).focus();
+  }
+}
+
+function setError(target, message) {
+  if (!message) {
+    target.textContent = "";
+    target.hidden = true;
+    return;
+  }
+  target.textContent = message;
+  target.hidden = false;
+}
+
+function setBusy(button, busy) {
+  button.disabled = busy;
+  button.setAttribute("aria-busy", busy ? "true" : "false");
+}
+
+function openSetup(mode) {
+  el("create-form").hidden = mode !== "create";
+  el("restore-form").hidden = mode !== "restore";
+  el("setup-title").textContent = t.headings[mode];
+  setError(el("create-error"), "");
+  setError(el("restore-error"), "");
+  showView("setup", mode === "create" ? "create-month" : "restore-month");
+}
+
+function canDerive() {
+  return Boolean(
+    globalThis.crypto &&
+      typeof globalThis.crypto.getRandomValues === "function" &&
+      globalThis.crypto.subtle,
+  );
+}
+
+function codeErrorMessage(error) {
+  switch (error && error.reason) {
+    case "EMPTY":
+      return t.errors.codeEmpty;
+    case "BAD_VERSION":
+      return t.errors.codeVersion;
+    case "BAD_CHAR":
+      return t.errors.codeChar;
+    case "BAD_LENGTH":
+      return t.errors.codeLength;
+    case "BAD_CHECKSUM":
+      return t.errors.codeChecksum;
+    default:
+      return t.errors.codeUnknown;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Ceremony: the list is not revealed until the code is saved
+// ---------------------------------------------------------------------------
+
+function openCeremony(session, reason) {
+  state.pending = session;
+  state.pendingReason = reason;
+
+  el("ceremony-step").textContent = t.ceremony.step;
+  el("ceremony-intro").textContent =
+    reason === "rotate" ? t.ceremony.rotateIntro : t.ceremony.createIntro;
+  el("ceremony-code").textContent = session.recoveryCode;
+  el("ceremony-fingerprint").textContent = session.fingerprint;
+  el("ceremony-confirm").checked = false;
+  el("ceremony-continue").disabled = true;
+
+  if (!el("ceremony").open) {
+    el("ceremony").showModal();
+  }
+  el("ceremony-confirm").focus();
+}
+
+function closeCeremony(value) {
+  if (el("ceremony").open) {
+    el("ceremony").close(value);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// List rendering
+// ---------------------------------------------------------------------------
+
+function buildRow(entry, todayMonth, todayDay) {
+  const row = document.createElement("tr");
+  const isToday = entry.month === todayMonth && entry.day === todayDay;
+
+  const dayCell = document.createElement("th");
+  dayCell.scope = "row";
+  dayCell.textContent = String(entry.day).padStart(2, "0");
+  if (isToday) {
+    row.classList.add("today");
+    const badge = document.createElement("span");
+    badge.className = "today-badge";
+    badge.textContent = "Today";
+    dayCell.append(badge);
+  }
+
+  const weekdayCell = document.createElement("td");
+  weekdayCell.textContent = entry.weekday;
+
+  const passwordCell = document.createElement("td");
+  passwordCell.className = "password";
+  const password = document.createElement("code");
+  password.textContent = entry.password;
+  passwordCell.append(password);
+
+  const actionCell = document.createElement("td");
+  actionCell.className = "no-print";
+  const copyButton = document.createElement("button");
+  copyButton.type = "button";
+  copyButton.className = "copy-button";
+  copyButton.textContent = "Copy";
+  copyButton.setAttribute("aria-label", `Copy password for day ${entry.day}`);
+  copyButton.dataset.day = String(entry.day);
+  actionCell.append(copyButton);
+
+  row.append(dayCell, weekdayCell, passwordCell, actionCell);
+  return row;
+}
+
+function showList(session, mode) {
+  state.session = session;
+
+  el("list-title").textContent = session.monthLabel;
+  el("list-fingerprint").textContent = session.fingerprint;
+  el("list-mode").textContent = t.mode[mode] || t.mode.create;
+  el("list-caption").textContent =
+    `Passwords for ${session.monthLabel}. Fingerprint ${session.fingerprint}.`;
+  el("list-code").textContent = session.recoveryCode;
+
+  const warning = el("restore-warning");
+  warning.hidden = mode !== "restore";
+  warning.textContent = t.restoreWarning;
+
+  const now = new Date();
+  const todayMonth = currentMonth(now);
+  const todayDay = now.getDate();
+
+  const body = el("list-body");
+  body.replaceChildren();
+  for (const entry of session.days) {
+    body.append(buildRow({ ...entry, month: session.month }, todayMonth, todayDay));
+  }
+
+  el("save-code").open = false;
+  el("share").hidden = typeof navigator.share !== "function";
+  showView("list", "list-title");
+}
+
+// ---------------------------------------------------------------------------
+// Clipboard, download, share, toast
+// ---------------------------------------------------------------------------
+
+async function copyText(text) {
+  try {
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch {
+    // Fall back to a selection copy below.
+  }
+
+  const area = document.createElement("textarea");
+  area.value = text;
+  area.setAttribute("readonly", "");
+  area.className = "visually-hidden";
+  document.body.append(area);
+  area.select();
+
+  let copied = false;
+  try {
+    copied = document.execCommand("copy");
+  } catch {
+    copied = false;
+  }
+  area.remove();
+  return copied;
+}
+
+async function copyWithToast(text, message) {
+  const copied = await copyText(text);
+  toast(copied ? message : t.toast.copyFailed);
+}
+
+function download(filename, text) {
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+function codeFile(session) {
+  return `${t.codeFile.header(session.fingerprint)}${session.recoveryCode}\n`;
+}
+
+async function shareList() {
+  if (!state.session) return;
+
+  const text = sessionToText(state.session);
+  const title = state.session.monthLabel;
+  const filename = t.filenames.list(state.session.month);
+
+  try {
+    if (typeof navigator.canShare === "function") {
+      const file = new File([text], filename, { type: "text/plain" });
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title });
+        return;
+      }
+    }
+    await navigator.share({ title, text });
+  } catch (error) {
+    if (!error || error.name !== "AbortError") {
+      toast(t.toast.shareFailed);
+    }
+  }
+}
+
+let toastTimer = 0;
+
+function toast(message) {
+  const target = el("toast");
+  target.textContent = message;
+  target.classList.add("show");
+  window.clearTimeout(toastTimer);
+  toastTimer = window.setTimeout(() => {
+    target.classList.remove("show");
+    target.textContent = "";
+  }, 3200);
+}
+
+// ---------------------------------------------------------------------------
+// Actions
+// ---------------------------------------------------------------------------
+
+async function handleCreate(event) {
+  event.preventDefault();
+  setError(el("create-error"), "");
+
+  const month = el("create-month").value.trim();
+  if (!isValidMonth(month)) {
+    setError(el("create-error"), t.errors.monthInvalid);
+    el("create-month").focus();
+    return;
+  }
+  if (!canDerive()) {
+    setError(el("create-error"), t.errors.crypto);
+    return;
+  }
+
+  setBusy(el("create-submit"), true);
+  try {
+    const seed = globalThis.crypto.getRandomValues(new Uint8Array(16));
+    const session = await createSession(seed, month);
+    openCeremony(session, "create");
+  } catch (error) {
+    setError(el("create-error"), t.errors.generic);
+  } finally {
+    setBusy(el("create-submit"), false);
+  }
+}
+
+async function handleRestore(event) {
+  event.preventDefault();
+  setError(el("restore-error"), "");
+
+  const month = el("restore-month").value.trim();
+  const code = el("restore-code").value.trim();
+
+  if (!isValidMonth(month)) {
+    setError(el("restore-error"), t.errors.monthInvalid);
+    el("restore-month").focus();
+    return;
+  }
+  if (!code) {
+    setError(el("restore-error"), t.errors.codeEmpty);
+    el("restore-code").focus();
+    return;
+  }
+  if (!canDerive()) {
+    setError(el("restore-error"), t.errors.crypto);
+    return;
+  }
+
+  setBusy(el("restore-submit"), true);
+  try {
+    const session = await restoreSession(code, month);
+    showList(session, "restore");
+  } catch (error) {
+    setError(el("restore-error"), codeErrorMessage(error));
+  } finally {
+    setBusy(el("restore-submit"), false);
+  }
+}
+
+function rotateCode() {
+  if (!state.session) return;
+  if (!window.confirm(t.rotateConfirm)) return;
+  if (!canDerive()) {
+    toast(t.errors.crypto);
+    return;
+  }
+
+  const month = state.session.month;
+  try {
+    const seed = globalThis.crypto.getRandomValues(new Uint8Array(16));
+    createSession(seed, month)
+      .then((session) => openCeremony(session, "rotate"))
+      .catch(() => toast(t.errors.generic));
+  } catch {
+    toast(t.errors.generic);
+  }
+}
+
+function startOver() {
+  state.session = null;
+  state.pending = null;
+  el("list-body").replaceChildren();
+  el("list-code").textContent = "";
+  el("list-fingerprint").textContent = "";
+  el("restore-code").value = "";
+  el("restore-fingerprint").hidden = true;
+  setError(el("create-error"), "");
+  setError(el("restore-error"), "");
+  showView("landing", "landing-title");
+}
+
+function updateFingerprintPreview() {
+  const value = el("restore-code").value.trim();
+  const output = el("restore-fingerprint");
+
+  if (!value) {
+    output.hidden = true;
+    output.textContent = "";
+    return;
+  }
+
+  try {
+    const seed = parseRecoveryCode(value);
+    output.textContent = `Fingerprint ${seedFingerprint(seed)}`;
+    output.hidden = false;
+  } catch {
+    output.hidden = true;
+    output.textContent = "";
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Wiring
+// ---------------------------------------------------------------------------
+
+function init() {
+  const month = currentMonth();
+  el("create-month").value = month;
+  el("restore-month").value = month;
+
+  el("door-create").addEventListener("click", () => openSetup("create"));
+  el("door-restore").addEventListener("click", () => openSetup("restore"));
+  el("setup-back").addEventListener("click", () => {
+    setError(el("create-error"), "");
+    setError(el("restore-error"), "");
+    showView("landing", "landing-title");
+  });
+
+  el("create-form").addEventListener("submit", handleCreate);
+  el("restore-form").addEventListener("submit", handleRestore);
+  el("restore-code").addEventListener("input", updateFingerprintPreview);
+
+  el("ceremony-confirm").addEventListener("change", (event) => {
+    el("ceremony-continue").disabled = !event.target.checked;
+  });
+
+  el("ceremony-copy").addEventListener("click", () => {
+    if (state.pending) {
+      copyWithToast(state.pending.recoveryCode, t.toast.copiedCode);
+    }
+  });
+
+  el("ceremony-download").addEventListener("click", () => {
+    if (!state.pending) return;
+    download(
+      t.filenames.code(state.pending.fingerprint),
+      codeFile(state.pending),
+    );
+    toast(t.toast.codeDownloaded);
+  });
+
+  el("ceremony-cancel").addEventListener("click", () => closeCeremony("cancel"));
+
+  el("ceremony").addEventListener("close", () => {
+    // Covers Escape and the Cancel button. Continue clears pending first.
+    state.pending = null;
+  });
+
+  el("ceremony-continue").addEventListener("click", () => {
+    if (!el("ceremony-confirm").checked || !state.pending) return;
+
+    const session = state.pending;
+    const reason = state.pendingReason;
+    state.pending = null;
+    closeCeremony("continue");
+    showList(session, reason);
+    if (reason === "rotate") {
+      toast(t.toast.rotated);
+    }
+  });
+
+  el("list-body").addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element) || !state.session) return;
+
+    const button = target.closest("button[data-day]");
+    if (!button) return;
+
+    const day = Number(button.dataset.day);
+    const entry = state.session.days.find((item) => item.day === day);
+    if (!entry) return;
+
+    copyWithToast(entry.password, t.toast.copiedPassword(day));
+  });
+
+  el("copy-all").addEventListener("click", () => {
+    if (state.session) {
+      copyWithToast(sessionToText(state.session), t.toast.copiedAll);
+    }
+  });
+
+  el("download-txt").addEventListener("click", () => {
+    if (!state.session) return;
+    download(
+      t.filenames.list(state.session.month),
+      sessionToText(state.session),
+    );
+    toast(t.toast.listDownloaded);
+  });
+
+  el("print").addEventListener("click", () => window.print());
+  el("share").addEventListener("click", shareList);
+
+  el("copy-code").addEventListener("click", () => {
+    if (state.session) {
+      copyWithToast(state.session.recoveryCode, t.toast.copiedCode);
+    }
+  });
+
+  el("download-code").addEventListener("click", () => {
+    if (!state.session) return;
+    download(
+      t.filenames.code(state.session.fingerprint),
+      codeFile(state.session),
+    );
+    toast(t.toast.codeDownloaded);
+  });
+
+  el("rotate").addEventListener("click", rotateCode);
+  el("start-over").addEventListener("click", startOver);
+
+  showView("landing");
+}
+
+init();
+return {  };
+})();
+
+})();
+</script></body>
+</html>
