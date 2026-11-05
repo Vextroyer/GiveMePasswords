@@ -47,6 +47,12 @@ test("normalization accepts a payload without the HPG1 prefix", () => {
   );
 });
 
+test("normalization strips zero-width characters from pasted codes", () => {
+  const pasted = `\u200b${CODE.replaceAll("-", "\u200b-\u200d")}\ufeff`;
+
+  assert.equal(normalizeRecoveryCode(pasted), "00041061050R3GG28A1C60T3GF2F");
+});
+
 test("invalid input is rejected with a reason", () => {
   const reason = (value) => (err) => err.reason === value;
 

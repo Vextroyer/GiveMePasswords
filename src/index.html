@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="description"
+      content="Generate a month of daily 8-digit passwords in your browser. No account, no server, no storage."
+    />
+    <title>Monthly Password Generator</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0iIzE0NTMyZCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgZm9udC1mYW1pbHk9InVpLW1vbm9zcGFjZSxtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTUiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPjg8L3RleHQ+PC9zdmc+"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <main id="main">
+      <header class="site-header no-print">
+        <p class="wordmark">Monthly passwords</p>
+        <p class="privacy-note">
+          Runs entirely in your browser. Nothing is sent, saved, or tracked.
+        </p>
+      </header>
+
+      <section id="view-landing" class="view" aria-labelledby="landing-title">
+        <h1 id="landing-title" tabindex="-1">A month of daily passwords</h1>
+        <p class="lede">
+          Turn one recovery code into a full month of 8-digit passwords. Use the
+          same code next time to get the same list back.
+        </p>
+
+        <div class="doors">
+          <button id="door-create" class="door" type="button">
+            <span class="door-title">Create a new list</span>
+            <span class="door-copy">Start with a fresh recovery code.</span>
+          </button>
+
+          <button id="door-restore" class="door" type="button">
+            <span class="door-title">I have a recovery code</span>
+            <span class="door-copy">Rebuild a list you saved earlier.</span>
+          </button>
+        </div>
+
+        <p class="fine-print">
+          An 8-digit password is convenient, not strong. This tool does not
+          protect against someone who captures your Wi-Fi traffic or has your
+          device. Keep your recovery code private.
+        </p>
+      </section>
+
+      <section id="view-setup" class="view" aria-labelledby="setup-title" hidden>
+        <button id="setup-back" class="link-button no-print" type="button">
+          &larr; Back
+        </button>
+
+        <h1 id="setup-title" tabindex="-1">Create a new list</h1>
+
+        <form id="create-form" class="panel" novalidate hidden>
+          <label for="create-month">Month</label>
+          <input
+            id="create-month"
+            name="month"
+            type="month"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="YYYY-MM"
+            required
+          />
+          <p class="hint" id="create-month-hint">
+            The list covers every day in this month. The month is not tied to the
+            code, so the same code works for any month.
+          </p>
+          <p class="error" id="create-error" role="alert" hidden></p>
+          <button id="create-submit" class="primary" type="submit">
+            Create list
+          </button>
+        </form>
+
+        <form id="restore-form" class="panel" novalidate hidden>
+          <label for="restore-month">Month</label>
+          <input
+            id="restore-month"
+            name="month"
+            type="month"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="YYYY-MM"
+            required
+          />
+
+          <label for="restore-code">Recovery code</label>
+          <textarea
+            id="restore-code"
+            name="code"
+            rows="3"
+            autocapitalize="characters"
+            autocomplete="off"
+            autocorrect="off"
+            spellcheck="false"
+            placeholder="HPG1-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX"
+            required
+          ></textarea>
+          <p class="hint">
+            Hyphens, spaces, and lowercase are fine. The code's checksum catches
+            most typos, but a valid code can still describe a different list.
+          </p>
+          <p class="fingerprint" id="restore-fingerprint" hidden></p>
+          <p class="error" id="restore-error" role="alert" hidden></p>
+          <button id="restore-submit" class="primary" type="submit">
+            Show my list
+          </button>
+        </form>
+      </section>
+
+      <section id="view-list" class="view" aria-labelledby="list-title" hidden>
+        <div class="list-heading">
+          <div>
+            <h1 id="list-title" tabindex="-1">Month</h1>
+            <p class="fingerprint">
+              Fingerprint <code id="list-fingerprint"></code>
+            </p>
+          </div>
+          <span class="badge" id="list-mode">New list</span>
+        </div>
+
+        <p class="notice" id="restore-warning" hidden></p>
+
+        <div class="toolbar no-print">
+          <button id="copy-all" type="button">Copy all</button>
+          <button id="download-txt" type="button">Download .txt</button>
+          <button id="print" type="button">Print</button>
+          <button id="share" type="button" hidden>Share</button>
+        </div>
+
+        <div class="table-wrap">
+          <table id="list-table">
+            <caption id="list-caption"></caption>
+            <thead>
+              <tr>
+                <th scope="col">Day</th>
+                <th scope="col">Weekday</th>
+                <th scope="col">Password</th>
+                <th scope="col" class="no-print">
+                  <span class="visually-hidden">Copy password</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="list-body"></tbody>
+          </table>
+        </div>
+
+        <p class="print-only print-note">
+          Generated with HPG-1. Keep this list private. The fingerprint is a
+          confirmation aid, not a secret.
+        </p>
+
+        <details class="save-code no-print" id="save-code">
+          <summary>Your recovery code</summary>
+          <p>
+            This is the only way to rebuild this list. Store it in a password
+            manager or print it and keep it somewhere safe.
+          </p>
+          <code id="list-code" class="code-block"></code>
+          <div class="toolbar">
+            <button id="copy-code" type="button">Copy code</button>
+            <button id="download-code" type="button">Download code</button>
+          </div>
+        </details>
+
+        <div class="toolbar no-print">
+          <button id="rotate" class="danger" type="button">Rotate code</button>
+          <button id="start-over" type="button">Start over</button>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="ceremony" aria-labelledby="ceremony-title" aria-describedby="ceremony-intro">
+      <h2 id="ceremony-title">Save your recovery code</h2>
+      <p class="step" id="ceremony-step"></p>
+      <p id="ceremony-intro"></p>
+
+      <code id="ceremony-code" class="code-block"></code>
+      <p class="fingerprint">
+        Fingerprint <code id="ceremony-fingerprint"></code>
+      </p>
+
+      <div class="toolbar">
+        <button id="ceremony-copy" type="button">Copy code</button>
+        <button id="ceremony-download" type="button">Download code</button>
+      </div>
+
+      <label class="confirm" for="ceremony-confirm">
+        <input id="ceremony-confirm" type="checkbox" />
+        <span>I have saved this code somewhere I can find it.</span>
+      </label>
+
+      <div class="toolbar">
+        <button id="ceremony-cancel" type="button">Cancel and discard</button>
+        <button id="ceremony-continue" class="primary" type="button" disabled>
+          Show my list
+        </button>
+      </div>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
