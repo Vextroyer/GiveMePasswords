@@ -10,7 +10,7 @@ phases:
     done: true
     goal: Confirm the artifact is GitHub Pages compatible, choose the deployment mechanism, and lock the trigger and header policy.
   - name: Add the Pages workflow
-    done: false
+    done: true
     goal: Commit a workflow that verifies the reviewed artifact and publishes the committed dist/ through the Pages artifact API.
   - name: Enable Pages and run the first deploy
     done: false
@@ -116,11 +116,11 @@ real and go into `docs/threat-model.md`; they are not silently dropped.
 
 Create `.github/workflows/pages.yml` exactly as below.
 
-- [ ] Add the workflow file.
-- [ ] Sanity-check YAML (a parser if available, otherwise manual review).
-- [ ] Confirm `make check` and `make verify-build` still pass locally.
-- [ ] Commit: `ci: deploy the reviewed artifact to GitHub Pages`.
-- [ ] Do **not** push yet if Pages has not been enabled (Phase 3, step H1).
+- [x] Add the workflow file.
+- [x] Sanity-check YAML (a parser if available, otherwise manual review).
+- [x] Confirm `make check` and `make verify-build` still pass locally.
+- [x] Commit: `ci: deploy the reviewed artifact to GitHub Pages`.
+- [x] Do **not** push yet if Pages has not been enabled (Phase 3, step H1).
       Pushing after H1 lets the workflow-file change trigger the first run
       automatically. If it was pushed early, re-run from the Actions UI.
 
@@ -186,6 +186,22 @@ Notes for the implementer:
   one mid-flight.
 - `configure-pages` will fail with a clear message if Pages is not enabled; that
   is the intended ordering guard.
+
+### Phase 2 outcome (2026-11-06)
+
+- Added `.github/workflows/pages.yml` exactly as specified; Ruby's YAML parser
+  accepts it (`jobs` = `build`, `deploy`).
+- Added `test/pages-workflow.test.mjs` (3 tests) as a contract test, so the
+  trigger paths, permissions, verify-then-publish step, artifact path, and
+  environment name are enforced by `make test`. This is the only change outside
+  CI/docs; the "no test changes" finding meant the existing suites needed none.
+- `make test` → **53 passing, 0 failing**.
+- `make check` → green (Python cross-check reproduced all vectors).
+- `make verify-build` → no diff; hash `1acaba57…f84786` (artifact untouched).
+- Commits: `176b89b test: require a path-filtered GitHub Pages workflow`,
+  `3978c5b ci: deploy the reviewed artifact to GitHub Pages`.
+- **Not pushed.** Waiting on Phase 3 H2: Pages source must be set to
+  "GitHub Actions" before the first run can succeed.
 
 ## Phase 3 — Enable Pages and first deploy · `[HUMAN]` + `[AGENT]`
 
