@@ -18,12 +18,12 @@ async function withTempDir(run) {
   }
 }
 
-test("the build emits one self-contained page plus headers and a hash", () =>
+test("the build emits one self-contained page and a hash", () =>
   withTempDir(async (outDir) => {
     const result = await build({ outDir });
 
     assert.equal(existsSync(join(outDir, "index.html")), true);
-    assert.equal(existsSync(join(outDir, "_headers")), true);
+    assert.equal(existsSync(join(outDir, "_headers")), false);
     assert.equal(existsSync(join(outDir, "SHA256SUMS")), true);
     assert.equal(result.hash, sha256(readFileSync(join(outDir, "index.html"))));
   }));
