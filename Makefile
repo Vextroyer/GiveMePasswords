@@ -1,7 +1,7 @@
 .PHONY: test cross-check check build verify-build
 
 test:
-	node --test test/
+	node --test test/*.test.mjs
 
 cross-check:
 	python3 tools/reference.py

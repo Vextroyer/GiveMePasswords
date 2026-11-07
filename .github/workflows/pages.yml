@@ -10,6 +10,7 @@ on:
       - "tools/**"
       - "test-vectors.json"
       - "package.json"
+      - "Makefile"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
