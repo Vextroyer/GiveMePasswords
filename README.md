@@ -79,6 +79,7 @@ the meta-CSP and header checks, is in [`docs/verification.md`](docs/verification
 
 | Document | What it covers |
 |---|---|
+| [`docs/architecture.md`](docs/architecture.md) | Maintainer overview: layout, data flow, build, test, deploy, rationale |
 | [`docs/spec-hpg-1.md`](docs/spec-hpg-1.md) | Frozen algorithm and recovery-code contract |
 | [`docs/faq.md`](docs/faq.md) | Using it, security questions, router problems, offline use |
 | [`docs/threat-model.md`](docs/threat-model.md) | Assets, attackers, mitigations, residual risks |

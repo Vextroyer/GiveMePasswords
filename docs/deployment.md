@@ -18,18 +18,24 @@ The no-slash URL redirects to the trailing-slash URL. HTTP redirects to HTTPS.
 
 ## How deployment works
 
-`.github/workflows/pages.yml` runs on pushes to `master` that touch:
+`.github/workflows/pages.yml` runs on pushes to `master` that touch an
+artifact-relevant path. It also supports `workflow_dispatch`.
 
-- `dist/**`
-- `src/**`
-- `scripts/**`
-- `tools/**`
-- `test-vectors.json`
-- `package.json`
-- `Makefile`
-- `.github/workflows/pages.yml`
+| Push touches | Workflow runs? | Deploys? |
+|---|---|---|
+| `README.md`, `docs/**`, `CHANGELOG.md`, `.knowledge/**`, `.gitignore` | No | No |
+| `test/**` | No | No |
+| `dist/**` | Yes | Yes |
+| `src/**` or `scripts/**` without a rebuilt `dist/` | Yes | No — `make verify-build` fails and surfaces the mistake |
+| `src/**` plus a rebuilt `dist/` | Yes | Yes |
+| `package.json`, `Makefile` | Yes | Yes |
+| `test-vectors.json`, `tools/**` | Yes | Yes (cross-check gate) |
+| Manual **Run workflow** | Yes | Yes |
 
-It also supports `workflow_dispatch`.
+The watched paths are `dist/**`, `src/**`, `scripts/**`, `tools/**`,
+`test-vectors.json`, `package.json`, `Makefile`, and
+`.github/workflows/pages.yml`. Keep this list next to the build inputs and
+extend it if `scripts/build.mjs` starts reading a new path.
 
 The `build` job:
 
@@ -72,6 +78,27 @@ It does **not** include a CSP, `X-Frame-Options`, COOP, CORP, nosniff,
 framable. This is a documented residual risk in
 [`threat-model.md`](threat-model.md).
 
+## Security header delta
+
+GitHub Pages does not support custom response headers, so the headers that were
+previously planned for Cloudflare are either absent or replaced:
+
+| Directive | Header-capable host | GitHub Pages |
+|---|---|---|
+| `Content-Security-Policy` | Response header | **Survives via `<meta>`** with identical script/style hashes |
+| `frame-ancestors 'none'` | Enforced | **Ignored in a meta CSP**; no `X-Frame-Options` either, so the page is framable |
+| `Strict-Transport-Security` | Enforced | **Absent**; `github.io` is not preloaded, but GitHub redirects HTTP to HTTPS |
+| `Referrer-Policy` | Response header | Absent as a header; `<meta name="referrer" content="no-referrer">` still applies |
+| `X-Content-Type-Options` | Enforced | Absent; GitHub sends correct MIME types |
+| COOP / CORP | Enforced | Absent; there are no cross-origin resources or popups |
+| `Permissions-Policy` | Enforced | Absent; the app requests no permissions |
+| `Cache-Control` | `max-age=300, must-revalidate` | Forced `max-age=600`; a redeploy can look stale for up to 10 minutes |
+
+The residual risk is low for a stateless generator with no account, storage, or
+cross-origin assets, but clickjacking and a possible first-visit downgrade are
+real. They are recorded in [`threat-model.md`](threat-model.md), not silently
+dropped.
+
 Because the cache is `max-age=600`, use a cache-buster when verifying a fresh
 deploy:
 
@@ -81,9 +108,15 @@ curl -s "https://vextroyer.github.io/GiveMePasswords/?$(date +%s)" | sha256sum
 
 ## Rollback
 
-1. Revert to a commit with a known-good `dist/`.
-2. Run `make verify-build` locally.
-3. Push the revert (or re-run a previous successful `pages` workflow).
+- **Artifact rollback:** revert the commit that changed `dist/`, run
+  `make verify-build`, and push. The path-filtered workflow redeploys; allow up
+  to 10 minutes for caches.
+- **Redeploy a known-good run:** open the earlier successful `pages` run in
+  Actions and re-run its deployment.
+- **Disable the site:** in **Settings → Pages**, unpublish or disable the site.
+  Public access stops immediately without changing the repository.
+- **Workflow rollback:** revert `.github/workflows/pages.yml`; the next
+  artifact-relevant push validates the reverted workflow.
 
 Never hand-edit `dist/`; always regenerate it with `make build`.
 
