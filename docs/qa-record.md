@@ -10,7 +10,7 @@
 
 | Check | Command | Result |
 |---|---|---|
-| Derivation + vectors + session + policy + build | `make test` | 55 passing, 0 failing (Node 22.23.4 and 26.13.0) |
+| Derivation + vectors + session + policy + build | `make test` | 61 passing, 0 failing (Node 22.23.4 and 26.13.0) |
 | Independent Python implementation | `make cross-check` | `test-vectors.json` reproduced |
 | Reproducible artifact | `make verify-build` | no diff, same hash |
 | Live artifact hash | `curl -s "https://vextroyer.github.io/GiveMePasswords/?$(date +%s)" \| sha256sum` | matches `dist/SHA256SUMS` |

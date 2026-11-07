@@ -19,6 +19,10 @@ are unchanged.
   personal context from the product docs.
 - Fixed the test command for Node 22: `node --test test/*.test.mjs` (Node 22
   does not expand a directory argument).
+- Added a test-only CI workflow covering Node 20, 22, 24, and 26, with the
+  reproducible-build check on Node 22. `.nvmrc` pins the default to 22.
+- Consolidated durable maintainer knowledge into `docs/architecture.md` and
+  removed the superseded `.knowledge/` research and plans.
 
 ### Pending
 
