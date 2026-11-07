@@ -3,7 +3,7 @@
 // - resolves the local ES-module graph and inlines it as one classic script
 // - inlines the stylesheet
 // - pins CSP hashes for the exact inline style and script
-// - writes dist/index.html, dist/_headers, dist/SHA256SUMS
+// - writes dist/index.html and dist/SHA256SUMS
 // - refuses to emit an artifact that contains external URLs, eval, or storage
 //
 // No timestamps, no environment data: the same inputs produce the same bytes.
@@ -165,20 +165,6 @@ function cspFor(styleHash, scriptHash) {
   ].join("; ");
 }
 
-function headersFor(csp) {
-  return `/*
-  Content-Security-Policy: ${csp}
-  Strict-Transport-Security: max-age=31536000; includeSubDomains
-  Referrer-Policy: no-referrer
-  X-Content-Type-Options: nosniff
-  X-Frame-Options: DENY
-  Cross-Origin-Opener-Policy: same-origin
-  Cross-Origin-Resource-Policy: same-origin
-  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
-  Cache-Control: public, max-age=300, must-revalidate
-`;
-}
-
 function replacePlaceholder(html, needle, replacement, label) {
   if (!html.includes(needle)) {
     throw new Error(`index.html: ${label} placeholder not found`);
@@ -272,12 +258,10 @@ export async function build({ outDir = resolve(ROOT, "dist") } = {}) {
   checkArtifact(html);
 
   const hash = sha256(html);
-  const headers = headersFor(csp);
 
   rmSync(target, { recursive: true, force: true });
   mkdirSync(target, { recursive: true });
   writeFileSync(resolve(target, "index.html"), html);
-  writeFileSync(resolve(target, "_headers"), headers);
   writeFileSync(resolve(target, "SHA256SUMS"), `${hash}  index.html\n`);
 
   return { outDir: target, html, hash, csp, version, buildId };

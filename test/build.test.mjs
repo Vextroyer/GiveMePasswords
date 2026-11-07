@@ -109,28 +109,6 @@ test("the CSP hashes match the exact inline style and script", () =>
     assert.match(csp[1], /default-src 'none'/);
     assert.match(csp[1], /object-src 'none'/);
     assert.match(csp[1], /base-uri 'none'/);
-
-    const headers = readFileSync(join(outDir, "_headers"), "utf8");
-    assert.ok(headers.includes(`sha256-${styleHash}`), "header CSP uses the style hash");
-    assert.ok(headers.includes(`sha256-${scriptHash}`), "header CSP uses the script hash");
-  }));
-
-test("the headers file carries the required hardening headers", () =>
-  withTempDir(async (outDir) => {
-    await build({ outDir });
-    const headers = readFileSync(join(outDir, "_headers"), "utf8");
-
-    for (const header of [
-      "Content-Security-Policy:",
-      "Strict-Transport-Security:",
-      "Referrer-Policy: no-referrer",
-      "X-Content-Type-Options: nosniff",
-      "Permissions-Policy:",
-      "X-Frame-Options: DENY",
-      "Cache-Control:",
-    ]) {
-      assert.ok(headers.includes(header), `missing ${header}`);
-    }
   }));
 
 test("SHA256SUMS uses the standard format", () =>
@@ -151,10 +129,6 @@ test("building twice produces identical bytes", () =>
       assert.equal(
         readFileSync(join(first, "index.html"), "utf8"),
         readFileSync(join(second, "index.html"), "utf8"),
-      );
-      assert.equal(
-        readFileSync(join(first, "_headers"), "utf8"),
-        readFileSync(join(second, "_headers"), "utf8"),
       );
     }),
   ));

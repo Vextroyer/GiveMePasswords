@@ -2,6 +2,12 @@
   "name": "monthly-password-generator",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vextroyer/GiveMePasswords.git"
+  },
+  "homepage": "https://vextroyer.github.io/GiveMePasswords/",
   "type": "module",
   "description": "Public, stateless, client-side monthly password list generator",
   "engines": {
