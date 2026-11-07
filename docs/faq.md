@@ -113,9 +113,8 @@ Common causes, in order:
 5. **Admin session logout.** Changing the Wi-Fi password can log you out of the
    router admin page. Log in again, or make the change from a wired connection.
 
-Record the exact behavior in
-[`router-compatibility.md`](router-compatibility.md) so the format can be
-adjusted if needed.
+The exact behavior is tracked in the pending router checks in
+[`qa-record.md`](qa-record.md) so the format can be adjusted if needed.
 
 ### Can I change the password length or character set?
 
@@ -156,7 +155,7 @@ Compare the SHA-256 of the served page with the `dist/SHA256SUMS` in the
 repository or release:
 
 ```sh
-curl -s https://<project>.pages.dev/ | sha256sum
+curl -s "https://vextroyer.github.io/GiveMePasswords/?$(date +%s)" | sha256sum
 cat dist/SHA256SUMS
 ```
 
@@ -183,5 +182,5 @@ copies of the page are the same release. The full-file hash is in
 ### Who runs this?
 
 This is a small, stateless utility. There is no business model, analytics, or
-support team. There is no guarantee of availability or maintenance. See the
-maintenance section in the plan and [`SECURITY.md`](../SECURITY.md).
+support team. There is no guarantee of availability or maintenance. See
+[`SECURITY.md`](../SECURITY.md) and the README.

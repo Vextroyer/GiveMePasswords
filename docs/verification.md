@@ -9,12 +9,15 @@ The reviewed artifact is committed as `dist/index.html`, with its hash in
 `dist/SHA256SUMS`.
 
 ```sh
-# Hash the page you actually received
-curl -s https://<project>.pages.dev/ | sha256sum
+# Hash the page you actually received. The cache-buster avoids a stale copy.
+curl -s "https://vextroyer.github.io/GiveMePasswords/?$(date +%s)" | sha256sum
 
 # Compare with the committed value
 cat dist/SHA256SUMS
 ```
+
+Do not use `curl --compressed` for this check: the hash is over the bytes as
+served, and decompression changes them.
 
 They must match exactly. If they do not, stop: you are running different code
 from the reviewed build. Do not enter or use a recovery code.
@@ -25,17 +28,17 @@ The committed value at the time of writing:
 1acaba57ed1c3f7fbfd9f1934e4e67dee560e327f1421650db7c65e808f84786  index.html
 ```
 
-The footer of the page also shows a **build id**: the first 16 hex characters
-of the SHA-256 of the inline script. The current build id is
-`8e732a49ddd4ddb7`. Unlike the full-file hash, the build id can be displayed
-inside the page because the script cannot contain its own digest. It changes
-when the app logic changes, not when only the HTML or CSS changes.
+The footer also shows a **build id**: the first 16 hex characters of the
+SHA-256 of the inline script. The current build id is `8e732a49ddd4ddb7`.
+Unlike the full-file hash, the build id can be displayed inside the page because
+the script cannot contain its own digest. It changes when the app logic changes,
+not when only the HTML or CSS changes.
 
 ## 2. Confirm the page makes no requests
 
 1. Open the page in a browser.
 2. DevTools → Network → reload.
-3. Confirm the only requests are the document itself. The favicon is a data URI
+3. Confirm the only request is the document itself. The favicon is a data URI
    and makes no request.
 4. Create or restore a list, copy, download, and print. The Network panel must
    stay empty.
@@ -44,22 +47,60 @@ A build test also scans the artifact for `fetch`, `XMLHttpRequest`, `WebSocket`,
 `sendBeacon`, dynamic imports, and external URLs; it fails the build if any are
 present.
 
-## 3. Confirm the CSP and headers
+## 3. Confirm the meta CSP
+
+GitHub Pages does not send a CSP response header. The only CSP is the
+`<meta http-equiv="Content-Security-Policy">` tag in the page. Check it by
+extracting the inline style and script and comparing their SHA-256 hashes with
+the values pinned in the meta tag:
 
 ```sh
-curl -sI https://<project>.pages.dev/ | grep -iE \
-  'content-security-policy|strict-transport-security|referrer-policy|x-content-type-options|permissions-policy|cache-control'
+python3 - <<'PY'
+import base64, hashlib, re, time, urllib.request
+
+url = "https://vextroyer.github.io/GiveMePasswords/?%d" % int(time.time())
+html = urllib.request.urlopen(url).read().decode()
+style = re.search(r"<style>(.*?)</style>", html, re.S).group(1).encode()
+script = re.search(r"<script>(.*?)</script>", html, re.S).group(1).encode()
+csp = re.search(
+    r'http-equiv="Content-Security-Policy"[^>]+content="([^"]+)"', html
+).group(1)
+
+for label, body in (("style", style), ("script", script)):
+    digest = base64.b64encode(hashlib.sha256(body).digest()).decode()
+    print(label, digest, f"sha256-{digest}" in csp)
+PY
 ```
 
-The CSP must contain `default-src 'none'` and one `sha256-` hash for the inline
-script and one for the inline style. The hashes are generated from the exact
-inlined bytes, so a header mismatch means the artifact changed without a
-rebuild.
+Both lines must print `True`. The current hashes are:
 
-In the browser console, confirm there are no CSP violations and no mixed-content
-warnings.
+- script: `sha256-jnMqSd3U3bcQ2i/XX+g/1e9LRi6ZaFMSYL3Vtvt1NiE=`
+- style: `sha256-2NRCTTgpTcbKL5PAo/8xnstlhENyWSIhB1yXBembMBc=`
 
-## 4. Rebuild from source (five minutes)
+In the browser console, confirm there are no CSP violations and no
+mixed-content warnings.
+
+## 4. Check the actual response headers
+
+```sh
+curl -sI https://vextroyer.github.io/GiveMePasswords/ | tr -d '\r'
+```
+
+The expected header set is:
+
+- `server: GitHub.com`
+- `strict-transport-security: max-age=31556952`
+- `cache-control: max-age=600`
+- `access-control-allow-origin: *`
+
+There is no CSP, `X-Frame-Options`, COOP, CORP, nosniff, `Referrer-Policy`, or
+`Permissions-Policy` response header. HSTS is present, but `github.io` is not
+HSTS-preloaded and the value is not guaranteed for every Pages site. Because
+`frame-ancestors 'none'` in a meta CSP is ignored by browsers and no
+`X-Frame-Options` is sent, the page is framable. See
+[`threat-model.md`](threat-model.md).
+
+## 5. Rebuild from source (five minutes)
 
 Requirements: Node.js 20+, Python 3.10+ (for the cross-check), and `make`.
 
@@ -74,7 +115,7 @@ make verify-build  # rebuild into .build/verify and diff against dist/
 environment-dependent values, so two runs on two machines produce identical
 bytes.
 
-## 5. Check the algorithm independently
+## 6. Check the algorithm independently
 
 The derivation is frozen in [`spec-hpg-1.md`](spec-hpg-1.md) and pinned in
 [`test-vectors.json`](../test-vectors.json). Two independent implementations
@@ -93,7 +134,7 @@ The vectors cover RFC 5869 A.1, pinned day passwords, a real rejection case
 (`2020-02-14`), two full months under different seeds, and recovery-code
 round-trips for edge seeds (`00…00`, `ff…ff`).
 
-## 6. Check the recovery code by hand
+## 7. Check the recovery code by hand
 
 For seed `000102030405060708090a0b0c0d0e0f`:
 
@@ -110,7 +151,7 @@ Enter it with a different month and confirm:
 - lowercase, spaces, hyphens, `I`/`L`, `O`, and zero-width characters are
   accepted.
 
-## 7. Verify the offline copy
+## 8. Verify the offline copy
 
 Save `dist/index.html` (or the served page) to disk and open it. Everything is
 inlined. If `crypto.subtle` is unavailable on `file://` in that browser, the app

@@ -4,12 +4,11 @@ A public, stateless, client-side tool that turns a 16-byte seed into a month of
 8-digit daily passwords. Nothing is sent to a server, nothing is stored, and the
 same seed always produces the same list.
 
-> **Status:** Phase 4 of 5 — the app, the hardened build, and the trust
-> documentation are complete and committed. Remaining work is external:
-> deployment, real-browser/device QA, the cousin usability runs, the router
-> record, and the public/private launch decision. See
-> [`docs/qa-record.md`](docs/qa-record.md) and
-> [`.knowledge/plans/public-monthly-password-generator.md`](.knowledge/plans/public-monthly-password-generator.md).
+> **Status:** Live at
+> [`https://vextroyer.github.io/GiveMePasswords/`](https://vextroyer.github.io/GiveMePasswords/).
+> The app, the hardened build, and the trust documentation are complete.
+> Remaining work is real-browser/device QA and the public/private launch
+> decision. See [`docs/qa-record.md`](docs/qa-record.md).
 
 ## What it does
 
@@ -48,10 +47,10 @@ Requirements: Node.js 20+ (built-in test runner, global WebCrypto) and Python
 3.10+ for the independent reference. No dependencies are installed.
 
 ```sh
-make test          # derivation, vectors, recovery codes, session, policy, build (49 tests)
+make test          # derivation, vectors, recovery codes, session, policy, build (55 tests)
 make cross-check   # independent Python reference vs. test-vectors.json
 make check         # both
-make build         # regenerate dist/index.html, dist/_headers, dist/SHA256SUMS
+make build         # regenerate dist/index.html and dist/SHA256SUMS
 make verify-build  # rebuild and prove dist/ is byte-for-byte current
 ```
 
@@ -68,13 +67,13 @@ The reviewed artifact and its hash are committed. Compare the served page with
 `dist/SHA256SUMS`:
 
 ```sh
-curl -s https://<project>.pages.dev/ | sha256sum
+curl -s "https://vextroyer.github.io/GiveMePasswords/?$(date +%s)" | sha256sum
 cat dist/SHA256SUMS
 ```
 
 The page footer shows the product version and a build id (the first 16 hex
 characters of the SHA-256 of the inline script). The full procedure, including
-header and CSP checks, is in [`docs/verification.md`](docs/verification.md).
+the meta-CSP and header checks, is in [`docs/verification.md`](docs/verification.md).
 
 ## Documentation
 
@@ -85,11 +84,9 @@ header and CSP checks, is in [`docs/verification.md`](docs/verification.md).
 | [`docs/threat-model.md`](docs/threat-model.md) | Assets, attackers, mitigations, residual risks |
 | [`docs/privacy.md`](docs/privacy.md) | What is collected (nothing), what the host logs |
 | [`docs/verification.md`](docs/verification.md) | How to check the artifact, headers, and rebuild |
-| [`docs/deployment.md`](docs/deployment.md) | Cloudflare Pages setup, post-deploy checks, rollback |
+| [`docs/deployment.md`](docs/deployment.md) | GitHub Pages deployment, trigger paths, rollback |
 | [`docs/qa-record.md`](docs/qa-record.md) | Automated evidence and pending manual checks |
 | [`docs/ux-checklist.md`](docs/ux-checklist.md) | The 15 UX failure modes and their status |
-| [`docs/usability-record.md`](docs/usability-record.md) | Cousin usability test script and results |
-| [`docs/router-compatibility.md`](docs/router-compatibility.md) | Real-router password policy record |
 | [`SECURITY.md`](SECURITY.md) | Supported versions, reporting, scope |
 | [`CHANGELOG.md`](CHANGELOG.md) | Release history |
 | [`LICENSE`](LICENSE) | MIT |
@@ -106,13 +103,13 @@ src/derive.js            HPG-1 password derivation (WebCrypto)
 src/recovery-code.js     HPG1 encode/decode, checksum, fingerprint
 scripts/build.mjs        single-file bundler + CSP hashes + artifact checks
 dist/index.html          committed, self-contained artifact
-dist/_headers            committed Cloudflare Pages security headers
 dist/SHA256SUMS          committed artifact hash
 test/                    Node test runner suites
 test-vectors.json        frozen public vectors
 tools/reference.py       independent standard-library implementation
 docs/                    specification, trust, QA, and operational records
-.knowledge/              research notes and the implementation plan
+.opencode/               agent framework (agents, commands, skills)
+.knowledge/              agent workspace (plans and scratch; not product)
 ```
 
 ## Roadmap
@@ -121,8 +118,8 @@ docs/                    specification, trust, QA, and operational records
 |---|---|
 | 1 | Derivation spec, recovery codes, vectors — done |
 | 2 | Single-file mobile-first app and recovery ceremony — done |
-| 3 | Hardened build and CSP headers — done; deployment pending external access |
-| 4 | Threat model, privacy/FAQ docs, usability and router verification — docs done, live checks pending |
+| 3 | Hardened build and CSP headers — done; deployed to GitHub Pages |
+| 4 | Threat model, privacy/FAQ docs — done; real-browser/device QA pending |
 | 5 | Public/private launch decision and maintenance contract |
 
 ## License

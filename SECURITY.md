@@ -16,7 +16,7 @@ Do not open a public issue for a vulnerability that could expose seeds or
 lists. Use a private channel:
 
 1. **Preferred:** GitHub's private vulnerability reporting / security advisory
-   on the repository, once it is published.
+   on the repository.
 2. Otherwise, contact the maintainer directly through the channel you already
    use with them.
 
@@ -41,7 +41,7 @@ In scope:
 - a way to produce a wrong list for a given `(code, month)` that differs from
   the published vectors;
 - a build that differs from the reviewed artifact while claiming to be it;
-- a CSP or header regression that allows injected code to run;
+- a CSP regression that allows injected code to run;
 - an injection or DOM-clobbering issue in the UI.
 
 Out of scope, and already documented:
@@ -56,6 +56,10 @@ Out of scope, and already documented:
 - **A valid code for a different seed.** The checksum is a typo detector; the
   fingerprint is the only confirmation.
 - **Duplicate passwords within a month.** Accepted by design.
+- **Framing / clickjacking.** GitHub Pages sends no `X-Frame-Options`, and
+  `frame-ancestors` in a `<meta>` CSP is ignored by browsers, so the page can be
+  framed. This is a documented residual risk; use a header-capable host if
+  clickjacking becomes a real concern.
 
 ## What we will do
 

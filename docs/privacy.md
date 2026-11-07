@@ -16,7 +16,8 @@ and are never sent anywhere. The only network request is the page itself.
   URL. A recovery code and its list live in page memory only.
 - Makes **no** network requests after the page loads. There are no fonts,
   images, analytics beacons, error reporters, or CDN calls.
-- Sends nothing to the maintainer, Cloudflare, or any third party.
+- Sends nothing to the maintainer or any third party. The page is hosted by
+  GitHub Pages (GitHub, Inc.), which sees the request for the page itself.
 - Does not fingerprint your device, read the clipboard without your action, or
   ask for permissions.
 
@@ -26,7 +27,7 @@ that cache contains only the public app, never your seed.
 
 ## What the host may log
 
-The page is served by a static host (Cloudflare Pages). Like any web host, it
+The page is served by GitHub Pages (GitHub, Inc.). Like any web host, GitHub
 may record standard request data such as:
 
 - IP address, user agent, requested path, timestamp, and response status;
@@ -34,8 +35,8 @@ may record standard request data such as:
 
 The request path contains **no seed, code, month, or password**, because the app
 never puts them in the URL. The maintainer does not receive or analyze these
-logs, and the app adds no analytics on top. The host's own retention and
-processing are governed by its privacy policy, not this one.
+logs, and the app adds no analytics on top. GitHub's retention and processing
+are governed by GitHub's privacy statement, not this one.
 
 ## Your data, outside the app
 

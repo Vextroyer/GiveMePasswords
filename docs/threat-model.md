@@ -22,24 +22,27 @@ for that seed, past and future, for every month.
 ```
 [ user ] --types--> [ browser tab: HPG-1 JS ] --clipboard/file/share--> [ OS, chat, cloud, paper ]
                           ^
-                          | static HTML from Cloudflare Pages (no server compute)
+                          | static HTML from GitHub Pages (no server compute)
 ```
 
 - The **device and browser** are trusted. A compromised device defeats this
   tool.
-- **Cloudflare Pages** serves bytes. It never sees a seed or a derived list.
+- **GitHub Pages** serves bytes. It never sees a seed or a derived list.
 - There is **no application server**, account, session, database, or secret.
 - **No third-party code** runs in the page: no fonts, analytics, CDNs, or
   libraries.
 - The **host's access logs** are outside the app's control; see
   [`privacy.md`](privacy.md).
+- **GitHub Pages** does not send custom response headers. The only CSP is the
+  `<meta>` tag; `frame-ancestors` is ignored in a meta CSP, so the page is
+  framable (see threat 18).
 
 ## 3. Attacker profiles
 
 | Actor | Capability | Goal |
 |---|---|---|
 | Casual neighbor / visitor | Guesses a password at the router login, or asks for the Wi-Fi | Free network access |
-| Someone who knows the cousin | Social access, may see a phone, a note, or a printed list | Access, curiosity, or malice |
+| Someone who knows the user | Social access, may see a phone, a note, or a printed list | Access, curiosity, or malice |
 | Network attacker | Captures a WPA handshake or observes traffic | Crack the Wi-Fi password offline |
 | Shoulder surfer | Sees the screen, a printout, or a clipboard | Read a day's password or the code |
 | Malicious host or dependency | Controls the served page | Exfiltrate seeds |
@@ -52,7 +55,7 @@ for that seed, past and future, for every month.
 |---|---|---|---|---|---|
 | 1 | Neighbor guesses the current Wi-Fi password online | Medium | Network access | 8 digits = 10^8 values, changed daily; the router should rate-limit or lock out. WPA3/SAE resists offline guessing better. | If the router allows unlimited online attempts, guessing is practical over time. Use a long passphrase or WPA3 with a strong key. |
 | 2 | Captured WPA handshake cracked offline | Medium | Network access | None from HPG-1. The generator does not change WPA cryptography. | **High.** 26.6 bits is crackable. This tool is convenience, not strong Wi-Fi security. |
-| 3 | Someone who knows the cousin obtains the recovery code | Medium | Every month is derivable | The code is shown only during the ceremony and behind a details panel; copy says keep it private; rotate action | Social engineering and shared devices remain. Rotation does not protect months already derived from the old seed. |
+| 3 | Someone who knows the user obtains the recovery code | Medium | Every month is derivable | The code is shown only during the ceremony and behind a details panel; copy says keep it private; rotate action | Social engineering and shared devices remain. Rotation does not protect months already derived from the old seed. |
 | 4 | Shoulder surfing at the ceremony, list, or printout | Medium | One day or the whole list | Ceremony is a deliberate step; print hides the code; no code in the list export | A photographed screen or paper is not detectable. |
 | 5 | Host or CDN compromised and serves malicious JS | Low–Medium | Seed exfiltration | Static artifact, zero runtime dependencies, strict CSP with pinned hashes, published SHA-256, offline copy, `make verify-build` | If the host serves different bytes and the user does not verify the hash, the attacker wins. |
 | 6 | Browser extension reads the DOM or clipboard | Medium | Seed/list exfiltration | None possible from inside the page | Extensions with page access can read everything. Use a clean profile or the offline copy. |
@@ -64,9 +67,10 @@ for that seed, past and future, for every month.
 | 12 | Two days get the same password | Low (≈0.0004% per month) | Confusing but functional | Accepted and documented; no dedupe | None. Dedupe would bias the distribution. |
 | 13 | Lost recovery code | High | The list cannot be rebuilt | Blocking ceremony, copy + download, an explicit "I saved it" checkbox, code shown again on the list screen | If the user loses every copy, there is no recovery. |
 | 14 | Phishing clone collects seeds | Medium | Full compromise of that user's lists | Canonical URL, published hash, no analytics, verification instructions | Users who do not check the URL or hash can be fooled. |
-| 15 | Router rejects leading zeros or 8 digits | Medium | A day's password cannot be set | Format pinned; Phase 4 tests the real router; an additive "first digit 1–9" mode is planned if needed | Not yet verified on the cousin's router. |
-| 16 | Changing the Wi-Fi password logs out the router admin session | Medium | The user is locked out mid-change | Operational guidance: make the change last, keep a wired connection, or log in again | Router-specific behavior; documented in the compatibility record. |
+| 15 | Router rejects leading zeros or 8 digits | Medium | A day's password cannot be set | Format pinned; router compatibility is untested; an additive "first digit 1–9" mode is a possible future change | Not yet verified on representative consumer routers. |
+| 16 | Changing the Wi-Fi password logs out the router admin session | Medium | The user is locked out mid-change | Operational guidance: make the change last, keep a wired connection, or log in again | Router-specific behavior; documented in the QA record. |
 | 17 | Offline copy fails because `crypto.subtle` needs a secure context | Low | No output | The app checks and fails closed with a message | Some browsers refuse WebCrypto on `file://`. Use the hosted HTTPS page or a local server. |
+| 18 | Clickjacking / UI redress because the page can be framed | Low–Medium | A user could be tricked into clicking through a transparent frame | No `X-Frame-Options` is sent by GitHub Pages; `frame-ancestors 'none'` in the meta CSP is ignored by browsers | The page is framable. Use a header-capable host if clickjacking becomes a real concern. |
 
 ## 5. Security properties HPG-1 does provide
 

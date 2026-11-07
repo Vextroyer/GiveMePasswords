@@ -5,14 +5,27 @@ All notable changes to this project are recorded here. The algorithm version
 
 ## [Unreleased]
 
-Deployment and real-world verification. No code changes are expected unless a
-gate fails.
+Deployment and cleanup. No algorithm change; `HPG-1` and the published vectors
+are unchanged.
 
-- Pending: Cloudflare Pages deployment and post-deploy header/hash checks.
-- Pending: browser and device QA matrix, print test, screen-reader pass, 200%
-  zoom, keyboard-only pass, Lighthouse.
-- Pending: cousin usability runs and the router compatibility record.
-- Pending: public/private launch decision.
+### Changed
+
+- Deployed the reviewed `dist/` to GitHub Pages through GitHub Actions
+  (run `42397975872`). The served page matches `dist/SHA256SUMS`.
+- Dropped the inert Cloudflare `_headers` artifact. GitHub Pages does not apply
+  custom response headers; the `<meta>` CSP remains the only CSP, and
+  `frame-ancestors` is not enforced by browsers in a meta tag.
+- Aligned the documentation with the live GitHub Pages system and removed
+  personal context from the product docs.
+- Fixed the test command for Node 22: `node --test test/*.test.mjs` (Node 22
+  does not expand a directory argument).
+
+### Pending
+
+- Real-browser and device QA matrix, print test, screen-reader pass, 200% zoom,
+  keyboard-only pass, Lighthouse.
+- Router compatibility checks on representative consumer hardware.
+- Public/private launch decision.
 
 ## [0.1.0] — 2026-11-05
 
@@ -40,11 +53,11 @@ no earlier public version.
   seed and code.
 - Independent Python reference implementation and `make cross-check`.
 - Reproducible single-file build: inlined CSS and ES modules, CSP hashes for
-  the exact inline bytes, Cloudflare Pages `_headers` (CSP, HSTS,
+  the exact inline bytes, a Cloudflare Pages `_headers` fallback (CSP, HSTS,
   `Referrer-Policy: no-referrer`, `nosniff`, frame denial, Permissions-Policy,
-  Cache-Control), `SHA256SUMS`, and a policy check that refuses an artifact
-  containing external URLs, `eval`, `innerHTML`, dynamic imports, storage APIs,
-  or network APIs.
+  Cache-Control; removed in Unreleased), `SHA256SUMS`, and a policy check that
+  refuses an artifact containing external URLs, `eval`, `innerHTML`, dynamic
+  imports, storage APIs, or network APIs.
 - Committed deployable artifact `dist/` and `make verify-build` to prove it
   matches the source.
 - The page footer and meta tags show the product version and a build id (the
