@@ -1,7 +1,7 @@
 ---
 id: github-pages-deployment
 created: 2026-11-06
-modified: 2026-11-06
+modified: 2026-11-07
 type: plan
 status: active
 expires: 2026-11-20
@@ -202,6 +202,29 @@ Notes for the implementer:
   `3978c5b ci: deploy the reviewed artifact to GitHub Pages`.
 - **Not pushed.** Waiting on Phase 3 H2: Pages source must be set to
   "GitHub Actions" before the first run can succeed.
+
+### Phase 3 preflight: Node 22 test-command fix (2026-11-07)
+
+The first pushed run (`3a53ae7`) failed at `make check` on Node 22.23.4:
+`node --test test/` treats the directory as a module (Node 22–25 do not expand
+directory arguments; Node 20 and 26 do). Full RCA:
+`.knowledge/insights/investigations/github-actions-node-test-directory.md`.
+
+Applied:
+
+- `Makefile` and `package.json` now run `node --test test/*.test.mjs`.
+- `.github/workflows/pages.yml` now triggers on `Makefile` changes.
+- `test/test-command.test.mjs` (3 contract tests) pins all three.
+
+Verified:
+
+- Node 26.13.0: **56/56 tests**, cross-check OK, `verify-build` no diff.
+- Node 22.23.4: **56/56 tests**, cross-check OK, `verify-build` no diff, hash
+  unchanged (`1acaba57…f84786`).
+- Commits: `85827ab test: require a Node-version-safe test command`,
+  `7450404 fix: run tests from an explicit glob on Node 22`.
+- The first deploy is still pending: push `7450404` (and this docs commit) to
+  trigger a new run.
 
 ## Phase 3 — Enable Pages and first deploy · `[HUMAN]` + `[AGENT]`
 
