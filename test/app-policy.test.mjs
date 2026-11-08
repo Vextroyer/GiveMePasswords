@@ -155,6 +155,18 @@ test("the print stylesheet exists and hides interactive chrome", () => {
   assert.doesNotMatch(css, /\.skip-link/i);
 });
 
+test("month inputs use native month and year selects", () => {
+  const html = read("index.html");
+  const app = read("app.js");
+
+  for (const id of ["create-month", "create-year", "restore-month", "restore-year"]) {
+    assert.match(html, new RegExp(`<select[^>]*id="${id}"`), `${id} select is missing`);
+  }
+  assert.doesNotMatch(html, /type="month"/);
+  assert.match(app, /create-year/);
+  assert.match(app, /restore-year/);
+});
+
 test("the UI does not render weekday data", () => {
   const html = read("index.html");
   const app = read("app.js");
