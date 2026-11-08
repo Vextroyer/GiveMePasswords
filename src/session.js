@@ -25,16 +25,6 @@ const MONTH_NAMES = [
   "December",
 ];
 
-const WEEKDAY_NAMES = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
-
 /** True for a canonical "YYYY-MM" string. */
 export function isValidMonth(value) {
   return typeof value === "string" && MONTH_PATTERN.test(value);
@@ -82,10 +72,7 @@ export async function createSession(seed, month) {
 
   const days = Array.from({ length: dayCount }, (_, index) => {
     const day = index + 1;
-    const weekday = new Date(
-      Date.UTC(year, monthNumber - 1, day),
-    ).getUTCDay();
-    return { day, weekday: WEEKDAY_NAMES[weekday], password: passwords[index] };
+    return { day, password: passwords[index] };
   });
 
   return {
@@ -110,13 +97,11 @@ export function sessionToText(session) {
     `Fingerprint: ${session.fingerprint}`,
     "Algorithm: HPG-1. Keep this list private.",
     "",
-    "Day  Weekday   Password",
+    "Day  Password",
   ];
 
   for (const entry of session.days) {
-    lines.push(
-      `${String(entry.day).padStart(2, "0")}   ${entry.weekday.padEnd(9)} ${entry.password}`,
-    );
+    lines.push(`${String(entry.day).padStart(2, "0")}   ${entry.password}`);
   }
 
   lines.push("", "End of list.");

@@ -31,7 +31,7 @@ What `make test` covers:
 - Recovery-code encoding, checksum, fingerprint, normalization (case,
   whitespace, hyphens, `I`/`L`/`O`, zero-width characters), and every failure
   reason.
-- Month validation, leap years, weekday names, session assembly, and text export
+- Month validation, leap years, session assembly, and text export
   (leading zeros preserved, seed and code omitted).
 - The app policy: no storage, no network, no HTML-injection sinks, no URL or
   history leakage, local-only imports, semantic markup, a data-URI favicon, and

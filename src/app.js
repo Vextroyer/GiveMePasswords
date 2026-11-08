@@ -134,9 +134,6 @@ function buildRow(entry, todayMonth, todayDay) {
     dayCell.append(badge);
   }
 
-  const weekdayCell = document.createElement("td");
-  weekdayCell.textContent = entry.weekday;
-
   const passwordCell = document.createElement("td");
   passwordCell.className = "password";
   const password = document.createElement("code");
@@ -153,7 +150,7 @@ function buildRow(entry, todayMonth, todayDay) {
   copyButton.dataset.day = String(entry.day);
   actionCell.append(copyButton);
 
-  row.append(dayCell, weekdayCell, passwordCell, actionCell);
+  row.append(dayCell, passwordCell, actionCell);
   return row;
 }
 

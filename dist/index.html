@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-jnMqSd3U3bcQ2i/XX+g/1e9LRi6ZaFMSYL3Vtvt1NiE='; style-src 'sha256-CmSHG1WY/5lm3OQ8k6eyAHuLoQA1RKCVnDbqZO4g8Ak='; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; connect-src 'none'; font-src 'none'; manifest-src 'none'; media-src 'none'; worker-src 'none'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-/eMbt22CUf+jMnUpkw+E5n+jXSBD0ZgX2Zkdf1FujR8='; style-src 'sha256-CmSHG1WY/5lm3OQ8k6eyAHuLoQA1RKCVnDbqZO4g8Ak='; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; connect-src 'none'; font-src 'none'; manifest-src 'none'; media-src 'none'; worker-src 'none'" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="referrer" content="no-referrer" />
     <meta name="color-scheme" content="light dark" />
@@ -760,7 +760,6 @@ dialog::backdrop {
             <thead>
               <tr>
                 <th scope="col">Day</th>
-                <th scope="col">Weekday</th>
                 <th scope="col">Password</th>
                 <th scope="col" class="no-print">
                   <span class="visually-hidden">Copy password</span>
@@ -1315,16 +1314,6 @@ const MONTH_NAMES = [
   "December",
 ];
 
-const WEEKDAY_NAMES = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
-
 /** True for a canonical "YYYY-MM" string. */
 function isValidMonth(value) {
   return typeof value === "string" && MONTH_PATTERN.test(value);
@@ -1372,10 +1361,7 @@ async function createSession(seed, month) {
 
   const days = Array.from({ length: dayCount }, (_, index) => {
     const day = index + 1;
-    const weekday = new Date(
-      Date.UTC(year, monthNumber - 1, day),
-    ).getUTCDay();
-    return { day, weekday: WEEKDAY_NAMES[weekday], password: passwords[index] };
+    return { day, password: passwords[index] };
   });
 
   return {
@@ -1400,13 +1386,11 @@ function sessionToText(session) {
     `Fingerprint: ${session.fingerprint}`,
     "Algorithm: HPG-1. Keep this list private.",
     "",
-    "Day  Weekday   Password",
+    "Day  Password",
   ];
 
   for (const entry of session.days) {
-    lines.push(
-      `${String(entry.day).padStart(2, "0")}   ${entry.weekday.padEnd(9)} ${entry.password}`,
-    );
+    lines.push(`${String(entry.day).padStart(2, "0")}   ${entry.password}`);
   }
 
   lines.push("", "End of list.");
@@ -1550,9 +1534,6 @@ function buildRow(entry, todayMonth, todayDay) {
     dayCell.append(badge);
   }
 
-  const weekdayCell = document.createElement("td");
-  weekdayCell.textContent = entry.weekday;
-
   const passwordCell = document.createElement("td");
   passwordCell.className = "password";
   const password = document.createElement("code");
@@ -1569,7 +1550,7 @@ function buildRow(entry, todayMonth, todayDay) {
   copyButton.dataset.day = String(entry.day);
   actionCell.append(copyButton);
 
-  row.append(dayCell, weekdayCell, passwordCell, actionCell);
+  row.append(dayCell, passwordCell, actionCell);
   return row;
 }
 
