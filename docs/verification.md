@@ -25,7 +25,7 @@ from the reviewed build. Do not enter or use a recovery code.
 The committed value at the time of writing:
 
 ```
-1f22f202d8d636adc99c75c9dc674d389d283e182ea1f82dce3aeee6ce08ffa0  index.html
+f4cf3116f2d479068351c986a681979df382a54db568cfc397255b6b9cd6cbbe  index.html
 ```
 
 The page intentionally shows no version or build metadata. Confirm the release
