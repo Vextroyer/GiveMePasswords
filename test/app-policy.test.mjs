@@ -126,7 +126,8 @@ test("the page ships semantic, screen-reader-friendly structure", () => {
   assert.match(html, /scope="col"/i);
   assert.match(html, /<dialog\b/i);
   assert.match(html, /aria-live="polite"/i);
-  assert.match(html, /class="skip-link"/i);
+  assert.doesNotMatch(html, /class="skip-link"/i);
+  assert.doesNotMatch(html, /Skip to content/i);
   assert.match(html, /for="create-month"/i);
   assert.match(html, /for="restore-code"/i);
 });
@@ -139,6 +140,7 @@ test("the print stylesheet exists and hides interactive chrome", () => {
   assert.match(css, /min-height:\s*44px/i);
   assert.match(css, /:focus-visible/i);
   assert.match(css, /\.visually-hidden/i);
+  assert.doesNotMatch(css, /\.skip-link/i);
 });
 
 test("UI copy is externalized for later translation", () => {
