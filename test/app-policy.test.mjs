@@ -188,6 +188,25 @@ test("no fingerprint appears in the UI, runtime copy, session, or export", () =>
   }
 });
 
+test("the landing and list actions have a clear hierarchy", () => {
+  const html = read("index.html");
+  const attrs = (id) => new RegExp(`<button id="${id}"([^>]*)>`).exec(html)[1];
+
+  assert.match(attrs("door-create"), /\bprimary\b/);
+  assert.doesNotMatch(attrs("door-restore"), /\bprimary\b/);
+  assert.match(attrs("copy-all"), /\bprimary\b/);
+  assert.doesNotMatch(attrs("download-txt"), /\bprimary\b/);
+  assert.doesNotMatch(attrs("rotate"), /\bdanger\b/);
+});
+
+test("the ceremony omits step-count noise", () => {
+  const html = read("index.html");
+  const strings = read("strings.js");
+
+  assert.doesNotMatch(html, /Step 1 of 2/);
+  assert.doesNotMatch(strings, /Step 1 of 2/);
+});
+
 test("the ceremony reminds users to keep the month with the code", () => {
   const html = read("index.html");
   const strings = read("strings.js");
