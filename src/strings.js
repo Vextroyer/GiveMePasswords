@@ -34,6 +34,8 @@ export const strings = {
     rotateIntro:
       "This is a new code. Lists made with the old code cannot be recreated from this one.",
     step: "Step 1 of 2: save the code. Step 2: show the list.",
+    monthReminder: (label) =>
+      `Keep this file, or note the month: ${label}. The code alone does not include the month.`,
   },
 
   toast: {

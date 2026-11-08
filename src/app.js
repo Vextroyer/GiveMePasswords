@@ -119,6 +119,9 @@ function openCeremony(session, reason) {
   el("ceremony-intro").textContent =
     reason === "rotate" ? t.ceremony.rotateIntro : t.ceremony.createIntro;
   el("ceremony-code").textContent = session.recoveryCode;
+  el("ceremony-month-reminder").textContent = t.ceremony.monthReminder(
+    session.monthLabel,
+  );
   el("ceremony-confirm").checked = false;
   el("ceremony-continue").disabled = true;
 

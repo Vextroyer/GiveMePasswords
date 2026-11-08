@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-wzW0H6Mis6C9aAnR1v5pSWGAHHx5uh5rWAo2Na6qcdM='; style-src 'sha256-gQXmBjHOMtwdLXGCNPY2gIR5q79g1we1fQAY2XDNc0g='; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; connect-src 'none'; font-src 'none'; manifest-src 'none'; media-src 'none'; worker-src 'none'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-6eVpWeQlj/Ar3bW9H0oyLsB8qFfv2FMPvHg9rtT/w5w='; style-src 'sha256-gQXmBjHOMtwdLXGCNPY2gIR5q79g1we1fQAY2XDNc0g='; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; connect-src 'none'; font-src 'none'; manifest-src 'none'; media-src 'none'; worker-src 'none'" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="referrer" content="no-referrer" />
     <meta name="color-scheme" content="light dark" />
@@ -795,6 +795,8 @@ dialog::backdrop {
         <button id="ceremony-download" type="button">Download code</button>
       </div>
 
+      <p class="hint" id="ceremony-month-reminder"></p>
+
       <label class="confirm" for="ceremony-confirm">
         <input id="ceremony-confirm" type="checkbox" />
         <span>I have saved this code somewhere I can find it.</span>
@@ -851,6 +853,8 @@ const strings = {
     rotateIntro:
       "This is a new code. Lists made with the old code cannot be recreated from this one.",
     step: "Step 1 of 2: save the code. Step 2: show the list.",
+    monthReminder: (label) =>
+      `Keep this file, or note the month: ${label}. The code alone does not include the month.`,
   },
 
   toast: {
@@ -1498,6 +1502,9 @@ function openCeremony(session, reason) {
   el("ceremony-intro").textContent =
     reason === "rotate" ? t.ceremony.rotateIntro : t.ceremony.createIntro;
   el("ceremony-code").textContent = session.recoveryCode;
+  el("ceremony-month-reminder").textContent = t.ceremony.monthReminder(
+    session.monthLabel,
+  );
   el("ceremony-confirm").checked = false;
   el("ceremony-continue").disabled = true;
 
