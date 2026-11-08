@@ -2,11 +2,7 @@
 // Pure ESM; no storage, DOM, network, or Node imports.
 
 import { deriveMonth } from "./derive.js";
-import {
-  encodeRecoveryCode,
-  parseRecoveryCode,
-  seedFingerprint,
-} from "./recovery-code.js";
+import { encodeRecoveryCode, parseRecoveryCode } from "./recovery-code.js";
 
 const MONTH_PATTERN = /^\d{4}-(0[1-9]|1[0-2])$/;
 
@@ -78,7 +74,6 @@ export async function createSession(seed, month) {
   return {
     month,
     monthLabel: monthLabel(month),
-    fingerprint: seedFingerprint(bytes),
     recoveryCode: encodeRecoveryCode(bytes),
     days,
   };
@@ -94,7 +89,6 @@ export async function restoreSession(code, month) {
 export function sessionToText(session) {
   const lines = [
     `Monthly passwords — ${session.monthLabel} (${session.days.length} days)`,
-    `Fingerprint: ${session.fingerprint}`,
     "Algorithm: HPG-1. Keep this list private.",
     "",
     "Day  Password",

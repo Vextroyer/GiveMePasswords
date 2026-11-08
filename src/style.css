@@ -240,15 +240,6 @@ textarea:focus-visible {
   font-size: 0.9375rem;
 }
 
-.notice {
-  margin: 0 0 1rem;
-  padding: 0.75rem 1rem;
-  background: var(--warning-bg);
-  border: 1px solid var(--warning-line);
-  border-radius: var(--radius);
-  font-size: 0.9375rem;
-}
-
 button {
   min-height: 44px;
   padding: 0.625rem 1rem;
@@ -305,18 +296,6 @@ button.danger {
   justify-content: space-between;
   gap: 0.75rem;
   margin-bottom: 1rem;
-}
-
-.fingerprint {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.9375rem;
-}
-
-.fingerprint code {
-  color: var(--text);
-  font-weight: 700;
-  letter-spacing: 0.05em;
 }
 
 .badge {
@@ -607,10 +586,6 @@ dialog::backdrop {
   .today-badge {
     border: 0;
     padding: 0;
-  }
-
-  .fingerprint code {
-    color: #000000;
   }
 
   .badge {

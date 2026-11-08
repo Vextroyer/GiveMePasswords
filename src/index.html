@@ -105,7 +105,6 @@
             Hyphens, spaces, and lowercase are fine. The code's checksum catches
             most typos, but a valid code can still describe a different list.
           </p>
-          <p class="fingerprint" id="restore-fingerprint" hidden></p>
           <p class="error" id="restore-error" role="alert" hidden></p>
           <button id="restore-submit" class="primary" type="submit">
             Show my list
@@ -115,16 +114,9 @@
 
       <section id="view-list" class="view" aria-labelledby="list-title" hidden>
         <div class="list-heading">
-          <div>
-            <h1 id="list-title" tabindex="-1">Month</h1>
-            <p class="fingerprint">
-              Fingerprint <code id="list-fingerprint"></code>
-            </p>
-          </div>
+          <h1 id="list-title" tabindex="-1">Month</h1>
           <span class="badge" id="list-mode">New list</span>
         </div>
-
-        <p class="notice" id="restore-warning" hidden></p>
 
         <div class="toolbar no-print">
           <button id="copy-all" type="button">Copy all</button>
@@ -150,8 +142,7 @@
         </div>
 
         <p class="print-only print-note">
-          Generated with HPG-1. Keep this list private. The fingerprint is a
-          confirmation aid, not a secret.
+          Generated with HPG-1. Keep this list private.
         </p>
 
         <details class="save-code no-print" id="save-code">
@@ -180,9 +171,6 @@
       <p id="ceremony-intro"></p>
 
       <code id="ceremony-code" class="code-block"></code>
-      <p class="fingerprint">
-        Fingerprint <code id="ceremony-fingerprint"></code>
-      </p>
 
       <div class="toolbar">
         <button id="ceremony-copy" type="button">Copy code</button>

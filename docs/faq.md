@@ -29,10 +29,10 @@ intended long-lived-code workflow.
 
 ### How do I know I typed the same code later?
 
-The app shows a **fingerprint** (8 hex characters) as soon as the code parses,
-and again on the list, in the text export, and in the print header. Compare it
-with the fingerprint you saved next to the code. A wrong-but-valid code also
-produces a full, realistic-looking list, so the fingerprint is the only check.
+There is no in-app fingerprint. The checksum catches most typos, but a
+wrong-but-valid code produces a full, realistic-looking list. To confirm, compare
+a day's password with a device that already uses the list, and check the month
+before applying it. The code alone cannot prove it is the one you meant.
 
 ### What if I lose the recovery code?
 
@@ -50,9 +50,8 @@ again from the same code.
 
 ### What if I forget which list I used?
 
-Restore the code for that month and compare the fingerprint and the day's
-password with the router. There is no way to prove a list is "the one" without
-the code.
+Restore the code for that month and compare the day's password with the router.
+There is no way to prove a list is "the one" from the code alone.
 
 ## Security
 
@@ -93,8 +92,8 @@ transcription is forgiving.
 ### What does the checksum do?
 
 It catches most typos before derivation. It is not authentication: a mistyped
-but valid code can still pass and produce a different list. That is why the
-fingerprint exists.
+but valid code can still pass and produce a different list. A valid code for a
+different seed cannot be detected from the code alone.
 
 ## Router compatibility
 
@@ -145,7 +144,7 @@ printout is safer.
 ### Why is the recovery code not in the printout?
 
 So a printed list left on a desk does not hand over every month. The printout
-includes the month and the fingerprint, not the code or the seed.
+includes the month, not the code or the seed.
 
 ## Trust and verification
 

@@ -142,7 +142,6 @@ HPG1-0004-1061-050R-3GG2-8A1C-60T3-GF2F
 
 Enter it with a different month and confirm:
 
-- the fingerprint is `CA7EF2C3`;
 - the month changes the list;
 - the same month and code reproduce it byte-for-byte;
 - a single changed checksum character is rejected with a checksum error;

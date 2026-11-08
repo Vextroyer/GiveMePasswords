@@ -12,7 +12,6 @@ import {
   restoreSession,
   sessionToText,
 } from "./session.js";
-import { parseRecoveryCode, seedFingerprint } from "./recovery-code.js";
 import { strings as t } from "./strings.js";
 
 const el = (id) => document.getElementById(id);
@@ -99,7 +98,6 @@ function openCeremony(session, reason) {
   el("ceremony-intro").textContent =
     reason === "rotate" ? t.ceremony.rotateIntro : t.ceremony.createIntro;
   el("ceremony-code").textContent = session.recoveryCode;
-  el("ceremony-fingerprint").textContent = session.fingerprint;
   el("ceremony-confirm").checked = false;
   el("ceremony-continue").disabled = true;
 
@@ -158,15 +156,9 @@ function showList(session, mode) {
   state.session = session;
 
   el("list-title").textContent = session.monthLabel;
-  el("list-fingerprint").textContent = session.fingerprint;
   el("list-mode").textContent = t.mode[mode] || t.mode.create;
-  el("list-caption").textContent =
-    `Passwords for ${session.monthLabel}. Fingerprint ${session.fingerprint}.`;
+  el("list-caption").textContent = `Passwords for ${session.monthLabel}.`;
   el("list-code").textContent = session.recoveryCode;
-
-  const warning = el("restore-warning");
-  warning.hidden = mode !== "restore";
-  warning.textContent = t.restoreWarning;
 
   const now = new Date();
   const todayMonth = currentMonth(now);
@@ -232,7 +224,7 @@ function download(filename, text) {
 }
 
 function codeFile(session) {
-  return `${t.codeFile.header(session.fingerprint)}${session.recoveryCode}\n`;
+  return `${t.codeFile.header()}${session.recoveryCode}\n`;
 }
 
 async function shareList() {
@@ -359,32 +351,10 @@ function startOver() {
   state.pending = null;
   el("list-body").replaceChildren();
   el("list-code").textContent = "";
-  el("list-fingerprint").textContent = "";
   el("restore-code").value = "";
-  el("restore-fingerprint").hidden = true;
   setError(el("create-error"), "");
   setError(el("restore-error"), "");
   showView("landing", "landing-title");
-}
-
-function updateFingerprintPreview() {
-  const value = el("restore-code").value.trim();
-  const output = el("restore-fingerprint");
-
-  if (!value) {
-    output.hidden = true;
-    output.textContent = "";
-    return;
-  }
-
-  try {
-    const seed = parseRecoveryCode(value);
-    output.textContent = `Fingerprint ${seedFingerprint(seed)}`;
-    output.hidden = false;
-  } catch {
-    output.hidden = true;
-    output.textContent = "";
-  }
 }
 
 // ---------------------------------------------------------------------------
@@ -406,7 +376,6 @@ function init() {
 
   el("create-form").addEventListener("submit", handleCreate);
   el("restore-form").addEventListener("submit", handleRestore);
-  el("restore-code").addEventListener("input", updateFingerprintPreview);
 
   el("ceremony-confirm").addEventListener("change", (event) => {
     el("ceremony-continue").disabled = !event.target.checked;
@@ -420,10 +389,7 @@ function init() {
 
   el("ceremony-download").addEventListener("click", () => {
     if (!state.pending) return;
-    download(
-      t.filenames.code(state.pending.fingerprint),
-      codeFile(state.pending),
-    );
+    download(t.filenames.code(state.pending.month), codeFile(state.pending));
     toast(t.toast.codeDownloaded);
   });
 
@@ -487,10 +453,7 @@ function init() {
 
   el("download-code").addEventListener("click", () => {
     if (!state.session) return;
-    download(
-      t.filenames.code(state.session.fingerprint),
-      codeFile(state.session),
-    );
+    download(t.filenames.code(state.session.month), codeFile(state.session));
     toast(t.toast.codeDownloaded);
   });
 

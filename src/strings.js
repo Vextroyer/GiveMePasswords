@@ -28,9 +28,6 @@ export const strings = {
     rotate: "Rotated code",
   },
 
-  restoreWarning:
-    "This list was rebuilt from a recovery code. Compare the fingerprint below with your saved copy before using these passwords.",
-
   ceremony: {
     createIntro:
       "This code is the only way to get this list again. We cannot recover it for you.",
@@ -52,12 +49,12 @@ export const strings = {
 
   filenames: {
     list: (month) => `passwords-${month}.txt`,
-    code: (fingerprint) => `recovery-code-${fingerprint}.txt`,
+    code: (month) => `recovery-code-${month}.txt`,
   },
 
   codeFile: {
-    header: (fingerprint) =>
-      `HPG1 recovery code\nFingerprint: ${fingerprint}\n\n` +
+    header: () =>
+      "HPG1 recovery code\n\n" +
       "Keep this file private. Anyone with this code can derive your passwords.\n\n",
   },
 

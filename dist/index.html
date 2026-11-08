@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-/eMbt22CUf+jMnUpkw+E5n+jXSBD0ZgX2Zkdf1FujR8='; style-src 'sha256-CmSHG1WY/5lm3OQ8k6eyAHuLoQA1RKCVnDbqZO4g8Ak='; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; connect-src 'none'; font-src 'none'; manifest-src 'none'; media-src 'none'; worker-src 'none'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-mo61yaE3jIRvHH0ndXqE/4UxgQmPQXHuWwCJ8CMYj/M='; style-src 'sha256-v5pP3/BqFxBKL2sIDBTn7eqSTa3B8I0Olyr377NcD/M='; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; connect-src 'none'; font-src 'none'; manifest-src 'none'; media-src 'none'; worker-src 'none'" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="referrer" content="no-referrer" />
     <meta name="color-scheme" content="light dark" />
@@ -257,15 +257,6 @@ textarea:focus-visible {
   font-size: 0.9375rem;
 }
 
-.notice {
-  margin: 0 0 1rem;
-  padding: 0.75rem 1rem;
-  background: var(--warning-bg);
-  border: 1px solid var(--warning-line);
-  border-radius: var(--radius);
-  font-size: 0.9375rem;
-}
-
 button {
   min-height: 44px;
   padding: 0.625rem 1rem;
@@ -322,18 +313,6 @@ button.danger {
   justify-content: space-between;
   gap: 0.75rem;
   margin-bottom: 1rem;
-}
-
-.fingerprint {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.9375rem;
-}
-
-.fingerprint code {
-  color: var(--text);
-  font-weight: 700;
-  letter-spacing: 0.05em;
 }
 
 .badge {
@@ -626,10 +605,6 @@ dialog::backdrop {
     padding: 0;
   }
 
-  .fingerprint code {
-    color: #000000;
-  }
-
   .badge {
     border: 1px solid #999999;
     color: #000000;
@@ -726,7 +701,6 @@ dialog::backdrop {
             Hyphens, spaces, and lowercase are fine. The code's checksum catches
             most typos, but a valid code can still describe a different list.
           </p>
-          <p class="fingerprint" id="restore-fingerprint" hidden></p>
           <p class="error" id="restore-error" role="alert" hidden></p>
           <button id="restore-submit" class="primary" type="submit">
             Show my list
@@ -736,16 +710,9 @@ dialog::backdrop {
 
       <section id="view-list" class="view" aria-labelledby="list-title" hidden>
         <div class="list-heading">
-          <div>
-            <h1 id="list-title" tabindex="-1">Month</h1>
-            <p class="fingerprint">
-              Fingerprint <code id="list-fingerprint"></code>
-            </p>
-          </div>
+          <h1 id="list-title" tabindex="-1">Month</h1>
           <span class="badge" id="list-mode">New list</span>
         </div>
-
-        <p class="notice" id="restore-warning" hidden></p>
 
         <div class="toolbar no-print">
           <button id="copy-all" type="button">Copy all</button>
@@ -771,8 +738,7 @@ dialog::backdrop {
         </div>
 
         <p class="print-only print-note">
-          Generated with HPG-1. Keep this list private. The fingerprint is a
-          confirmation aid, not a secret.
+          Generated with HPG-1. Keep this list private.
         </p>
 
         <details class="save-code no-print" id="save-code">
@@ -801,9 +767,6 @@ dialog::backdrop {
       <p id="ceremony-intro"></p>
 
       <code id="ceremony-code" class="code-block"></code>
-      <p class="fingerprint">
-        Fingerprint <code id="ceremony-fingerprint"></code>
-      </p>
 
       <div class="toolbar">
         <button id="ceremony-copy" type="button">Copy code</button>
@@ -860,9 +823,6 @@ const strings = {
     rotate: "Rotated code",
   },
 
-  restoreWarning:
-    "This list was rebuilt from a recovery code. Compare the fingerprint below with your saved copy before using these passwords.",
-
   ceremony: {
     createIntro:
       "This code is the only way to get this list again. We cannot recover it for you.",
@@ -884,12 +844,12 @@ const strings = {
 
   filenames: {
     list: (month) => `passwords-${month}.txt`,
-    code: (fingerprint) => `recovery-code-${fingerprint}.txt`,
+    code: (month) => `recovery-code-${month}.txt`,
   },
 
   codeFile: {
-    header: (fingerprint) =>
-      `HPG1 recovery code\nFingerprint: ${fingerprint}\n\n` +
+    header: () =>
+      "HPG1 recovery code\n\n" +
       "Keep this file private. Anyone with this code can derive your passwords.\n\n",
   },
 
@@ -1290,7 +1250,7 @@ return { encodeRecoveryCode, normalizeRecoveryCode, parseRecoveryCode, seedFinge
 // --- session.js ---
 const __m_session = (() => {
 const { deriveMonth } = __m_derive;
-const { encodeRecoveryCode, parseRecoveryCode, seedFingerprint } = __m_recovery_code;
+const { encodeRecoveryCode, parseRecoveryCode } = __m_recovery_code;
 // HPG-1 session assembly: month validation, labels, and printable lists.
 // Pure ESM; no storage, DOM, network, or Node imports.
 
@@ -1367,7 +1327,6 @@ async function createSession(seed, month) {
   return {
     month,
     monthLabel: monthLabel(month),
-    fingerprint: seedFingerprint(bytes),
     recoveryCode: encodeRecoveryCode(bytes),
     days,
   };
@@ -1383,7 +1342,6 @@ async function restoreSession(code, month) {
 function sessionToText(session) {
   const lines = [
     `Monthly passwords — ${session.monthLabel} (${session.days.length} days)`,
-    `Fingerprint: ${session.fingerprint}`,
     "Algorithm: HPG-1. Keep this list private.",
     "",
     "Day  Password",
@@ -1402,7 +1360,6 @@ return { isValidMonth, currentMonth, monthLabel, createSession, restoreSession, 
 // --- app.js ---
 const __m_app = (() => {
 const { createSession, currentMonth, isValidMonth, restoreSession, sessionToText } = __m_session;
-const { parseRecoveryCode, seedFingerprint } = __m_recovery_code;
 const { strings: t } = __m_strings;
 // Browser wiring for the Monthly Password Generator.
 //
@@ -1410,7 +1367,6 @@ const { strings: t } = __m_strings;
 // format in recovery-code.js, and month assembly in session.js. Nothing here
 // persists, requests, or injects HTML: all dynamic values go through
 // textContent.
-
 
 
 
@@ -1499,7 +1455,6 @@ function openCeremony(session, reason) {
   el("ceremony-intro").textContent =
     reason === "rotate" ? t.ceremony.rotateIntro : t.ceremony.createIntro;
   el("ceremony-code").textContent = session.recoveryCode;
-  el("ceremony-fingerprint").textContent = session.fingerprint;
   el("ceremony-confirm").checked = false;
   el("ceremony-continue").disabled = true;
 
@@ -1558,15 +1513,9 @@ function showList(session, mode) {
   state.session = session;
 
   el("list-title").textContent = session.monthLabel;
-  el("list-fingerprint").textContent = session.fingerprint;
   el("list-mode").textContent = t.mode[mode] || t.mode.create;
-  el("list-caption").textContent =
-    `Passwords for ${session.monthLabel}. Fingerprint ${session.fingerprint}.`;
+  el("list-caption").textContent = `Passwords for ${session.monthLabel}.`;
   el("list-code").textContent = session.recoveryCode;
-
-  const warning = el("restore-warning");
-  warning.hidden = mode !== "restore";
-  warning.textContent = t.restoreWarning;
 
   const now = new Date();
   const todayMonth = currentMonth(now);
@@ -1632,7 +1581,7 @@ function download(filename, text) {
 }
 
 function codeFile(session) {
-  return `${t.codeFile.header(session.fingerprint)}${session.recoveryCode}\n`;
+  return `${t.codeFile.header()}${session.recoveryCode}\n`;
 }
 
 async function shareList() {
@@ -1759,32 +1708,10 @@ function startOver() {
   state.pending = null;
   el("list-body").replaceChildren();
   el("list-code").textContent = "";
-  el("list-fingerprint").textContent = "";
   el("restore-code").value = "";
-  el("restore-fingerprint").hidden = true;
   setError(el("create-error"), "");
   setError(el("restore-error"), "");
   showView("landing", "landing-title");
-}
-
-function updateFingerprintPreview() {
-  const value = el("restore-code").value.trim();
-  const output = el("restore-fingerprint");
-
-  if (!value) {
-    output.hidden = true;
-    output.textContent = "";
-    return;
-  }
-
-  try {
-    const seed = parseRecoveryCode(value);
-    output.textContent = `Fingerprint ${seedFingerprint(seed)}`;
-    output.hidden = false;
-  } catch {
-    output.hidden = true;
-    output.textContent = "";
-  }
 }
 
 // ---------------------------------------------------------------------------
@@ -1806,7 +1733,6 @@ function init() {
 
   el("create-form").addEventListener("submit", handleCreate);
   el("restore-form").addEventListener("submit", handleRestore);
-  el("restore-code").addEventListener("input", updateFingerprintPreview);
 
   el("ceremony-confirm").addEventListener("change", (event) => {
     el("ceremony-continue").disabled = !event.target.checked;
@@ -1820,10 +1746,7 @@ function init() {
 
   el("ceremony-download").addEventListener("click", () => {
     if (!state.pending) return;
-    download(
-      t.filenames.code(state.pending.fingerprint),
-      codeFile(state.pending),
-    );
+    download(t.filenames.code(state.pending.month), codeFile(state.pending));
     toast(t.toast.codeDownloaded);
   });
 
@@ -1887,10 +1810,7 @@ function init() {
 
   el("download-code").addEventListener("click", () => {
     if (!state.session) return;
-    download(
-      t.filenames.code(state.session.fingerprint),
-      codeFile(state.session),
-    );
+    download(t.filenames.code(state.session.month), codeFile(state.session));
     toast(t.toast.codeDownloaded);
   });
 
