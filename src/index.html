@@ -33,7 +33,7 @@
         </p>
 
         <div class="doors">
-          <button id="door-create" class="door" type="button">
+          <button id="door-create" class="door primary" type="button">
             <span class="door-title">Create a new list</span>
             <span class="door-copy">Start with a fresh recovery code.</span>
           </button>
@@ -135,7 +135,7 @@
         </div>
 
         <div class="toolbar no-print">
-          <button id="copy-all" type="button">Copy all</button>
+          <button id="copy-all" class="primary" type="button">Copy all</button>
           <button id="download-txt" type="button">Download .txt</button>
           <button id="print" type="button">Print</button>
           <button id="share" type="button" hidden>Share</button>
@@ -175,7 +175,7 @@
         </details>
 
         <div class="toolbar no-print">
-          <button id="rotate" class="danger" type="button">Rotate code</button>
+          <button id="rotate" type="button">Rotate code</button>
           <button id="start-over" type="button">Start over</button>
         </div>
       </section>
@@ -183,7 +183,6 @@
 
     <dialog id="ceremony" aria-labelledby="ceremony-title" aria-describedby="ceremony-intro">
       <h2 id="ceremony-title">Save your recovery code</h2>
-      <p class="step" id="ceremony-step"></p>
       <p id="ceremony-intro"></p>
 
       <code id="ceremony-code" class="code-block"></code>

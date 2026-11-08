@@ -172,6 +172,11 @@ a {
   font-size: 0.9375rem;
 }
 
+.door.primary .door-copy {
+  color: inherit;
+  opacity: 0.85;
+}
+
 .fine-print {
   margin-top: 2rem;
   padding-top: 1rem;
@@ -437,14 +442,6 @@ dialog {
 
 dialog::backdrop {
   background: rgb(0 0 0 / 0.55);
-}
-
-.step {
-  color: var(--muted);
-  font-size: 0.875rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
 }
 
 .confirm {

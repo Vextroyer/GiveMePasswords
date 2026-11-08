@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-6eVpWeQlj/Ar3bW9H0oyLsB8qFfv2FMPvHg9rtT/w5w='; style-src 'sha256-gQXmBjHOMtwdLXGCNPY2gIR5q79g1we1fQAY2XDNc0g='; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; connect-src 'none'; font-src 'none'; manifest-src 'none'; media-src 'none'; worker-src 'none'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-ltbr2qPjW78hG6s1+rsipYBZqSFwwa6NMF0H5SlMxdg='; style-src 'sha256-Ttc9pOVePplXOYtzJgO8UmU+OWAH+JkY2gjdf5rEl24='; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; connect-src 'none'; font-src 'none'; manifest-src 'none'; media-src 'none'; worker-src 'none'" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="referrer" content="no-referrer" />
     <meta name="color-scheme" content="light dark" />
@@ -187,6 +187,11 @@ a {
 .door-copy {
   color: var(--muted);
   font-size: 0.9375rem;
+}
+
+.door.primary .door-copy {
+  color: inherit;
+  opacity: 0.85;
 }
 
 .fine-print {
@@ -456,14 +461,6 @@ dialog::backdrop {
   background: rgb(0 0 0 / 0.55);
 }
 
-.step {
-  color: var(--muted);
-  font-size: 0.875rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
 .confirm {
   display: flex;
   align-items: flex-start;
@@ -635,7 +632,7 @@ dialog::backdrop {
         </p>
 
         <div class="doors">
-          <button id="door-create" class="door" type="button">
+          <button id="door-create" class="door primary" type="button">
             <span class="door-title">Create a new list</span>
             <span class="door-copy">Start with a fresh recovery code.</span>
           </button>
@@ -737,7 +734,7 @@ dialog::backdrop {
         </div>
 
         <div class="toolbar no-print">
-          <button id="copy-all" type="button">Copy all</button>
+          <button id="copy-all" class="primary" type="button">Copy all</button>
           <button id="download-txt" type="button">Download .txt</button>
           <button id="print" type="button">Print</button>
           <button id="share" type="button" hidden>Share</button>
@@ -777,7 +774,7 @@ dialog::backdrop {
         </details>
 
         <div class="toolbar no-print">
-          <button id="rotate" class="danger" type="button">Rotate code</button>
+          <button id="rotate" type="button">Rotate code</button>
           <button id="start-over" type="button">Start over</button>
         </div>
       </section>
@@ -785,7 +782,6 @@ dialog::backdrop {
 
     <dialog id="ceremony" aria-labelledby="ceremony-title" aria-describedby="ceremony-intro">
       <h2 id="ceremony-title">Save your recovery code</h2>
-      <p class="step" id="ceremony-step"></p>
       <p id="ceremony-intro"></p>
 
       <code id="ceremony-code" class="code-block"></code>
@@ -852,7 +848,6 @@ const strings = {
       "This code is the only way to get this list again. We cannot recover it for you.",
     rotateIntro:
       "This is a new code. Lists made with the old code cannot be recreated from this one.",
-    step: "Step 1 of 2: save the code. Step 2: show the list.",
     monthReminder: (label) =>
       `Keep this file, or note the month: ${label}. The code alone does not include the month.`,
   },
@@ -1498,7 +1493,6 @@ function openCeremony(session, reason) {
   state.pending = session;
   state.pendingReason = reason;
 
-  el("ceremony-step").textContent = t.ceremony.step;
   el("ceremony-intro").textContent =
     reason === "rotate" ? t.ceremony.rotateIntro : t.ceremony.createIntro;
   el("ceremony-code").textContent = session.recoveryCode;

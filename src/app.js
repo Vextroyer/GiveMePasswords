@@ -115,7 +115,6 @@ function openCeremony(session, reason) {
   state.pending = session;
   state.pendingReason = reason;
 
-  el("ceremony-step").textContent = t.ceremony.step;
   el("ceremony-intro").textContent =
     reason === "rotate" ? t.ceremony.rotateIntro : t.ceremony.createIntro;
   el("ceremony-code").textContent = session.recoveryCode;
