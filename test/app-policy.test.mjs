@@ -188,6 +188,14 @@ test("no fingerprint appears in the UI, runtime copy, session, or export", () =>
   }
 });
 
+test("the ceremony reminds users to keep the month with the code", () => {
+  const html = read("index.html");
+  const strings = read("strings.js");
+
+  assert.match(html, /id="ceremony-month-reminder"/);
+  assert.match(strings, /The code alone does not include the month/);
+});
+
 test("the recovery artifact puts the month in the filename only", () => {
   assert.equal(strings.filenames.code("2026-11"), "recovery-code-2026-11.txt");
   assert.doesNotMatch(strings.filenames.code("2026-11"), /fingerprint/i);
