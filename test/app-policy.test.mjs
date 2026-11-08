@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
+import { strings } from "../src/strings.js";
 
 const SRC = new URL("../src/", import.meta.url);
 const read = (name) => readFileSync(new URL(name, SRC), "utf8");
@@ -160,6 +161,28 @@ test("the UI does not render weekday data", () => {
 
   assert.doesNotMatch(html, /weekday/i);
   assert.doesNotMatch(app, /weekday/i);
+});
+
+test("no fingerprint appears in the UI, runtime copy, session, or export", () => {
+  const sources = {
+    "index.html": read("index.html"),
+    "app.js": read("app.js"),
+    "strings.js": read("strings.js"),
+    "session.js": read("session.js"),
+  };
+
+  for (const [name, source] of Object.entries(sources)) {
+    assert.doesNotMatch(source, /fingerprint/i, `${name} mentions a fingerprint`);
+  }
+});
+
+test("the recovery artifact puts the month in the filename only", () => {
+  assert.equal(strings.filenames.code("2026-11"), "recovery-code-2026-11.txt");
+  assert.doesNotMatch(strings.filenames.code("2026-11"), /fingerprint/i);
+
+  const header = strings.codeFile.header();
+  assert.doesNotMatch(header, /fingerprint/i);
+  assert.match(header, /HPG1 recovery code/);
 });
 
 test("UI copy is externalized for later translation", () => {

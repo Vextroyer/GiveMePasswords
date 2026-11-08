@@ -38,7 +38,6 @@ test("createSession builds the full pinned month", async () => {
 
   assert.equal(session.month, "2026-11");
   assert.equal(session.monthLabel, "November 2026");
-  assert.equal(session.fingerprint, "CA7EF2C3");
   assert.equal(session.recoveryCode, CODE);
   assert.equal(session.days.length, 30);
   assert.deepEqual(session.days[0], {
@@ -64,7 +63,6 @@ test("restoreSession reproduces the same list from a messy code", async () => {
     restored.days.map((entry) => entry.password),
     original.days.map((entry) => entry.password),
   );
-  assert.equal(restored.fingerprint, original.fingerprint);
 });
 
 test("restoreSession fails closed on a bad checksum", async () => {
@@ -84,7 +82,8 @@ test("the exported text keeps leading zeros, omits the seed, and names the month
 
   assert.match(text, /November 2026/);
   assert.match(text, /November 2026 \(30 days\)/);
-  assert.match(text, /CA7EF2C3/);
+  assert.doesNotMatch(text, /Fingerprint/i);
+  assert.doesNotMatch(text, /CA7EF2C3/);
   assert.match(text, /07134458/);
   assert.match(text, /52296676/);
   assert.match(text, /Day\s+Password/);
