@@ -51,28 +51,16 @@ test("the built page inlines the stylesheet and every module", () =>
     }
   }));
 
-test("the built page shows the package version and a script-derived build id", () =>
+test("the built page carries no version or build metadata", () =>
   withTempDir(async (outDir) => {
-    const pkg = JSON.parse(
-      readFileSync(new URL("../package.json", import.meta.url), "utf8"),
-    );
     await build({ outDir });
     const html = readFileSync(join(outDir, "index.html"), "utf8");
 
-    const script = /<script>([\s\S]*?)<\/script>/.exec(html);
-    assert.ok(script, "inline script is present");
-    const buildId = sha256(script[1]).slice(0, 16);
-
-    assert.ok(
-      html.includes(`<meta name="app-version" content="${pkg.version}"`),
-      "a verifier can read the version from a meta tag",
-    );
-    assert.ok(
-      html.includes(`<meta name="build-id" content="${buildId}"`),
-      "the build id is the digest of the inline script",
-    );
-    assert.ok(html.includes(`<span id="app-version">${pkg.version}</span>`));
-    assert.ok(html.includes(`<code id="build-id">${buildId}</code>`));
+    assert.doesNotMatch(html, /name="app-version"/i);
+    assert.doesNotMatch(html, /name="build-id"/i);
+    assert.doesNotMatch(html, /id="app-version"/i);
+    assert.doesNotMatch(html, /id="build-id"/i);
+    assert.doesNotMatch(html, /HPG-1\s*&middot;/i);
   }));
 
 test("the built page keeps the no-storage, no-network, no-injection policy", () =>
