@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-jnMqSd3U3bcQ2i/XX+g/1e9LRi6ZaFMSYL3Vtvt1NiE='; style-src 'sha256-2NRCTTgpTcbKL5PAo/8xnstlhENyWSIhB1yXBembMBc='; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; connect-src 'none'; font-src 'none'; manifest-src 'none'; media-src 'none'; worker-src 'none'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-jnMqSd3U3bcQ2i/XX+g/1e9LRi6ZaFMSYL3Vtvt1NiE='; style-src 'sha256-2JUCyuyFQ71rSuYtOoMpoqwRaSg98dyH2t8VTBJ3bE8='; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; connect-src 'none'; font-src 'none'; manifest-src 'none'; media-src 'none'; worker-src 'none'" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="referrer" content="no-referrer" />
     <meta name="color-scheme" content="light dark" />
@@ -119,22 +119,6 @@ a {
   outline: 3px solid var(--focus);
   outline-offset: 2px;
   border-radius: 4px;
-}
-
-.skip-link {
-  position: absolute;
-  left: 0.75rem;
-  top: -3rem;
-  z-index: 20;
-  padding: 0.75rem 1rem;
-  background: var(--surface);
-  border: 2px solid var(--accent);
-  border-radius: var(--radius);
-  transition: top 120ms ease-in;
-}
-
-.skip-link:focus {
-  top: 0.75rem;
 }
 
 .site-header {
@@ -618,8 +602,7 @@ dialog::backdrop {
 
   .no-print,
   dialog,
-  .toast,
-  .skip-link {
+  .toast {
     display: none !important;
   }
 
@@ -673,8 +656,6 @@ dialog::backdrop {
 }
 </style></head>
   <body>
-    <a class="skip-link" href="#main">Skip to content</a>
-
     <main id="main">
       <header class="site-header no-print">
         <p class="wordmark">Monthly passwords</p>

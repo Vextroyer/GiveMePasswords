@@ -102,22 +102,6 @@ a {
   border-radius: 4px;
 }
 
-.skip-link {
-  position: absolute;
-  left: 0.75rem;
-  top: -3rem;
-  z-index: 20;
-  padding: 0.75rem 1rem;
-  background: var(--surface);
-  border: 2px solid var(--accent);
-  border-radius: var(--radius);
-  transition: top 120ms ease-in;
-}
-
-.skip-link:focus {
-  top: 0.75rem;
-}
-
 .site-header {
   display: flex;
   flex-wrap: wrap;
@@ -599,8 +583,7 @@ dialog::backdrop {
 
   .no-print,
   dialog,
-  .toast,
-  .skip-link {
+  .toast {
     display: none !important;
   }
 

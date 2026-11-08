@@ -25,7 +25,7 @@ Status legend: **Mitigated** · **Partial** · **Deferred**
 | 11 | Uses the site offline before the first successful load | Partial | The single-file artifact and offline copy are shipped; no CDN dependencies. The `file://` behavior still needs a browser check. | Browser check |
 | 12 | Timezone or midnight confusion | Partial | "Today" is highlighted from the local calendar, weekday names are explicit, and the derivation never reads the clock. No timezone label is shown. | DOM smoke (`currentMonth`), `test/session.test.mjs` |
 | 13 | Seed pasted with whitespace or zero-width characters | Mitigated | Normalization strips Unicode whitespace, `-`, U+200B, U+200C, U+200D, U+FEFF, and folds `I`/`L`/`O`. | `test/recovery-code.test.mjs` |
-| 14 | Screen reader reads the table as a blob | Mitigated | Semantic `<table>` with `<caption>`, `scope` headers, row headers for days, labelled per-row copy buttons, an `aria-live` toast, and a skip link. | `test/app-policy.test.mjs`; Browser check: real screen reader |
+| 14 | Screen reader reads the table as a blob | Mitigated | Semantic `<table>` with `<caption>`, `scope` headers, row headers for days, labelled per-row copy buttons, an `aria-live` toast, and a single `<main>` landmark with one `<h1>` per view. | `test/app-policy.test.mjs`; Browser check: real screen reader |
 | 15 | Print clips the password column or prints dark backgrounds | Partial | `@media print` forces light colors, hides controls, repeats table headers, avoids row breaks, and sets `@page` margins. | `test/app-policy.test.mjs`; Browser check: A4/Letter |
 
 ## Accessibility checklist
