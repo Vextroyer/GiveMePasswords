@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-ltbr2qPjW78hG6s1+rsipYBZqSFwwa6NMF0H5SlMxdg='; style-src 'sha256-Ttc9pOVePplXOYtzJgO8UmU+OWAH+JkY2gjdf5rEl24='; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; connect-src 'none'; font-src 'none'; manifest-src 'none'; media-src 'none'; worker-src 'none'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-z6P3TP8djQS9KG/5pc+urU7DwuDYvzkZGuwu0vlVh7c='; style-src 'sha256-Ttc9pOVePplXOYtzJgO8UmU+OWAH+JkY2gjdf5rEl24='; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; connect-src 'none'; font-src 'none'; manifest-src 'none'; media-src 'none'; worker-src 'none'" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="referrer" content="no-referrer" />
     <meta name="color-scheme" content="light dark" />
@@ -658,7 +658,12 @@ dialog::backdrop {
         <form id="create-form" class="panel" novalidate hidden>
           <label for="create-month">Month</label>
           <div class="month-input">
-            <select id="create-month" name="month" required>
+            <select
+              id="create-month"
+              name="month"
+              aria-describedby="create-month-hint create-error"
+              required
+            >
               <option value="01">January</option>
               <option value="02">February</option>
               <option value="03">March</option>
@@ -672,7 +677,13 @@ dialog::backdrop {
               <option value="11">November</option>
               <option value="12">December</option>
             </select>
-            <select id="create-year" name="year" aria-label="Year" required></select>
+            <select
+              id="create-year"
+              name="year"
+              aria-label="Year"
+              aria-describedby="create-month-hint create-error"
+              required
+            ></select>
           </div>
           <p class="hint" id="create-month-hint">
             The list covers every day in this month. A new list gets a new code,
@@ -687,7 +698,12 @@ dialog::backdrop {
         <form id="restore-form" class="panel" novalidate hidden>
           <label for="restore-month">Month</label>
           <div class="month-input">
-            <select id="restore-month" name="month" required>
+            <select
+              id="restore-month"
+              name="month"
+              aria-describedby="restore-error"
+              required
+            >
               <option value="01">January</option>
               <option value="02">February</option>
               <option value="03">March</option>
@@ -701,7 +717,13 @@ dialog::backdrop {
               <option value="11">November</option>
               <option value="12">December</option>
             </select>
-            <select id="restore-year" name="year" aria-label="Year" required></select>
+            <select
+              id="restore-year"
+              name="year"
+              aria-label="Year"
+              aria-describedby="restore-error"
+              required
+            ></select>
           </div>
 
           <label for="restore-code">Recovery code</label>
@@ -714,9 +736,10 @@ dialog::backdrop {
             autocorrect="off"
             spellcheck="false"
             placeholder="HPG1-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX"
+            aria-describedby="restore-code-hint restore-error"
             required
           ></textarea>
-          <p class="hint">
+          <p class="hint" id="restore-code-hint">
             Hyphens, spaces, and lowercase are fine. The code's checksum catches
             most typos, but a valid code can still describe a different list.
           </p>
@@ -1609,7 +1632,7 @@ async function copyText(text) {
 
 async function copyWithToast(text, message) {
   const copied = await copyText(text);
-  toast(copied ? message : t.toast.copyFailed);
+  toast(copied ? message : t.toast.copyFailed, copied ? 3200 : 6000);
 }
 
 function download(filename, text) {
@@ -1653,7 +1676,7 @@ async function shareList() {
 
 let toastTimer = 0;
 
-function toast(message) {
+function toast(message, duration = 3200) {
   const target = el("toast");
   target.textContent = message;
   target.classList.add("show");
@@ -1661,7 +1684,7 @@ function toast(message) {
   toastTimer = window.setTimeout(() => {
     target.classList.remove("show");
     target.textContent = "";
-  }, 3200);
+  }, duration);
 }
 
 // ---------------------------------------------------------------------------

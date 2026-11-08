@@ -59,7 +59,12 @@
         <form id="create-form" class="panel" novalidate hidden>
           <label for="create-month">Month</label>
           <div class="month-input">
-            <select id="create-month" name="month" required>
+            <select
+              id="create-month"
+              name="month"
+              aria-describedby="create-month-hint create-error"
+              required
+            >
               <option value="01">January</option>
               <option value="02">February</option>
               <option value="03">March</option>
@@ -73,7 +78,13 @@
               <option value="11">November</option>
               <option value="12">December</option>
             </select>
-            <select id="create-year" name="year" aria-label="Year" required></select>
+            <select
+              id="create-year"
+              name="year"
+              aria-label="Year"
+              aria-describedby="create-month-hint create-error"
+              required
+            ></select>
           </div>
           <p class="hint" id="create-month-hint">
             The list covers every day in this month. A new list gets a new code,
@@ -88,7 +99,12 @@
         <form id="restore-form" class="panel" novalidate hidden>
           <label for="restore-month">Month</label>
           <div class="month-input">
-            <select id="restore-month" name="month" required>
+            <select
+              id="restore-month"
+              name="month"
+              aria-describedby="restore-error"
+              required
+            >
               <option value="01">January</option>
               <option value="02">February</option>
               <option value="03">March</option>
@@ -102,7 +118,13 @@
               <option value="11">November</option>
               <option value="12">December</option>
             </select>
-            <select id="restore-year" name="year" aria-label="Year" required></select>
+            <select
+              id="restore-year"
+              name="year"
+              aria-label="Year"
+              aria-describedby="restore-error"
+              required
+            ></select>
           </div>
 
           <label for="restore-code">Recovery code</label>
@@ -115,9 +137,10 @@
             autocorrect="off"
             spellcheck="false"
             placeholder="HPG1-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX"
+            aria-describedby="restore-code-hint restore-error"
             required
           ></textarea>
-          <p class="hint">
+          <p class="hint" id="restore-code-hint">
             Hyphens, spaces, and lowercase are fine. The code's checksum catches
             most typos, but a valid code can still describe a different list.
           </p>

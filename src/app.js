@@ -231,7 +231,7 @@ async function copyText(text) {
 
 async function copyWithToast(text, message) {
   const copied = await copyText(text);
-  toast(copied ? message : t.toast.copyFailed);
+  toast(copied ? message : t.toast.copyFailed, copied ? 3200 : 6000);
 }
 
 function download(filename, text) {
@@ -275,7 +275,7 @@ async function shareList() {
 
 let toastTimer = 0;
 
-function toast(message) {
+function toast(message, duration = 3200) {
   const target = el("toast");
   target.textContent = message;
   target.classList.add("show");
@@ -283,7 +283,7 @@ function toast(message) {
   toastTimer = window.setTimeout(() => {
     target.classList.remove("show");
     target.textContent = "";
-  }, 3200);
+  }, duration);
 }
 
 // ---------------------------------------------------------------------------
