@@ -61,6 +61,27 @@ function openSetup(mode) {
   showView("setup", mode === "create" ? "create-month" : "restore-month");
 }
 
+function populateYearOptions(select) {
+  const current = new Date().getFullYear();
+  select.replaceChildren();
+  for (let year = current - 1; year <= current + 2; year += 1) {
+    const option = document.createElement("option");
+    option.value = String(year);
+    option.textContent = String(year);
+    select.append(option);
+  }
+}
+
+function setMonthInputs(prefix, month) {
+  const [year, monthNumber] = month.split("-");
+  el(`${prefix}-month`).value = monthNumber;
+  el(`${prefix}-year`).value = year;
+}
+
+function readMonthInput(prefix) {
+  return `${el(`${prefix}-year`).value}-${el(`${prefix}-month`).value}`;
+}
+
 function canDerive() {
   return Boolean(
     globalThis.crypto &&
@@ -271,7 +292,7 @@ async function handleCreate(event) {
   event.preventDefault();
   setError(el("create-error"), "");
 
-  const month = el("create-month").value.trim();
+  const month = readMonthInput("create");
   if (!isValidMonth(month)) {
     setError(el("create-error"), t.errors.monthInvalid);
     el("create-month").focus();
@@ -298,7 +319,7 @@ async function handleRestore(event) {
   event.preventDefault();
   setError(el("restore-error"), "");
 
-  const month = el("restore-month").value.trim();
+  const month = readMonthInput("restore");
   const code = el("restore-code").value.trim();
 
   if (!isValidMonth(month)) {
@@ -363,8 +384,11 @@ function startOver() {
 
 function init() {
   const month = currentMonth();
-  el("create-month").value = month;
-  el("restore-month").value = month;
+  for (const id of ["create-year", "restore-year"]) {
+    populateYearOptions(el(id));
+  }
+  setMonthInputs("create", month);
+  setMonthInputs("restore", month);
 
   el("door-create").addEventListener("click", () => openSetup("create"));
   el("door-restore").addEventListener("click", () => openSetup("restore"));

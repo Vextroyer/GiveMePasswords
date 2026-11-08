@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-mo61yaE3jIRvHH0ndXqE/4UxgQmPQXHuWwCJ8CMYj/M='; style-src 'sha256-v5pP3/BqFxBKL2sIDBTn7eqSTa3B8I0Olyr377NcD/M='; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; connect-src 'none'; font-src 'none'; manifest-src 'none'; media-src 'none'; worker-src 'none'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-wzW0H6Mis6C9aAnR1v5pSWGAHHx5uh5rWAo2Na6qcdM='; style-src 'sha256-gQXmBjHOMtwdLXGCNPY2gIR5q79g1we1fQAY2XDNc0g='; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; connect-src 'none'; font-src 'none'; manifest-src 'none'; media-src 'none'; worker-src 'none'" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="referrer" content="no-referrer" />
     <meta name="color-scheme" content="light dark" />
@@ -217,7 +217,7 @@ label {
   margin-top: 0.5rem;
 }
 
-input[type="month"],
+select,
 textarea {
   width: 100%;
   min-height: 44px;
@@ -229,6 +229,12 @@ textarea {
   border-radius: 8px;
 }
 
+.month-input {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 0.5rem;
+}
+
 textarea {
   min-height: 5.5rem;
   resize: vertical;
@@ -236,7 +242,7 @@ textarea {
   letter-spacing: 0.04em;
 }
 
-input[type="month"]:focus-visible,
+select:focus-visible,
 textarea:focus-visible {
   outline-offset: 0;
 }
@@ -654,15 +660,23 @@ dialog::backdrop {
 
         <form id="create-form" class="panel" novalidate hidden>
           <label for="create-month">Month</label>
-          <input
-            id="create-month"
-            name="month"
-            type="month"
-            inputmode="numeric"
-            autocomplete="off"
-            placeholder="YYYY-MM"
-            required
-          />
+          <div class="month-input">
+            <select id="create-month" name="month" required>
+              <option value="01">January</option>
+              <option value="02">February</option>
+              <option value="03">March</option>
+              <option value="04">April</option>
+              <option value="05">May</option>
+              <option value="06">June</option>
+              <option value="07">July</option>
+              <option value="08">August</option>
+              <option value="09">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+            <select id="create-year" name="year" aria-label="Year" required></select>
+          </div>
           <p class="hint" id="create-month-hint">
             The list covers every day in this month. A new list gets a new code,
             so it will not match an earlier list.
@@ -675,15 +689,23 @@ dialog::backdrop {
 
         <form id="restore-form" class="panel" novalidate hidden>
           <label for="restore-month">Month</label>
-          <input
-            id="restore-month"
-            name="month"
-            type="month"
-            inputmode="numeric"
-            autocomplete="off"
-            placeholder="YYYY-MM"
-            required
-          />
+          <div class="month-input">
+            <select id="restore-month" name="month" required>
+              <option value="01">January</option>
+              <option value="02">February</option>
+              <option value="03">March</option>
+              <option value="04">April</option>
+              <option value="05">May</option>
+              <option value="06">June</option>
+              <option value="07">July</option>
+              <option value="08">August</option>
+              <option value="09">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+            <select id="restore-year" name="year" aria-label="Year" required></select>
+          </div>
 
           <label for="restore-code">Recovery code</label>
           <textarea
@@ -1418,6 +1440,27 @@ function openSetup(mode) {
   showView("setup", mode === "create" ? "create-month" : "restore-month");
 }
 
+function populateYearOptions(select) {
+  const current = new Date().getFullYear();
+  select.replaceChildren();
+  for (let year = current - 1; year <= current + 2; year += 1) {
+    const option = document.createElement("option");
+    option.value = String(year);
+    option.textContent = String(year);
+    select.append(option);
+  }
+}
+
+function setMonthInputs(prefix, month) {
+  const [year, monthNumber] = month.split("-");
+  el(`${prefix}-month`).value = monthNumber;
+  el(`${prefix}-year`).value = year;
+}
+
+function readMonthInput(prefix) {
+  return `${el(`${prefix}-year`).value}-${el(`${prefix}-month`).value}`;
+}
+
 function canDerive() {
   return Boolean(
     globalThis.crypto &&
@@ -1628,7 +1671,7 @@ async function handleCreate(event) {
   event.preventDefault();
   setError(el("create-error"), "");
 
-  const month = el("create-month").value.trim();
+  const month = readMonthInput("create");
   if (!isValidMonth(month)) {
     setError(el("create-error"), t.errors.monthInvalid);
     el("create-month").focus();
@@ -1655,7 +1698,7 @@ async function handleRestore(event) {
   event.preventDefault();
   setError(el("restore-error"), "");
 
-  const month = el("restore-month").value.trim();
+  const month = readMonthInput("restore");
   const code = el("restore-code").value.trim();
 
   if (!isValidMonth(month)) {
@@ -1720,8 +1763,11 @@ function startOver() {
 
 function init() {
   const month = currentMonth();
-  el("create-month").value = month;
-  el("restore-month").value = month;
+  for (const id of ["create-year", "restore-year"]) {
+    populateYearOptions(el(id));
+  }
+  setMonthInputs("create", month);
+  setMonthInputs("restore", month);
 
   el("door-create").addEventListener("click", () => openSetup("create"));
   el("door-restore").addEventListener("click", () => openSetup("restore"));

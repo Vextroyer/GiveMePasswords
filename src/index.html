@@ -58,15 +58,23 @@
 
         <form id="create-form" class="panel" novalidate hidden>
           <label for="create-month">Month</label>
-          <input
-            id="create-month"
-            name="month"
-            type="month"
-            inputmode="numeric"
-            autocomplete="off"
-            placeholder="YYYY-MM"
-            required
-          />
+          <div class="month-input">
+            <select id="create-month" name="month" required>
+              <option value="01">January</option>
+              <option value="02">February</option>
+              <option value="03">March</option>
+              <option value="04">April</option>
+              <option value="05">May</option>
+              <option value="06">June</option>
+              <option value="07">July</option>
+              <option value="08">August</option>
+              <option value="09">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+            <select id="create-year" name="year" aria-label="Year" required></select>
+          </div>
           <p class="hint" id="create-month-hint">
             The list covers every day in this month. A new list gets a new code,
             so it will not match an earlier list.
@@ -79,15 +87,23 @@
 
         <form id="restore-form" class="panel" novalidate hidden>
           <label for="restore-month">Month</label>
-          <input
-            id="restore-month"
-            name="month"
-            type="month"
-            inputmode="numeric"
-            autocomplete="off"
-            placeholder="YYYY-MM"
-            required
-          />
+          <div class="month-input">
+            <select id="restore-month" name="month" required>
+              <option value="01">January</option>
+              <option value="02">February</option>
+              <option value="03">March</option>
+              <option value="04">April</option>
+              <option value="05">May</option>
+              <option value="06">June</option>
+              <option value="07">July</option>
+              <option value="08">August</option>
+              <option value="09">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+            <select id="restore-year" name="year" aria-label="Year" required></select>
+          </div>
 
           <label for="restore-code">Recovery code</label>
           <textarea

@@ -200,7 +200,7 @@ label {
   margin-top: 0.5rem;
 }
 
-input[type="month"],
+select,
 textarea {
   width: 100%;
   min-height: 44px;
@@ -212,6 +212,12 @@ textarea {
   border-radius: 8px;
 }
 
+.month-input {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 0.5rem;
+}
+
 textarea {
   min-height: 5.5rem;
   resize: vertical;
@@ -219,7 +225,7 @@ textarea {
   letter-spacing: 0.04em;
 }
 
-input[type="month"]:focus-visible,
+select:focus-visible,
 textarea:focus-visible {
   outline-offset: 0;
 }
