@@ -218,8 +218,13 @@ Inputs with no prefix are accepted, so a user may paste the payload alone.
 
 A wrong-but-well-formed code (valid alphabet and length) that passes the
 checksum produces a plausible but different list. The checksum is a typo
-detector, not authentication; the UI must show the fingerprint (§8) so the user
-can confirm the seed.
+detector, not authentication. A valid code for a different seed cannot be
+detected from the code itself at this layer.
+
+The UI is **not required** to display the fingerprint (§8). Implementations may
+compute and display it as an optional confirmation aid, but the HPG-1 contract
+does not depend on it. A UI that omits the fingerprint must not claim to detect
+a valid-but-wrong code.
 
 ### 7.5 Error reasons
 
@@ -242,10 +247,13 @@ The fingerprint is a short, non-secret confirmation aid:
 fingerprint = lowercase_hex(SHA-256(UTF8("HPG1|fingerprint") || seed))[0:4]
 ```
 
-It is rendered as **8 uppercase hex characters** (the first 4 bytes). It is
-displayed after the seed is entered and on printed lists so a user can compare
-two sources. It reveals no useful information about the seed beyond what an
-8-digit password already reveals, and it is not a checksum of the list.
+It is rendered as **8 uppercase hex characters** (the first 4 bytes). It
+reveals no useful information about the seed beyond what an 8-digit password
+already reveals, and it is not a checksum of the list.
+
+The fingerprint is part of the derivation contract: implementations must be able
+to compute it, and the published vectors pin its value. Displaying it is
+**optional**. The reference UI does not show, print, or export it.
 
 Example: seed `000102030405060708090a0b0c0d0e0f` → `CA7EF2C3`.
 
