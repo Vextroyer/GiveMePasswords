@@ -43,12 +43,10 @@ test("createSession builds the full pinned month", async () => {
   assert.equal(session.days.length, 30);
   assert.deepEqual(session.days[0], {
     day: 1,
-    weekday: "Sunday",
     password: "52296676",
   });
   assert.deepEqual(session.days[29], {
     day: 30,
-    weekday: "Monday",
     password: "07134458",
   });
 });
@@ -89,6 +87,9 @@ test("the exported text keeps leading zeros, omits the seed, and names the month
   assert.match(text, /CA7EF2C3/);
   assert.match(text, /07134458/);
   assert.match(text, /52296676/);
+  assert.match(text, /Day\s+Password/);
+  assert.doesNotMatch(text, /Weekday/i);
+  assert.doesNotMatch(text, /\b(?:Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)\b/);
   assert.doesNotMatch(text, /HPG1-/);
   assert.doesNotMatch(text, /000102030405060708090a0b0c0d0e0f/i);
   assert.ok(text.endsWith("\n"));

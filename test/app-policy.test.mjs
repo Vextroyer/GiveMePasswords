@@ -124,6 +124,7 @@ test("the page ships semantic, screen-reader-friendly structure", () => {
   assert.match(html, /<table\b/i);
   assert.match(html, /<caption\b/i);
   assert.match(html, /scope="col"/i);
+  assert.doesNotMatch(html, /weekday/i);
   assert.match(html, /<dialog\b/i);
   assert.match(html, /aria-live="polite"/i);
   assert.doesNotMatch(html, /class="skip-link"/i);
@@ -151,6 +152,14 @@ test("the print stylesheet exists and hides interactive chrome", () => {
   assert.match(css, /:focus-visible/i);
   assert.match(css, /\.visually-hidden/i);
   assert.doesNotMatch(css, /\.skip-link/i);
+});
+
+test("the UI does not render weekday data", () => {
+  const html = read("index.html");
+  const app = read("app.js");
+
+  assert.doesNotMatch(html, /weekday/i);
+  assert.doesNotMatch(app, /weekday/i);
 });
 
 test("UI copy is externalized for later translation", () => {
