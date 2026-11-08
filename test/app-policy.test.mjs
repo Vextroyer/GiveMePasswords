@@ -188,6 +188,28 @@ test("no fingerprint appears in the UI, runtime copy, session, or export", () =>
   }
 });
 
+test("form controls point at their error messages", () => {
+  const html = read("index.html");
+  const tag = (id) => {
+    const start = html.indexOf(`id="${id}"`);
+    return html.slice(start, html.indexOf(">", start));
+  };
+
+  for (const id of [
+    "create-month",
+    "create-year",
+    "restore-month",
+    "restore-year",
+    "restore-code",
+  ]) {
+    assert.match(tag(id), /aria-describedby="[^"]*error/, `${id} has no error association`);
+  }
+});
+
+test("copy-failure feedback stays visible longer", () => {
+  assert.match(read("app.js"), /copyFailed[^)]*6000/);
+});
+
 test("the landing and list actions have a clear hierarchy", () => {
   const html = read("index.html");
   const attrs = (id) => new RegExp(`<button id="${id}"([^>]*)>`).exec(html)[1];
