@@ -28,11 +28,9 @@ The committed value at the time of writing:
 1acaba57ed1c3f7fbfd9f1934e4e67dee560e327f1421650db7c65e808f84786  index.html
 ```
 
-The footer also shows a **build id**: the first 16 hex characters of the
-SHA-256 of the inline script. The current build id is `8e732a49ddd4ddb7`.
-Unlike the full-file hash, the build id can be displayed inside the page because
-the script cannot contain its own digest. It changes when the app logic changes,
-not when only the HTML or CSS changes.
+The page intentionally shows no version or build metadata. Confirm the release
+by matching the full-file hash above and the commit you deployed; there is no
+in-page footer or `app-version`/`build-id` meta tag to compare.
 
 ## 2. Confirm the page makes no requests
 

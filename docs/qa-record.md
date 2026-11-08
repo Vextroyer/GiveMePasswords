@@ -1,6 +1,6 @@
 # QA Record
 
-- **Build:** `HPG-1`, version `0.1.0`, build id `8e732a49ddd4ddb7`, artifact
+- **Build:** `HPG-1`, version `0.1.0`, artifact
   `1acaba57ed1c3f7fbfd9f1934e4e67dee560e327f1421650db7c65e808f84786`
 - **Last verified:** 2026-11-07
 - **Environment:** Linux container, Node.js 22.23.4 and 26.13.0, Python 3.15.2,

@@ -168,16 +168,15 @@ also rebuild it yourself with `make build` and check `make verify-build`. See
 Yes; the source, spec, vectors, and build are in the repository. See
 [`LICENSE`](../LICENSE).
 
-### Why does the page show a version like `HPG-1`?
+### What does `HPG-1` mean?
 
 `HPG-1` is the frozen derivation version. If the algorithm ever changes, it will
 be published as `HPG-2` with new vectors, and old codes will keep working under
 the version they were created with.
 
-The footer also shows the product version and a **build id** (the first 16 hex
-characters of the SHA-256 of the inline script). Use it to confirm that two
-copies of the page are the same release. The full-file hash is in
-`dist/SHA256SUMS`; see [`verification.md`](verification.md).
+The page does not show a product version or build id. To confirm that two copies
+of the page are the same release, compare the full-file hash in
+`dist/SHA256SUMS` and the commit; see [`verification.md`](verification.md).
 
 ### Who runs this?
 

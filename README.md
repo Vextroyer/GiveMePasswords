@@ -71,8 +71,8 @@ curl -s "https://vextroyer.github.io/GiveMePasswords/?$(date +%s)" | sha256sum
 cat dist/SHA256SUMS
 ```
 
-The page footer shows the product version and a build id (the first 16 hex
-characters of the SHA-256 of the inline script). The full procedure, including
+The page shows no version or build metadata. Verify the full-file hash in
+`dist/SHA256SUMS` and the commit you are running. The full procedure, including
 the meta-CSP and header checks, is in [`docs/verification.md`](docs/verification.md).
 
 ## Documentation

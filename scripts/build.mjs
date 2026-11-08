@@ -165,14 +165,7 @@ function cspFor(styleHash, scriptHash) {
   ].join("; ");
 }
 
-function replacePlaceholder(html, needle, replacement, label) {
-  if (!html.includes(needle)) {
-    throw new Error(`index.html: ${label} placeholder not found`);
-  }
-  return html.replace(needle, replacement);
-}
-
-function inlineHtml(csp, css, bundle, version, buildId) {
+function inlineHtml(csp, css, bundle) {
   let html = readSource("index.html");
 
   const styleLink = /[ \t]*<link\s+rel="stylesheet"\s+href="style\.css"\s*\/?>\s*/i;
@@ -183,31 +176,6 @@ function inlineHtml(csp, css, bundle, version, buildId) {
 
   html = html.replace(styleLink, () => `<style>${css}</style>`);
   html = html.replace(scriptTag, () => `<script>${bundle}</script>`);
-
-  html = replacePlaceholder(
-    html,
-    '<meta name="app-version" content="dev" />',
-    `<meta name="app-version" content="${version}" />`,
-    "app-version meta",
-  );
-  html = replacePlaceholder(
-    html,
-    '<meta name="build-id" content="dev" />',
-    `<meta name="build-id" content="${buildId}" />`,
-    "build-id meta",
-  );
-  html = replacePlaceholder(
-    html,
-    '<span id="app-version">dev</span>',
-    `<span id="app-version">${version}</span>`,
-    "app-version label",
-  );
-  html = replacePlaceholder(
-    html,
-    '<code id="build-id">dev</code>',
-    `<code id="build-id">${buildId}</code>`,
-    "build-id label",
-  );
 
   return html.replace(
     /(<meta charset="utf-8"\s*\/>)/i,
@@ -254,7 +222,7 @@ export async function build({ outDir = resolve(ROOT, "dist") } = {}) {
   const buildId = sha256(bundle).slice(0, 16);
   const csp = cspFor(sha256(css, "base64"), sha256(bundle, "base64"));
 
-  const html = inlineHtml(csp, css, bundle, version, buildId);
+  const html = inlineHtml(csp, css, bundle);
   checkArtifact(html);
 
   const hash = sha256(html);

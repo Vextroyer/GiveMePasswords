@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-jnMqSd3U3bcQ2i/XX+g/1e9LRi6ZaFMSYL3Vtvt1NiE='; style-src 'sha256-2JUCyuyFQ71rSuYtOoMpoqwRaSg98dyH2t8VTBJ3bE8='; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; connect-src 'none'; font-src 'none'; manifest-src 'none'; media-src 'none'; worker-src 'none'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-jnMqSd3U3bcQ2i/XX+g/1e9LRi6ZaFMSYL3Vtvt1NiE='; style-src 'sha256-CmSHG1WY/5lm3OQ8k6eyAHuLoQA1RKCVnDbqZO4g8Ak='; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; connect-src 'none'; font-src 'none'; manifest-src 'none'; media-src 'none'; worker-src 'none'" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="referrer" content="no-referrer" />
     <meta name="color-scheme" content="light dark" />
@@ -10,8 +10,6 @@
       name="description"
       content="Generate a month of daily 8-digit passwords in your browser. No account, no server, no storage."
     />
-    <meta name="app-version" content="0.1.0" />
-    <meta name="build-id" content="8e732a49ddd4ddb7" />
     <title>Monthly Password Generator</title>
     <link
       rel="icon"
@@ -189,22 +187,6 @@ a {
 .door-copy {
   color: var(--muted);
   font-size: 0.9375rem;
-}
-
-.site-footer {
-  margin-top: 2.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 0.8125rem;
-}
-
-.site-footer p {
-  margin: 0;
-}
-
-.site-footer code {
-  color: var(--text);
 }
 
 .fine-print {
@@ -815,13 +797,6 @@ dialog::backdrop {
           <button id="start-over" type="button">Start over</button>
         </div>
       </section>
-
-      <footer class="site-footer">
-        <p>
-          HPG-1 &middot; v<span id="app-version">0.1.0</span> &middot;
-          build <code id="build-id">8e732a49ddd4ddb7</code>
-        </p>
-      </footer>
     </main>
 
     <dialog id="ceremony" aria-labelledby="ceremony-title" aria-describedby="ceremony-intro">
