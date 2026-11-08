@@ -1,7 +1,7 @@
 # QA Record
 
 - **Build:** `HPG-1`, version `0.1.0`, artifact
-  `1acaba57ed1c3f7fbfd9f1934e4e67dee560e327f1421650db7c65e808f84786`
+  `1f22f202d8d636adc99c75c9dc674d389d283e182ea1f82dce3aeee6ce08ffa0`
 - **Last verified:** 2026-11-07
 - **Environment:** Linux container, Node.js 22.23.4 and 26.13.0, Python 3.15.2,
   GNU Make 4.3. No Docker, no browser available in the build environment.
@@ -10,7 +10,7 @@
 
 | Check | Command | Result |
 |---|---|---|
-| Derivation + vectors + session + policy + build | `make test` | 61 passing, 0 failing (Node 22.23.4 and 26.13.0) |
+| Derivation + vectors + session + policy + build | `make test` | 65 passing, 0 failing (Node 22.23.4 and 26.13.0) |
 | Independent Python implementation | `make cross-check` | `test-vectors.json` reproduced |
 | Reproducible artifact | `make verify-build` | no diff, same hash |
 | Live artifact hash | `curl -s "https://vextroyer.github.io/GiveMePasswords/?$(date +%s)" \| sha256sum` | matches `dist/SHA256SUMS` |
