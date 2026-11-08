@@ -132,6 +132,16 @@ test("the page ships semantic, screen-reader-friendly structure", () => {
   assert.match(html, /for="restore-code"/i);
 });
 
+test("the landing copy states the limitation in one factual line", () => {
+  const html = read("index.html");
+
+  assert.match(html, /8-digit convenience code — not for high-value accounts\./);
+  assert.doesNotMatch(html, /convenient, not strong/i);
+  assert.doesNotMatch(html, /Wi-Fi traffic/i);
+  assert.doesNotMatch(html, /Chat and notes apps/i);
+  assert.doesNotMatch(html, />[^<]*\b(?:strong|secure|safer|safe)\b/i);
+});
+
 test("the print stylesheet exists and hides interactive chrome", () => {
   const css = read("style.css");
 
