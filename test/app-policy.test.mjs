@@ -263,3 +263,23 @@ test("UI copy is externalized for later translation", () => {
   assert.match(strings, /export\s+const\s+strings\b/);
   assert.match(app, /from\s+["']\.\/strings\.js["']/);
 });
+
+test("the simplified page keeps its structural and feedback guards", () => {
+  const html = read("index.html");
+
+  assert.equal((html.match(/<main\b/gi) || []).length, 1, "exactly one <main>");
+  assert.equal((html.match(/<h1\b/gi) || []).length, 3, "one <h1> per view");
+  assert.match(html, /role="status"/);
+  assert.match(html, /role="alert"/);
+  assert.doesNotMatch(html, /<footer\b/i);
+  assert.doesNotMatch(html, /name="app-version"/i);
+  assert.doesNotMatch(html, /name="build-id"/i);
+  assert.doesNotMatch(html, /fingerprint/i);
+
+  for (const id of ["create-month", "restore-month", "restore-code"]) {
+    assert.match(html, new RegExp(`<label[^>]*for="${id}"`), `${id} has no label`);
+  }
+  for (const id of ["create-year", "restore-year"]) {
+    assert.match(html, new RegExp(`id="${id}"[^>]*data-i18n-attr="aria-label`), `${id} has no accessible name`);
+  }
+});
