@@ -50,7 +50,7 @@ Requirements: Node.js 20+ (built-in test runner, global WebCrypto) and Python
 3.10+ for the independent reference. No dependencies are installed.
 
 ```sh
-make test          # derivation, vectors, recovery codes, session, policy, build (71 tests)
+make test          # derivation, vectors, recovery codes, session, policy, build, i18n (80 tests)
 make cross-check   # independent Python reference vs. test-vectors.json
 make check         # both
 make build         # regenerate dist/index.html and dist/SHA256SUMS
