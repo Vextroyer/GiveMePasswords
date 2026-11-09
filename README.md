@@ -16,6 +16,9 @@ same seed always produces the same list.
   printable recovery code, and derives every day's password for a chosen month.
 - **Restore a list.** Paste a saved recovery code and the same month to get the
   identical list back, with no account and no server.
+- **Use it in English or Spanish.** The language defaults from the browser and
+  can be switched in the header. The choice is in memory only and resets on the
+  next visit.
 
 ## What it is not
 

@@ -8,8 +8,9 @@
     <meta
       name="description"
       content="Generate a month of daily 8-digit passwords in your browser. No account, no server, no storage."
+      data-i18n-attr="content:meta.description"
     />
-    <title>Monthly Password Generator</title>
+    <title data-i18n="meta.title">Monthly Password Generator</title>
     <link
       rel="icon"
       href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0iIzE0NTMyZCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgZm9udC1mYW1pbHk9InVpLW1vbm9zcGFjZSxtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTUiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPjg8L3RleHQ+PC9zdmc+"
@@ -19,45 +20,55 @@
   <body>
     <main id="main">
       <header class="site-header no-print">
-        <p class="wordmark">Monthly passwords</p>
-        <p class="privacy-note">
+        <p class="wordmark" data-i18n="header.wordmark">Monthly passwords</p>
+        <p class="privacy-note" data-i18n="header.privacy">
           Runs entirely in your browser. Nothing is sent, saved, or tracked.
         </p>
+        <div class="lang-switch" role="group" data-i18n-attr="aria-label:lang.label">
+          <button id="lang-en" type="button" lang="en" aria-pressed="true" data-i18n="lang.en">
+            English
+          </button>
+          <button id="lang-es" type="button" lang="es" aria-pressed="false" data-i18n="lang.es">
+            Español
+          </button>
+        </div>
       </header>
 
       <section id="view-landing" class="view" aria-labelledby="landing-title">
-        <h1 id="landing-title" tabindex="-1">A month of daily passwords</h1>
-        <p class="lede">
+        <h1 id="landing-title" tabindex="-1" data-i18n="landing.title">
+          A month of daily passwords
+        </h1>
+        <p class="lede" data-i18n="landing.lede">
           Turn one recovery code into a full month of 8-digit passwords. Use the
           same code next time to get the same list back.
         </p>
 
         <div class="doors">
           <button id="door-create" class="door primary" type="button">
-            <span class="door-title">Create a new list</span>
-            <span class="door-copy">Start with a fresh recovery code.</span>
+            <span class="door-title" data-i18n="landing.createTitle">Create a new list</span>
+            <span class="door-copy" data-i18n="landing.createCopy">Start with a fresh recovery code.</span>
           </button>
 
           <button id="door-restore" class="door" type="button">
-            <span class="door-title">I have a recovery code</span>
-            <span class="door-copy">Rebuild a list you saved earlier.</span>
+            <span class="door-title" data-i18n="landing.restoreTitle">I have a recovery code</span>
+            <span class="door-copy" data-i18n="landing.restoreCopy">Rebuild a list you saved earlier.</span>
           </button>
         </div>
 
-        <p class="fine-print">
+        <p class="fine-print" data-i18n="landing.risk">
           8-digit convenience code — not for high-value accounts.
         </p>
       </section>
 
       <section id="view-setup" class="view" aria-labelledby="setup-title" hidden>
-        <button id="setup-back" class="link-button no-print" type="button">
-          &larr; Back
+        <button id="setup-back" class="link-button no-print" type="button" data-i18n="setup.back">
+          ← Back
         </button>
 
-        <h1 id="setup-title" tabindex="-1">Create a new list</h1>
+        <h1 id="setup-title" tabindex="-1" data-i18n="headings.create">Create a new list</h1>
 
         <form id="create-form" class="panel" novalidate hidden>
-          <label for="create-month">Month</label>
+          <label for="create-month" data-i18n="form.month">Month</label>
           <div class="month-input">
             <select
               id="create-month"
@@ -65,39 +76,39 @@
               aria-describedby="create-month-hint create-error"
               required
             >
-              <option value="01">January</option>
-              <option value="02">February</option>
-              <option value="03">March</option>
-              <option value="04">April</option>
-              <option value="05">May</option>
-              <option value="06">June</option>
-              <option value="07">July</option>
-              <option value="08">August</option>
-              <option value="09">September</option>
-              <option value="10">October</option>
-              <option value="11">November</option>
-              <option value="12">December</option>
+              <option value="01" data-i18n="months.01">January</option>
+              <option value="02" data-i18n="months.02">February</option>
+              <option value="03" data-i18n="months.03">March</option>
+              <option value="04" data-i18n="months.04">April</option>
+              <option value="05" data-i18n="months.05">May</option>
+              <option value="06" data-i18n="months.06">June</option>
+              <option value="07" data-i18n="months.07">July</option>
+              <option value="08" data-i18n="months.08">August</option>
+              <option value="09" data-i18n="months.09">September</option>
+              <option value="10" data-i18n="months.10">October</option>
+              <option value="11" data-i18n="months.11">November</option>
+              <option value="12" data-i18n="months.12">December</option>
             </select>
             <select
               id="create-year"
               name="year"
-              aria-label="Year"
+              data-i18n-attr="aria-label:form.year"
               aria-describedby="create-month-hint create-error"
               required
             ></select>
           </div>
-          <p class="hint" id="create-month-hint">
+          <p class="hint" id="create-month-hint" data-i18n="create.hint">
             The list covers every day in this month. A new list gets a new code,
             so it will not match an earlier list.
           </p>
           <p class="error" id="create-error" role="alert" hidden></p>
-          <button id="create-submit" class="primary" type="submit">
+          <button id="create-submit" class="primary" type="submit" data-i18n="create.submit">
             Create list
           </button>
         </form>
 
         <form id="restore-form" class="panel" novalidate hidden>
-          <label for="restore-month">Month</label>
+          <label for="restore-month" data-i18n="form.month">Month</label>
           <div class="month-input">
             <select
               id="restore-month"
@@ -105,29 +116,29 @@
               aria-describedby="restore-error"
               required
             >
-              <option value="01">January</option>
-              <option value="02">February</option>
-              <option value="03">March</option>
-              <option value="04">April</option>
-              <option value="05">May</option>
-              <option value="06">June</option>
-              <option value="07">July</option>
-              <option value="08">August</option>
-              <option value="09">September</option>
-              <option value="10">October</option>
-              <option value="11">November</option>
-              <option value="12">December</option>
+              <option value="01" data-i18n="months.01">January</option>
+              <option value="02" data-i18n="months.02">February</option>
+              <option value="03" data-i18n="months.03">March</option>
+              <option value="04" data-i18n="months.04">April</option>
+              <option value="05" data-i18n="months.05">May</option>
+              <option value="06" data-i18n="months.06">June</option>
+              <option value="07" data-i18n="months.07">July</option>
+              <option value="08" data-i18n="months.08">August</option>
+              <option value="09" data-i18n="months.09">September</option>
+              <option value="10" data-i18n="months.10">October</option>
+              <option value="11" data-i18n="months.11">November</option>
+              <option value="12" data-i18n="months.12">December</option>
             </select>
             <select
               id="restore-year"
               name="year"
-              aria-label="Year"
+              data-i18n-attr="aria-label:form.year"
               aria-describedby="restore-error"
               required
             ></select>
           </div>
 
-          <label for="restore-code">Recovery code</label>
+          <label for="restore-code" data-i18n="form.recoveryCode">Recovery code</label>
           <textarea
             id="restore-code"
             name="code"
@@ -138,14 +149,15 @@
             spellcheck="false"
             placeholder="HPG1-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX"
             aria-describedby="restore-code-hint restore-error"
+            data-i18n-attr="placeholder:form.codePlaceholder"
             required
           ></textarea>
-          <p class="hint" id="restore-code-hint">
+          <p class="hint" id="restore-code-hint" data-i18n="restore.hint">
             Hyphens, spaces, and lowercase are fine. The code's checksum catches
             most typos, but a valid code can still describe a different list.
           </p>
           <p class="error" id="restore-error" role="alert" hidden></p>
-          <button id="restore-submit" class="primary" type="submit">
+          <button id="restore-submit" class="primary" type="submit" data-i18n="restore.submit">
             Show my list
           </button>
         </form>
@@ -153,15 +165,19 @@
 
       <section id="view-list" class="view" aria-labelledby="list-title" hidden>
         <div class="list-heading">
-          <h1 id="list-title" tabindex="-1">Month</h1>
+          <h1 id="list-title" tabindex="-1" data-i18n="list.titleFallback">Month</h1>
           <span class="badge" id="list-mode">New list</span>
         </div>
 
         <div class="toolbar no-print">
-          <button id="copy-all" class="primary" type="button">Copy all</button>
-          <button id="download-txt" type="button">Download .txt</button>
-          <button id="print" type="button">Print</button>
-          <button id="share" type="button" hidden>Share</button>
+          <button id="copy-all" class="primary" type="button" data-i18n="actions.copyAll">
+            Copy all
+          </button>
+          <button id="download-txt" type="button" data-i18n="actions.download">
+            Download .txt
+          </button>
+          <button id="print" type="button" data-i18n="actions.print">Print</button>
+          <button id="share" type="button" hidden data-i18n="actions.share">Share</button>
         </div>
 
         <div class="table-wrap">
@@ -169,10 +185,10 @@
             <caption id="list-caption"></caption>
             <thead>
               <tr>
-                <th scope="col">Day</th>
-                <th scope="col">Password</th>
+                <th scope="col" data-i18n="table.day">Day</th>
+                <th scope="col" data-i18n="table.password">Password</th>
                 <th scope="col" class="no-print">
-                  <span class="visually-hidden">Copy password</span>
+                  <span class="visually-hidden" data-i18n="table.copyColumn">Copy password</span>
                 </th>
               </tr>
             </thead>
@@ -180,51 +196,71 @@
           </table>
         </div>
 
-        <p class="print-only print-note">
+        <p class="print-only print-note" data-i18n="list.printNote">
           Generated with HPG-1. Keep this list private.
         </p>
 
         <details class="save-code no-print" id="save-code">
-          <summary>Your recovery code</summary>
-          <p>
+          <summary data-i18n="list.saveSummary">Your recovery code</summary>
+          <p data-i18n="list.saveCopy">
             This is the only way to rebuild this list. Store it in a password
             manager or print it and keep it somewhere you can find it.
           </p>
           <code id="list-code" class="code-block"></code>
           <div class="toolbar">
-            <button id="copy-code" type="button">Copy code</button>
-            <button id="download-code" type="button">Download code</button>
+            <button id="copy-code" type="button" data-i18n="actions.copyCode">
+              Copy code
+            </button>
+            <button id="download-code" type="button" data-i18n="actions.downloadCode">
+              Download code
+            </button>
           </div>
         </details>
 
         <div class="toolbar no-print">
-          <button id="rotate" type="button">Rotate code</button>
-          <button id="start-over" type="button">Start over</button>
+          <button id="rotate" type="button" data-i18n="actions.rotate">Rotate code</button>
+          <button id="start-over" type="button" data-i18n="actions.startOver">
+            Start over
+          </button>
         </div>
       </section>
     </main>
 
     <dialog id="ceremony" aria-labelledby="ceremony-title" aria-describedby="ceremony-intro">
-      <h2 id="ceremony-title">Save your recovery code</h2>
+      <h2 id="ceremony-title" data-i18n="ceremony.title">Save your recovery code</h2>
       <p id="ceremony-intro"></p>
 
       <code id="ceremony-code" class="code-block"></code>
 
       <div class="toolbar">
-        <button id="ceremony-copy" type="button">Copy code</button>
-        <button id="ceremony-download" type="button">Download code</button>
+        <button id="ceremony-copy" type="button" data-i18n="actions.copyCode">
+          Copy code
+        </button>
+        <button id="ceremony-download" type="button" data-i18n="actions.downloadCode">
+          Download code
+        </button>
       </div>
 
       <p class="hint" id="ceremony-month-reminder"></p>
 
       <label class="confirm" for="ceremony-confirm">
         <input id="ceremony-confirm" type="checkbox" />
-        <span>I have saved this code somewhere I can find it.</span>
+        <span data-i18n="ceremony.confirm">
+          I have saved this code somewhere I can find it.
+        </span>
       </label>
 
       <div class="toolbar">
-        <button id="ceremony-cancel" type="button">Cancel and discard</button>
-        <button id="ceremony-continue" class="primary" type="button" disabled>
+        <button id="ceremony-cancel" type="button" data-i18n="ceremony.cancel">
+          Cancel and discard
+        </button>
+        <button
+          id="ceremony-continue"
+          class="primary"
+          type="button"
+          data-i18n="ceremony.continue"
+          disabled
+        >
           Show my list
         </button>
       </div>

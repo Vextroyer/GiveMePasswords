@@ -12,13 +12,20 @@ import {
   restoreSession,
   sessionToText,
 } from "./session.js";
-import { strings as t } from "./strings.js";
+import {
+  applyTranslations,
+  getLocale,
+  resolveLocale,
+  setLocale,
+  t,
+} from "./strings.js";
 
 const el = (id) => document.getElementById(id);
 
 const VIEWS = ["landing", "setup", "list"];
 const state = {
   session: null,
+  mode: "create",
   pending: null,
   pendingReason: "create",
 };
@@ -55,7 +62,7 @@ function setBusy(button, busy) {
 function openSetup(mode) {
   el("create-form").hidden = mode !== "create";
   el("restore-form").hidden = mode !== "restore";
-  el("setup-title").textContent = t.headings[mode];
+  el("setup-title").textContent = t(`headings.${mode}`);
   setError(el("create-error"), "");
   setError(el("restore-error"), "");
   showView("setup", mode === "create" ? "create-month" : "restore-month");
@@ -93,17 +100,17 @@ function canDerive() {
 function codeErrorMessage(error) {
   switch (error && error.reason) {
     case "EMPTY":
-      return t.errors.codeEmpty;
+      return t("errors.codeEmpty");
     case "BAD_VERSION":
-      return t.errors.codeVersion;
+      return t("errors.codeVersion");
     case "BAD_CHAR":
-      return t.errors.codeChar;
+      return t("errors.codeChar");
     case "BAD_LENGTH":
-      return t.errors.codeLength;
+      return t("errors.codeLength");
     case "BAD_CHECKSUM":
-      return t.errors.codeChecksum;
+      return t("errors.codeChecksum");
     default:
-      return t.errors.codeUnknown;
+      return t("errors.codeUnknown");
   }
 }
 
@@ -111,16 +118,22 @@ function codeErrorMessage(error) {
 // Ceremony: the list is not revealed until the code is saved
 // ---------------------------------------------------------------------------
 
+function setCeremonyCopy(session, reason) {
+  el("ceremony-intro").textContent = t(
+    reason === "rotate" ? "ceremony.rotateIntro" : "ceremony.createIntro",
+  );
+  el("ceremony-month-reminder").textContent = t(
+    "ceremony.monthReminder",
+    session.monthLabel,
+  );
+}
+
 function openCeremony(session, reason) {
   state.pending = session;
   state.pendingReason = reason;
 
-  el("ceremony-intro").textContent =
-    reason === "rotate" ? t.ceremony.rotateIntro : t.ceremony.createIntro;
   el("ceremony-code").textContent = session.recoveryCode;
-  el("ceremony-month-reminder").textContent = t.ceremony.monthReminder(
-    session.monthLabel,
-  );
+  setCeremonyCopy(session, reason);
   el("ceremony-confirm").checked = false;
   el("ceremony-continue").disabled = true;
 
@@ -151,7 +164,7 @@ function buildRow(entry, todayMonth, todayDay) {
     row.classList.add("today");
     const badge = document.createElement("span");
     badge.className = "today-badge";
-    badge.textContent = "Today";
+    badge.textContent = t("table.today");
     dayCell.append(badge);
   }
 
@@ -166,8 +179,8 @@ function buildRow(entry, todayMonth, todayDay) {
   const copyButton = document.createElement("button");
   copyButton.type = "button";
   copyButton.className = "copy-button";
-  copyButton.textContent = "Copy";
-  copyButton.setAttribute("aria-label", `Copy password for day ${entry.day}`);
+  copyButton.textContent = t("table.copy");
+  copyButton.setAttribute("aria-label", t("table.copyDay", entry.day));
   copyButton.dataset.day = String(entry.day);
   actionCell.append(copyButton);
 
@@ -175,12 +188,10 @@ function buildRow(entry, todayMonth, todayDay) {
   return row;
 }
 
-function showList(session, mode) {
-  state.session = session;
-
+function renderList(session, mode) {
   el("list-title").textContent = session.monthLabel;
-  el("list-mode").textContent = t.mode[mode] || t.mode.create;
-  el("list-caption").textContent = `Passwords for ${session.monthLabel}.`;
+  el("list-mode").textContent = t(`mode.${mode}`);
+  el("list-caption").textContent = t("list.caption", session.monthLabel);
   el("list-code").textContent = session.recoveryCode;
 
   const now = new Date();
@@ -192,6 +203,13 @@ function showList(session, mode) {
   for (const entry of session.days) {
     body.append(buildRow({ ...entry, month: session.month }, todayMonth, todayDay));
   }
+}
+
+function showList(session, mode) {
+  state.session = session;
+  state.mode = mode;
+
+  renderList(session, mode);
 
   el("save-code").open = false;
   el("share").hidden = typeof navigator.share !== "function";
@@ -231,7 +249,7 @@ async function copyText(text) {
 
 async function copyWithToast(text, message) {
   const copied = await copyText(text);
-  toast(copied ? message : t.toast.copyFailed, copied ? 3200 : 6000);
+  toast(copied ? message : t("toast.copyFailed"), copied ? 3200 : 6000);
 }
 
 function download(filename, text) {
@@ -247,7 +265,7 @@ function download(filename, text) {
 }
 
 function codeFile(session) {
-  return `${t.codeFile.header()}${session.recoveryCode}\n`;
+  return `${t("codeFile.header")}${session.recoveryCode}\n`;
 }
 
 async function shareList() {
@@ -255,7 +273,7 @@ async function shareList() {
 
   const text = sessionToText(state.session);
   const title = state.session.monthLabel;
-  const filename = t.filenames.list(state.session.month);
+  const filename = t("filenames.list", state.session.month);
 
   try {
     if (typeof navigator.canShare === "function") {
@@ -268,7 +286,7 @@ async function shareList() {
     await navigator.share({ title, text });
   } catch (error) {
     if (!error || error.name !== "AbortError") {
-      toast(t.toast.shareFailed);
+      toast(t("toast.shareFailed"));
     }
   }
 }
@@ -296,12 +314,12 @@ async function handleCreate(event) {
 
   const month = readMonthInput("create");
   if (!isValidMonth(month)) {
-    setError(el("create-error"), t.errors.monthInvalid);
+    setError(el("create-error"), t("errors.monthInvalid"));
     el("create-month").focus();
     return;
   }
   if (!canDerive()) {
-    setError(el("create-error"), t.errors.crypto);
+    setError(el("create-error"), t("errors.crypto"));
     return;
   }
 
@@ -311,7 +329,7 @@ async function handleCreate(event) {
     const session = await createSession(seed, month);
     openCeremony(session, "create");
   } catch (error) {
-    setError(el("create-error"), t.errors.generic);
+    setError(el("create-error"), t("errors.generic"));
   } finally {
     setBusy(el("create-submit"), false);
   }
@@ -325,17 +343,17 @@ async function handleRestore(event) {
   const code = el("restore-code").value.trim();
 
   if (!isValidMonth(month)) {
-    setError(el("restore-error"), t.errors.monthInvalid);
+    setError(el("restore-error"), t("errors.monthInvalid"));
     el("restore-month").focus();
     return;
   }
   if (!code) {
-    setError(el("restore-error"), t.errors.codeEmpty);
+    setError(el("restore-error"), t("errors.codeEmpty"));
     el("restore-code").focus();
     return;
   }
   if (!canDerive()) {
-    setError(el("restore-error"), t.errors.crypto);
+    setError(el("restore-error"), t("errors.crypto"));
     return;
   }
 
@@ -352,9 +370,9 @@ async function handleRestore(event) {
 
 function rotateCode() {
   if (!state.session) return;
-  if (!window.confirm(t.rotateConfirm)) return;
+  if (!window.confirm(t("rotateConfirm"))) return;
   if (!canDerive()) {
-    toast(t.errors.crypto);
+    toast(t("errors.crypto"));
     return;
   }
 
@@ -363,14 +381,15 @@ function rotateCode() {
     const seed = globalThis.crypto.getRandomValues(new Uint8Array(16));
     createSession(seed, month)
       .then((session) => openCeremony(session, "rotate"))
-      .catch(() => toast(t.errors.generic));
+      .catch(() => toast(t("errors.generic")));
   } catch {
-    toast(t.errors.generic);
+    toast(t("errors.generic"));
   }
 }
 
 function startOver() {
   state.session = null;
+  state.mode = "create";
   state.pending = null;
   el("list-body").replaceChildren();
   el("list-code").textContent = "";
@@ -381,16 +400,65 @@ function startOver() {
 }
 
 // ---------------------------------------------------------------------------
+// Locale switching
+// ---------------------------------------------------------------------------
+
+function updateLocaleButtons() {
+  for (const code of ["en", "es"]) {
+    el(`lang-${code}`).setAttribute("aria-pressed", String(getLocale() === code));
+  }
+}
+
+function refreshDynamicCopy() {
+  setError(el("create-error"), "");
+  setError(el("restore-error"), "");
+
+  if (!el("view-setup").hidden) {
+    const mode = el("create-form").hidden ? "restore" : "create";
+    el("setup-title").textContent = t(`headings.${mode}`);
+  }
+
+  if (!el("view-list").hidden && state.session) {
+    renderList(state.session, state.mode);
+  }
+
+  if (el("ceremony").open && state.pending) {
+    setCeremonyCopy(state.pending, state.pendingReason);
+  }
+
+  updateLocaleButtons();
+}
+
+function switchLocale(next) {
+  if (getLocale() === next) return;
+  setLocale(next);
+  applyTranslations(document);
+
+  const toastTarget = el("toast");
+  toastTarget.classList.remove("show");
+  toastTarget.textContent = "";
+
+  refreshDynamicCopy();
+}
+
+// ---------------------------------------------------------------------------
 // Wiring
 // ---------------------------------------------------------------------------
 
 function init() {
+  setLocale(resolveLocale());
+  applyTranslations(document);
+  updateLocaleButtons();
+
   const month = currentMonth();
   for (const id of ["create-year", "restore-year"]) {
     populateYearOptions(el(id));
   }
   setMonthInputs("create", month);
   setMonthInputs("restore", month);
+
+  el("lang-en").addEventListener("click", () => switchLocale("en"));
+  el("lang-es").addEventListener("click", () => switchLocale("es"));
 
   el("door-create").addEventListener("click", () => openSetup("create"));
   el("door-restore").addEventListener("click", () => openSetup("restore"));
@@ -409,14 +477,14 @@ function init() {
 
   el("ceremony-copy").addEventListener("click", () => {
     if (state.pending) {
-      copyWithToast(state.pending.recoveryCode, t.toast.copiedCode);
+      copyWithToast(state.pending.recoveryCode, t("toast.copiedCode"));
     }
   });
 
   el("ceremony-download").addEventListener("click", () => {
     if (!state.pending) return;
-    download(t.filenames.code(state.pending.month), codeFile(state.pending));
-    toast(t.toast.codeDownloaded);
+    download(t("filenames.code", state.pending.month), codeFile(state.pending));
+    toast(t("toast.codeDownloaded"));
   });
 
   el("ceremony-cancel").addEventListener("click", () => closeCeremony("cancel"));
@@ -435,7 +503,7 @@ function init() {
     closeCeremony("continue");
     showList(session, reason);
     if (reason === "rotate") {
-      toast(t.toast.rotated);
+      toast(t("toast.rotated"));
     }
   });
 
@@ -450,22 +518,22 @@ function init() {
     const entry = state.session.days.find((item) => item.day === day);
     if (!entry) return;
 
-    copyWithToast(entry.password, t.toast.copiedPassword(day));
+    copyWithToast(entry.password, t("toast.copiedPassword", day));
   });
 
   el("copy-all").addEventListener("click", () => {
     if (state.session) {
-      copyWithToast(sessionToText(state.session), t.toast.copiedAll);
+      copyWithToast(sessionToText(state.session), t("toast.copiedAll"));
     }
   });
 
   el("download-txt").addEventListener("click", () => {
     if (!state.session) return;
     download(
-      t.filenames.list(state.session.month),
+      t("filenames.list", state.session.month),
       sessionToText(state.session),
     );
-    toast(t.toast.listDownloaded);
+    toast(t("toast.listDownloaded"));
   });
 
   el("print").addEventListener("click", () => window.print());
@@ -473,14 +541,14 @@ function init() {
 
   el("copy-code").addEventListener("click", () => {
     if (state.session) {
-      copyWithToast(state.session.recoveryCode, t.toast.copiedCode);
+      copyWithToast(state.session.recoveryCode, t("toast.copiedCode"));
     }
   });
 
   el("download-code").addEventListener("click", () => {
     if (!state.session) return;
-    download(t.filenames.code(state.session.month), codeFile(state.session));
-    toast(t.toast.codeDownloaded);
+    download(t("filenames.code", state.session.month), codeFile(state.session));
+    toast(t("toast.codeDownloaded"));
   });
 
   el("rotate").addEventListener("click", rotateCode);

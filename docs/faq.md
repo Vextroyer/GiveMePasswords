@@ -177,6 +177,13 @@ The page does not show a product version or build id. To confirm that two copies
 of the page are the same release, compare the full-file hash in
 `dist/SHA256SUMS` and the commit; see [`verification.md`](verification.md).
 
+### Does it work in Spanish?
+
+Yes. The page ships English and Spanish copy in one bundle. It starts in Spanish
+when the browser's preferred languages include `es`, and the header toggle
+switches immediately. The choice is kept in memory only; it is not stored and
+resets on the next visit.
+
 ### Who runs this?
 
 This is a small, stateless utility. There is no business model, analytics, or

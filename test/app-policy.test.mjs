@@ -207,7 +207,7 @@ test("form controls point at their error messages", () => {
 });
 
 test("copy-failure feedback stays visible longer", () => {
-  assert.match(read("app.js"), /copyFailed[^)]*6000/);
+  assert.match(read("app.js"), /copyFailed"\),\s*copied \? 3200 : 6000/);
 });
 
 test("the landing and list actions have a clear hierarchy", () => {
@@ -244,6 +244,16 @@ test("the recovery artifact puts the month in the filename only", () => {
   const header = strings.codeFile.header();
   assert.doesNotMatch(header, /fingerprint/i);
   assert.match(header, /HPG1 recovery code/);
+});
+
+test("the language toggle is wired to the dictionary", () => {
+  const app = read("app.js");
+
+  assert.match(app, /lang-en/);
+  assert.match(app, /lang-es/);
+  assert.match(app, /applyTranslations\(document\)/);
+  assert.match(app, /resolveLocale/);
+  assert.match(app, /setLocale/);
 });
 
 test("UI copy is externalized for later translation", () => {

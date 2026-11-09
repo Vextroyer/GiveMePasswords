@@ -124,6 +124,24 @@ a {
   font-size: 0.875rem;
 }
 
+.lang-switch {
+  display: inline-flex;
+  gap: 0.25rem;
+  margin-left: auto;
+}
+
+.lang-switch button {
+  min-height: 44px;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.8125rem;
+}
+
+.lang-switch button[aria-pressed="true"] {
+  color: var(--accent-text);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
 .lede {
   font-size: 1.0625rem;
   max-width: 38rem;

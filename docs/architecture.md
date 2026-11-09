@@ -25,7 +25,7 @@ convenience tool. See [`threat-model.md`](threat-model.md).
 | `src/session.js` | Month validation and list assembly (DOM-free) |
 | `src/derive.js` | HPG-1 derivation via WebCrypto HKDF-SHA-256 |
 | `src/recovery-code.js` | Crockford Base32 encode/decode, checksum, fingerprint |
-| `src/strings.js` | Runtime copy (translation seam) |
+| `src/strings.js` | EN/ES catalogs, `t()`, locale resolution, static-HTML hydration |
 | `src/style.css` | Mobile-first light/dark/print styles |
 | `scripts/build.mjs` | Single-file bundler, CSP hashes, policy checks, `SHA256SUMS` |
 | `dist/index.html` | Committed, self-contained artifact |

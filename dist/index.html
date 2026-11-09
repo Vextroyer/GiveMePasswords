@@ -2,15 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-z6P3TP8djQS9KG/5pc+urU7DwuDYvzkZGuwu0vlVh7c='; style-src 'sha256-Ttc9pOVePplXOYtzJgO8UmU+OWAH+JkY2gjdf5rEl24='; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; connect-src 'none'; font-src 'none'; manifest-src 'none'; media-src 'none'; worker-src 'none'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-adxk3HsG9hO5SShsRJX2n2rU2cKKu3+Ss63b8TKhwGI='; style-src 'sha256-R85VdP8JnksOxBt3kG0XwYcwZdzvyc7FZU9fN48lrbo='; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; connect-src 'none'; font-src 'none'; manifest-src 'none'; media-src 'none'; worker-src 'none'" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="referrer" content="no-referrer" />
     <meta name="color-scheme" content="light dark" />
     <meta
       name="description"
       content="Generate a month of daily 8-digit passwords in your browser. No account, no server, no storage."
+      data-i18n-attr="content:meta.description"
     />
-    <title>Monthly Password Generator</title>
+    <title data-i18n="meta.title">Monthly Password Generator</title>
     <link
       rel="icon"
       href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0iIzE0NTMyZCIvPjx0ZXh0IHg9IjE2IiB5PSIyMiIgZm9udC1mYW1pbHk9InVpLW1vbm9zcGFjZSxtb25vc3BhY2UiIGZvbnQtc2l6ZT0iMTUiIGZpbGw9IiNmZmZmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPjg8L3RleHQ+PC9zdmc+"
@@ -139,6 +140,24 @@ a {
   margin: 0;
   color: var(--muted);
   font-size: 0.875rem;
+}
+
+.lang-switch {
+  display: inline-flex;
+  gap: 0.25rem;
+  margin-left: auto;
+}
+
+.lang-switch button {
+  min-height: 44px;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.8125rem;
+}
+
+.lang-switch button[aria-pressed="true"] {
+  color: var(--accent-text);
+  background: var(--accent);
+  border-color: var(--accent);
 }
 
 .lede {
@@ -618,45 +637,55 @@ dialog::backdrop {
   <body>
     <main id="main">
       <header class="site-header no-print">
-        <p class="wordmark">Monthly passwords</p>
-        <p class="privacy-note">
+        <p class="wordmark" data-i18n="header.wordmark">Monthly passwords</p>
+        <p class="privacy-note" data-i18n="header.privacy">
           Runs entirely in your browser. Nothing is sent, saved, or tracked.
         </p>
+        <div class="lang-switch" role="group" data-i18n-attr="aria-label:lang.label">
+          <button id="lang-en" type="button" lang="en" aria-pressed="true" data-i18n="lang.en">
+            English
+          </button>
+          <button id="lang-es" type="button" lang="es" aria-pressed="false" data-i18n="lang.es">
+            Español
+          </button>
+        </div>
       </header>
 
       <section id="view-landing" class="view" aria-labelledby="landing-title">
-        <h1 id="landing-title" tabindex="-1">A month of daily passwords</h1>
-        <p class="lede">
+        <h1 id="landing-title" tabindex="-1" data-i18n="landing.title">
+          A month of daily passwords
+        </h1>
+        <p class="lede" data-i18n="landing.lede">
           Turn one recovery code into a full month of 8-digit passwords. Use the
           same code next time to get the same list back.
         </p>
 
         <div class="doors">
           <button id="door-create" class="door primary" type="button">
-            <span class="door-title">Create a new list</span>
-            <span class="door-copy">Start with a fresh recovery code.</span>
+            <span class="door-title" data-i18n="landing.createTitle">Create a new list</span>
+            <span class="door-copy" data-i18n="landing.createCopy">Start with a fresh recovery code.</span>
           </button>
 
           <button id="door-restore" class="door" type="button">
-            <span class="door-title">I have a recovery code</span>
-            <span class="door-copy">Rebuild a list you saved earlier.</span>
+            <span class="door-title" data-i18n="landing.restoreTitle">I have a recovery code</span>
+            <span class="door-copy" data-i18n="landing.restoreCopy">Rebuild a list you saved earlier.</span>
           </button>
         </div>
 
-        <p class="fine-print">
+        <p class="fine-print" data-i18n="landing.risk">
           8-digit convenience code — not for high-value accounts.
         </p>
       </section>
 
       <section id="view-setup" class="view" aria-labelledby="setup-title" hidden>
-        <button id="setup-back" class="link-button no-print" type="button">
-          &larr; Back
+        <button id="setup-back" class="link-button no-print" type="button" data-i18n="setup.back">
+          ← Back
         </button>
 
-        <h1 id="setup-title" tabindex="-1">Create a new list</h1>
+        <h1 id="setup-title" tabindex="-1" data-i18n="headings.create">Create a new list</h1>
 
         <form id="create-form" class="panel" novalidate hidden>
-          <label for="create-month">Month</label>
+          <label for="create-month" data-i18n="form.month">Month</label>
           <div class="month-input">
             <select
               id="create-month"
@@ -664,39 +693,39 @@ dialog::backdrop {
               aria-describedby="create-month-hint create-error"
               required
             >
-              <option value="01">January</option>
-              <option value="02">February</option>
-              <option value="03">March</option>
-              <option value="04">April</option>
-              <option value="05">May</option>
-              <option value="06">June</option>
-              <option value="07">July</option>
-              <option value="08">August</option>
-              <option value="09">September</option>
-              <option value="10">October</option>
-              <option value="11">November</option>
-              <option value="12">December</option>
+              <option value="01" data-i18n="months.01">January</option>
+              <option value="02" data-i18n="months.02">February</option>
+              <option value="03" data-i18n="months.03">March</option>
+              <option value="04" data-i18n="months.04">April</option>
+              <option value="05" data-i18n="months.05">May</option>
+              <option value="06" data-i18n="months.06">June</option>
+              <option value="07" data-i18n="months.07">July</option>
+              <option value="08" data-i18n="months.08">August</option>
+              <option value="09" data-i18n="months.09">September</option>
+              <option value="10" data-i18n="months.10">October</option>
+              <option value="11" data-i18n="months.11">November</option>
+              <option value="12" data-i18n="months.12">December</option>
             </select>
             <select
               id="create-year"
               name="year"
-              aria-label="Year"
+              data-i18n-attr="aria-label:form.year"
               aria-describedby="create-month-hint create-error"
               required
             ></select>
           </div>
-          <p class="hint" id="create-month-hint">
+          <p class="hint" id="create-month-hint" data-i18n="create.hint">
             The list covers every day in this month. A new list gets a new code,
             so it will not match an earlier list.
           </p>
           <p class="error" id="create-error" role="alert" hidden></p>
-          <button id="create-submit" class="primary" type="submit">
+          <button id="create-submit" class="primary" type="submit" data-i18n="create.submit">
             Create list
           </button>
         </form>
 
         <form id="restore-form" class="panel" novalidate hidden>
-          <label for="restore-month">Month</label>
+          <label for="restore-month" data-i18n="form.month">Month</label>
           <div class="month-input">
             <select
               id="restore-month"
@@ -704,29 +733,29 @@ dialog::backdrop {
               aria-describedby="restore-error"
               required
             >
-              <option value="01">January</option>
-              <option value="02">February</option>
-              <option value="03">March</option>
-              <option value="04">April</option>
-              <option value="05">May</option>
-              <option value="06">June</option>
-              <option value="07">July</option>
-              <option value="08">August</option>
-              <option value="09">September</option>
-              <option value="10">October</option>
-              <option value="11">November</option>
-              <option value="12">December</option>
+              <option value="01" data-i18n="months.01">January</option>
+              <option value="02" data-i18n="months.02">February</option>
+              <option value="03" data-i18n="months.03">March</option>
+              <option value="04" data-i18n="months.04">April</option>
+              <option value="05" data-i18n="months.05">May</option>
+              <option value="06" data-i18n="months.06">June</option>
+              <option value="07" data-i18n="months.07">July</option>
+              <option value="08" data-i18n="months.08">August</option>
+              <option value="09" data-i18n="months.09">September</option>
+              <option value="10" data-i18n="months.10">October</option>
+              <option value="11" data-i18n="months.11">November</option>
+              <option value="12" data-i18n="months.12">December</option>
             </select>
             <select
               id="restore-year"
               name="year"
-              aria-label="Year"
+              data-i18n-attr="aria-label:form.year"
               aria-describedby="restore-error"
               required
             ></select>
           </div>
 
-          <label for="restore-code">Recovery code</label>
+          <label for="restore-code" data-i18n="form.recoveryCode">Recovery code</label>
           <textarea
             id="restore-code"
             name="code"
@@ -737,14 +766,15 @@ dialog::backdrop {
             spellcheck="false"
             placeholder="HPG1-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX"
             aria-describedby="restore-code-hint restore-error"
+            data-i18n-attr="placeholder:form.codePlaceholder"
             required
           ></textarea>
-          <p class="hint" id="restore-code-hint">
+          <p class="hint" id="restore-code-hint" data-i18n="restore.hint">
             Hyphens, spaces, and lowercase are fine. The code's checksum catches
             most typos, but a valid code can still describe a different list.
           </p>
           <p class="error" id="restore-error" role="alert" hidden></p>
-          <button id="restore-submit" class="primary" type="submit">
+          <button id="restore-submit" class="primary" type="submit" data-i18n="restore.submit">
             Show my list
           </button>
         </form>
@@ -752,15 +782,19 @@ dialog::backdrop {
 
       <section id="view-list" class="view" aria-labelledby="list-title" hidden>
         <div class="list-heading">
-          <h1 id="list-title" tabindex="-1">Month</h1>
+          <h1 id="list-title" tabindex="-1" data-i18n="list.titleFallback">Month</h1>
           <span class="badge" id="list-mode">New list</span>
         </div>
 
         <div class="toolbar no-print">
-          <button id="copy-all" class="primary" type="button">Copy all</button>
-          <button id="download-txt" type="button">Download .txt</button>
-          <button id="print" type="button">Print</button>
-          <button id="share" type="button" hidden>Share</button>
+          <button id="copy-all" class="primary" type="button" data-i18n="actions.copyAll">
+            Copy all
+          </button>
+          <button id="download-txt" type="button" data-i18n="actions.download">
+            Download .txt
+          </button>
+          <button id="print" type="button" data-i18n="actions.print">Print</button>
+          <button id="share" type="button" hidden data-i18n="actions.share">Share</button>
         </div>
 
         <div class="table-wrap">
@@ -768,10 +802,10 @@ dialog::backdrop {
             <caption id="list-caption"></caption>
             <thead>
               <tr>
-                <th scope="col">Day</th>
-                <th scope="col">Password</th>
+                <th scope="col" data-i18n="table.day">Day</th>
+                <th scope="col" data-i18n="table.password">Password</th>
                 <th scope="col" class="no-print">
-                  <span class="visually-hidden">Copy password</span>
+                  <span class="visually-hidden" data-i18n="table.copyColumn">Copy password</span>
                 </th>
               </tr>
             </thead>
@@ -779,51 +813,71 @@ dialog::backdrop {
           </table>
         </div>
 
-        <p class="print-only print-note">
+        <p class="print-only print-note" data-i18n="list.printNote">
           Generated with HPG-1. Keep this list private.
         </p>
 
         <details class="save-code no-print" id="save-code">
-          <summary>Your recovery code</summary>
-          <p>
+          <summary data-i18n="list.saveSummary">Your recovery code</summary>
+          <p data-i18n="list.saveCopy">
             This is the only way to rebuild this list. Store it in a password
             manager or print it and keep it somewhere you can find it.
           </p>
           <code id="list-code" class="code-block"></code>
           <div class="toolbar">
-            <button id="copy-code" type="button">Copy code</button>
-            <button id="download-code" type="button">Download code</button>
+            <button id="copy-code" type="button" data-i18n="actions.copyCode">
+              Copy code
+            </button>
+            <button id="download-code" type="button" data-i18n="actions.downloadCode">
+              Download code
+            </button>
           </div>
         </details>
 
         <div class="toolbar no-print">
-          <button id="rotate" type="button">Rotate code</button>
-          <button id="start-over" type="button">Start over</button>
+          <button id="rotate" type="button" data-i18n="actions.rotate">Rotate code</button>
+          <button id="start-over" type="button" data-i18n="actions.startOver">
+            Start over
+          </button>
         </div>
       </section>
     </main>
 
     <dialog id="ceremony" aria-labelledby="ceremony-title" aria-describedby="ceremony-intro">
-      <h2 id="ceremony-title">Save your recovery code</h2>
+      <h2 id="ceremony-title" data-i18n="ceremony.title">Save your recovery code</h2>
       <p id="ceremony-intro"></p>
 
       <code id="ceremony-code" class="code-block"></code>
 
       <div class="toolbar">
-        <button id="ceremony-copy" type="button">Copy code</button>
-        <button id="ceremony-download" type="button">Download code</button>
+        <button id="ceremony-copy" type="button" data-i18n="actions.copyCode">
+          Copy code
+        </button>
+        <button id="ceremony-download" type="button" data-i18n="actions.downloadCode">
+          Download code
+        </button>
       </div>
 
       <p class="hint" id="ceremony-month-reminder"></p>
 
       <label class="confirm" for="ceremony-confirm">
         <input id="ceremony-confirm" type="checkbox" />
-        <span>I have saved this code somewhere I can find it.</span>
+        <span data-i18n="ceremony.confirm">
+          I have saved this code somewhere I can find it.
+        </span>
       </label>
 
       <div class="toolbar">
-        <button id="ceremony-cancel" type="button">Cancel and discard</button>
-        <button id="ceremony-continue" class="primary" type="button" disabled>
+        <button id="ceremony-cancel" type="button" data-i18n="ceremony.cancel">
+          Cancel and discard
+        </button>
+        <button
+          id="ceremony-continue"
+          class="primary"
+          type="button"
+          data-i18n="ceremony.continue"
+          disabled
+        >
           Show my list
         </button>
       </div>
@@ -836,18 +890,65 @@ dialog::backdrop {
 
 // --- strings.js ---
 const __m_strings = (() => {
-// All user-facing copy that the app inserts at runtime.
-// Static markup lives in index.html; this file keeps dynamic strings in one
-// place so a future translation or RTL pass has a single entry point.
+// All user-facing copy, plus the EN/ES dictionary and hydration helpers.
+// Static markup carries data-i18n keys; runtime copy goes through t().
 
 const strings = {
+  meta: {
+    title: "Monthly Password Generator",
+    description:
+      "Generate a month of daily 8-digit passwords in your browser. No account, no server, no storage.",
+  },
+
+  header: {
+    wordmark: "Monthly passwords",
+    privacy: "Runs entirely in your browser. Nothing is sent, saved, or tracked.",
+  },
+
+  lang: {
+    label: "Language",
+    en: "English",
+    es: "Español",
+  },
+
+  landing: {
+    title: "A month of daily passwords",
+    lede: "Turn one recovery code into a full month of 8-digit passwords. Use the same code next time to get the same list back.",
+    createTitle: "Create a new list",
+    createCopy: "Start with a fresh recovery code.",
+    restoreTitle: "I have a recovery code",
+    restoreCopy: "Rebuild a list you saved earlier.",
+    risk: "8-digit convenience code — not for high-value accounts.",
+  },
+
+  setup: {
+    back: "← Back",
+  },
+
+  form: {
+    month: "Month",
+    year: "Year",
+    recoveryCode: "Recovery code",
+    codePlaceholder: "HPG1-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX",
+  },
+
+  create: {
+    hint: "The list covers every day in this month. A new list gets a new code, so it will not match an earlier list.",
+    submit: "Create list",
+  },
+
+  restore: {
+    hint: "Hyphens, spaces, and lowercase are fine. The code's checksum catches most typos, but a valid code can still describe a different list.",
+    submit: "Show my list",
+  },
+
   headings: {
     create: "Create a new list",
     restore: "I have a recovery code",
   },
 
   errors: {
-    month: "Choose a month in YYYY-MM format.",
+    month: "Choose a month.",
     codeEmpty: "Enter the recovery code.",
     codeVersion: "This code is from a different version. Only HPG1 codes work here.",
     codeChar: "The code has a character that is not allowed. Check it against your saved copy.",
@@ -857,7 +958,7 @@ const strings = {
     crypto:
       "This browser cannot generate passwords here. Use a current browser over HTTPS (or localhost).",
     generic: "Something went wrong. Reload the page and try again.",
-    monthInvalid: "That month is not valid. Use four digits, a hyphen, and two digits, for example 2026-11.",
+    monthInvalid: "That month is not valid.",
   },
 
   mode: {
@@ -866,13 +967,69 @@ const strings = {
     rotate: "Rotated code",
   },
 
+  list: {
+    titleFallback: "Month",
+    caption: (label) => `Passwords for ${label}.`,
+    printNote: "Generated with HPG-1. Keep this list private.",
+    saveSummary: "Your recovery code",
+    saveCopy:
+      "This is the only way to rebuild this list. Store it in a password manager or print it and keep it somewhere you can find it.",
+  },
+
+  actions: {
+    copyAll: "Copy all",
+    download: "Download .txt",
+    print: "Print",
+    share: "Share",
+    copyCode: "Copy code",
+    downloadCode: "Download code",
+    rotate: "Rotate code",
+    startOver: "Start over",
+  },
+
+  table: {
+    day: "Day",
+    password: "Password",
+    copy: "Copy",
+    copyColumn: "Copy password",
+    copyDay: (day) => `Copy password for day ${day}`,
+    today: "Today",
+  },
+
+  months: {
+    label: (name, year) => `${name} ${year}`,
+    "01": "January",
+    "02": "February",
+    "03": "March",
+    "04": "April",
+    "05": "May",
+    "06": "June",
+    "07": "July",
+    "08": "August",
+    "09": "September",
+    10: "October",
+    11: "November",
+    12: "December",
+  },
+
+  export: {
+    title: (label, days) => `Monthly passwords — ${label} (${days} days)`,
+    algorithm: "Algorithm: HPG-1. Keep this list private.",
+    header: "Day  Password",
+    end: "End of the list.",
+  },
+
   ceremony: {
+    title: "Save your recovery code",
     createIntro:
       "This code is the only way to get this list again. We cannot recover it for you.",
     rotateIntro:
       "This is a new code. Lists made with the old code cannot be recreated from this one.",
     monthReminder: (label) =>
       `Keep this file, or note the month: ${label}. The code alone does not include the month.`,
+    confirm: "I have saved this code somewhere I can find it.",
+    cancel: "Cancel and discard",
+    continue: "Show my list",
   },
 
   toast: {
@@ -900,7 +1057,247 @@ const strings = {
   rotateConfirm:
     "Rotate the code? Lists you already saved stay valid on the router, but this new code will not recreate them. You will need to save the new code.",
 };
-return { strings };
+
+const catalogs = {
+  en: strings,
+  es: {
+    meta: {
+      title: "Generador de contraseñas mensuales",
+      description:
+        "Genera un mes de contraseñas diarias de 8 dígitos en tu navegador. Sin cuenta, sin servidor y sin almacenamiento.",
+    },
+
+    header: {
+      wordmark: "Contraseñas mensuales",
+      privacy: "Todo ocurre en tu navegador. No se envía, guarda ni rastrea nada.",
+    },
+
+    lang: {
+      label: "Idioma",
+      en: "English",
+      es: "Español",
+    },
+
+    landing: {
+      title: "Un mes de contraseñas diarias",
+      lede: "Convierte un código de recuperación en un mes completo de contraseñas de 8 dígitos. Usa el mismo código la próxima vez para recuperar la misma lista.",
+      createTitle: "Crear una lista nueva",
+      createCopy: "Empieza con un código de recuperación nuevo.",
+      restoreTitle: "Tengo un código de recuperación",
+      restoreCopy: "Reconstruye una lista que guardaste antes.",
+      risk: "Código de conveniencia de 8 dígitos: no para cuentas de alto valor.",
+    },
+
+    setup: {
+      back: "← Atrás",
+    },
+
+    form: {
+      month: "Mes",
+      year: "Año",
+      recoveryCode: "Código de recuperación",
+      codePlaceholder: "HPG1-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX",
+    },
+
+    create: {
+      hint: "La lista cubre todos los días de este mes. Una lista nueva recibe un código nuevo, así que no coincidirá con una lista anterior.",
+      submit: "Crear lista",
+    },
+
+    restore: {
+      hint: "Los guiones, los espacios y las minúsculas están bien. La suma de verificación detecta la mayoría de los errores de escritura, pero un código válido puede describir otra lista.",
+      submit: "Mostrar mi lista",
+    },
+
+    headings: {
+      create: "Crear una lista nueva",
+      restore: "Tengo un código de recuperación",
+    },
+
+    errors: {
+      month: "Elige un mes.",
+      codeEmpty: "Escribe el código de recuperación.",
+      codeVersion: "Este código es de otra versión. Solo funcionan los códigos HPG1.",
+      codeChar: "El código contiene un carácter no permitido. Compáralo con tu copia guardada.",
+      codeLength:
+        "El código tiene una longitud incorrecta. Debe tener 28 caracteres después del prefijo HPG1.",
+      codeChecksum:
+        "La suma de verificación del código no coincide. Revísalo con tu copia guardada.",
+      codeUnknown: "No se pudo leer ese código de recuperación.",
+      crypto:
+        "Este navegador no puede generar contraseñas aquí. Usa un navegador actual con HTTPS (o localhost).",
+      generic: "Algo salió mal. Recarga la página e inténtalo de nuevo.",
+      monthInvalid: "Ese mes no es válido.",
+    },
+
+    mode: {
+      create: "Lista nueva",
+      restore: "Restaurada desde el código",
+      rotate: "Código renovado",
+    },
+
+    list: {
+      titleFallback: "Mes",
+      caption: (label) => `Contraseñas de ${label}.`,
+      printNote: "Generado con HPG-1. Mantén esta lista en privado.",
+      saveSummary: "Tu código de recuperación",
+      saveCopy:
+        "Esta es la única forma de reconstruir esta lista. Guárdalo en un gestor de contraseñas o imprímelo y guárdalo donde puedas encontrarlo.",
+    },
+
+    actions: {
+      copyAll: "Copiar todo",
+      download: "Descargar .txt",
+      print: "Imprimir",
+      share: "Compartir",
+      copyCode: "Copiar código",
+      downloadCode: "Descargar código",
+      rotate: "Renovar código",
+      startOver: "Empezar de nuevo",
+    },
+
+    table: {
+      day: "Día",
+      password: "Contraseña",
+      copy: "Copiar",
+      copyColumn: "Copiar contraseña",
+      copyDay: (day) => `Copiar la contraseña del día ${day}`,
+      today: "Hoy",
+    },
+
+    months: {
+      label: (name, year) => `${name} de ${year}`,
+      "01": "enero",
+      "02": "febrero",
+      "03": "marzo",
+      "04": "abril",
+      "05": "mayo",
+      "06": "junio",
+      "07": "julio",
+      "08": "agosto",
+      "09": "septiembre",
+      10: "octubre",
+      11: "noviembre",
+      12: "diciembre",
+    },
+
+    export: {
+      title: (label, days) => `Contraseñas mensuales — ${label} (${days} días)`,
+      algorithm: "Algoritmo: HPG-1. Mantén esta lista en privado.",
+      header: "Día  Contraseña",
+      end: "Fin de la lista.",
+    },
+
+    ceremony: {
+      title: "Guarda tu código de recuperación",
+      createIntro:
+        "Este código es la única forma de recuperar esta lista. No podemos recuperarlo por ti.",
+      rotateIntro:
+        "Este es un código nuevo. Las listas creadas con el código anterior no se pueden recrear con este.",
+      monthReminder: (label) =>
+        `Guarda este archivo o anota el mes: ${label}. El código por sí solo no incluye el mes.`,
+      confirm: "He guardado este código en un lugar donde puedo encontrarlo.",
+      cancel: "Cancelar y descartar",
+      continue: "Mostrar mi lista",
+    },
+
+    toast: {
+      copiedPassword: (day) => `Contraseña del día ${day} copiada.`,
+      copiedAll: "Todas las contraseñas copiadas.",
+      copiedCode: "Código de recuperación copiado.",
+      listDownloaded: "Lista descargada.",
+      codeDownloaded: "Código de recuperación descargado.",
+      copyFailed:
+        "No se pudo copiar automáticamente. Selecciona el texto y cópialo manualmente.",
+      shareFailed: "Compartir no está disponible en este navegador.",
+      rotated: "Código nuevo creado. Guárdalo antes de mostrar la lista nueva.",
+    },
+
+    filenames: {
+      list: (month) => `passwords-${month}.txt`,
+      code: (month) => `recovery-code-${month}.txt`,
+    },
+
+    codeFile: {
+      header: () =>
+        "Código de recuperación HPG1\n\n" +
+        "Guarda este archivo en privado. Cualquiera que tenga este código puede derivar tus contraseñas.\n\n",
+    },
+
+    rotateConfirm:
+      "¿Renovar el código? Las listas que ya guardaste siguen siendo válidas en el router, pero este código nuevo no las recreará. Tendrás que guardar el nuevo código.",
+  },
+};
+
+let locale = "en";
+
+function lookup(tree, key) {
+  let value = tree;
+  for (const part of key.split(".")) {
+    if (!value || typeof value !== "object" || !(part in value)) return undefined;
+    value = value[part];
+  }
+  return value;
+}
+
+/** Resolve a locale from navigator.languages or an explicit list. */
+function resolveLocale(languages) {
+  const list =
+    languages ||
+    (typeof navigator !== "undefined" && Array.isArray(navigator.languages)
+      ? navigator.languages
+      : []);
+
+  for (const tag of list) {
+    const normalized = String(tag).toLowerCase();
+    if (normalized === "es" || normalized.startsWith("es-")) return "es";
+    if (normalized === "en" || normalized.startsWith("en-")) return "en";
+  }
+  return "en";
+}
+
+/** Set the active locale. Unknown values are ignored. */
+function setLocale(next) {
+  if (typeof next === "string" && Object.prototype.hasOwnProperty.call(catalogs, next)) {
+    locale = next;
+  }
+  return locale;
+}
+
+function getLocale() {
+  return locale;
+}
+
+/** Translate a dotted key; dynamic entries are called with the given args. */
+function t(key, ...args) {
+  const value = lookup(catalogs[locale], key) ?? lookup(catalogs.en, key);
+  if (typeof value === "function") return value(...args);
+  return value === undefined ? key : value;
+}
+
+/** Hydrate static markup without ever writing HTML. */
+function applyTranslations(root) {
+  const scope = root || (typeof document !== "undefined" ? document : null);
+  if (!scope) return;
+
+  for (const node of scope.querySelectorAll("[data-i18n]")) {
+    node.textContent = t(node.getAttribute("data-i18n"));
+  }
+
+  for (const node of scope.querySelectorAll("[data-i18n-attr]")) {
+    for (const pair of node.getAttribute("data-i18n-attr").split(/\s+/)) {
+      const split = pair.indexOf(":");
+      if (split < 1) continue;
+      const attribute = pair.slice(0, split);
+      const key = pair.slice(split + 1);
+      node.setAttribute(attribute, t(key));
+    }
+  }
+
+  const doc = scope.nodeType === 9 ? scope : scope.ownerDocument;
+  if (doc && doc.documentElement) doc.documentElement.lang = locale;
+}
+return { resolveLocale, setLocale, getLocale, t, applyTranslations, strings, catalogs };
 })();
 
 // --- derive.js ---
@@ -1295,28 +1692,15 @@ return { encodeRecoveryCode, normalizeRecoveryCode, parseRecoveryCode, seedFinge
 const __m_session = (() => {
 const { deriveMonth } = __m_derive;
 const { encodeRecoveryCode, parseRecoveryCode } = __m_recovery_code;
+const { t } = __m_strings;
 // HPG-1 session assembly: month validation, labels, and printable lists.
 // Pure ESM; no storage, DOM, network, or Node imports.
 
 
 
 
-const MONTH_PATTERN = /^\d{4}-(0[1-9]|1[0-2])$/;
 
-const MONTH_NAMES = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+const MONTH_PATTERN = /^\d{4}-(0[1-9]|1[0-2])$/;
 
 /** True for a canonical "YYYY-MM" string. */
 function isValidMonth(value) {
@@ -1330,14 +1714,14 @@ function currentMonth(date = new Date()) {
   return `${year}-${month}`;
 }
 
-/** Human month label, e.g. "November 2026". Locale-independent. */
+/** Human month label in the active locale, e.g. "November 2026". */
 function monthLabel(month) {
   if (!isValidMonth(month)) {
     throw new RangeError("month must be YYYY-MM");
   }
   const year = Number(month.slice(0, 4));
-  const monthIndex = Number(month.slice(5, 7)) - 1;
-  return `${MONTH_NAMES[monthIndex]} ${year}`;
+  const monthNumber = month.slice(5, 7);
+  return t("months.label", t(`months.${monthNumber}`), year);
 }
 
 /** Normalize and validate a 16-byte seed without exposing it. */
@@ -1385,17 +1769,17 @@ async function restoreSession(code, month) {
 /** Render a session as a plain-text table; never includes seed or code. */
 function sessionToText(session) {
   const lines = [
-    `Monthly passwords — ${session.monthLabel} (${session.days.length} days)`,
-    "Algorithm: HPG-1. Keep this list private.",
+    t("export.title", session.monthLabel, session.days.length),
+    t("export.algorithm"),
     "",
-    "Day  Password",
+    t("export.header"),
   ];
 
   for (const entry of session.days) {
     lines.push(`${String(entry.day).padStart(2, "0")}   ${entry.password}`);
   }
 
-  lines.push("", "End of list.");
+  lines.push("", t("export.end"));
   return `${lines.join("\n")}\n`;
 }
 return { isValidMonth, currentMonth, monthLabel, createSession, restoreSession, sessionToText };
@@ -1404,7 +1788,7 @@ return { isValidMonth, currentMonth, monthLabel, createSession, restoreSession, 
 // --- app.js ---
 const __m_app = (() => {
 const { createSession, currentMonth, isValidMonth, restoreSession, sessionToText } = __m_session;
-const { strings: t } = __m_strings;
+const { applyTranslations, getLocale, resolveLocale, setLocale, t } = __m_strings;
 // Browser wiring for the Monthly Password Generator.
 //
 // This file owns the DOM only. Derivation lives in derive.js, the recovery-code
@@ -1420,6 +1804,7 @@ const el = (id) => document.getElementById(id);
 const VIEWS = ["landing", "setup", "list"];
 const state = {
   session: null,
+  mode: "create",
   pending: null,
   pendingReason: "create",
 };
@@ -1456,7 +1841,7 @@ function setBusy(button, busy) {
 function openSetup(mode) {
   el("create-form").hidden = mode !== "create";
   el("restore-form").hidden = mode !== "restore";
-  el("setup-title").textContent = t.headings[mode];
+  el("setup-title").textContent = t(`headings.${mode}`);
   setError(el("create-error"), "");
   setError(el("restore-error"), "");
   showView("setup", mode === "create" ? "create-month" : "restore-month");
@@ -1494,17 +1879,17 @@ function canDerive() {
 function codeErrorMessage(error) {
   switch (error && error.reason) {
     case "EMPTY":
-      return t.errors.codeEmpty;
+      return t("errors.codeEmpty");
     case "BAD_VERSION":
-      return t.errors.codeVersion;
+      return t("errors.codeVersion");
     case "BAD_CHAR":
-      return t.errors.codeChar;
+      return t("errors.codeChar");
     case "BAD_LENGTH":
-      return t.errors.codeLength;
+      return t("errors.codeLength");
     case "BAD_CHECKSUM":
-      return t.errors.codeChecksum;
+      return t("errors.codeChecksum");
     default:
-      return t.errors.codeUnknown;
+      return t("errors.codeUnknown");
   }
 }
 
@@ -1512,16 +1897,22 @@ function codeErrorMessage(error) {
 // Ceremony: the list is not revealed until the code is saved
 // ---------------------------------------------------------------------------
 
+function setCeremonyCopy(session, reason) {
+  el("ceremony-intro").textContent = t(
+    reason === "rotate" ? "ceremony.rotateIntro" : "ceremony.createIntro",
+  );
+  el("ceremony-month-reminder").textContent = t(
+    "ceremony.monthReminder",
+    session.monthLabel,
+  );
+}
+
 function openCeremony(session, reason) {
   state.pending = session;
   state.pendingReason = reason;
 
-  el("ceremony-intro").textContent =
-    reason === "rotate" ? t.ceremony.rotateIntro : t.ceremony.createIntro;
   el("ceremony-code").textContent = session.recoveryCode;
-  el("ceremony-month-reminder").textContent = t.ceremony.monthReminder(
-    session.monthLabel,
-  );
+  setCeremonyCopy(session, reason);
   el("ceremony-confirm").checked = false;
   el("ceremony-continue").disabled = true;
 
@@ -1552,7 +1943,7 @@ function buildRow(entry, todayMonth, todayDay) {
     row.classList.add("today");
     const badge = document.createElement("span");
     badge.className = "today-badge";
-    badge.textContent = "Today";
+    badge.textContent = t("table.today");
     dayCell.append(badge);
   }
 
@@ -1567,8 +1958,8 @@ function buildRow(entry, todayMonth, todayDay) {
   const copyButton = document.createElement("button");
   copyButton.type = "button";
   copyButton.className = "copy-button";
-  copyButton.textContent = "Copy";
-  copyButton.setAttribute("aria-label", `Copy password for day ${entry.day}`);
+  copyButton.textContent = t("table.copy");
+  copyButton.setAttribute("aria-label", t("table.copyDay", entry.day));
   copyButton.dataset.day = String(entry.day);
   actionCell.append(copyButton);
 
@@ -1576,12 +1967,10 @@ function buildRow(entry, todayMonth, todayDay) {
   return row;
 }
 
-function showList(session, mode) {
-  state.session = session;
-
+function renderList(session, mode) {
   el("list-title").textContent = session.monthLabel;
-  el("list-mode").textContent = t.mode[mode] || t.mode.create;
-  el("list-caption").textContent = `Passwords for ${session.monthLabel}.`;
+  el("list-mode").textContent = t(`mode.${mode}`);
+  el("list-caption").textContent = t("list.caption", session.monthLabel);
   el("list-code").textContent = session.recoveryCode;
 
   const now = new Date();
@@ -1593,6 +1982,13 @@ function showList(session, mode) {
   for (const entry of session.days) {
     body.append(buildRow({ ...entry, month: session.month }, todayMonth, todayDay));
   }
+}
+
+function showList(session, mode) {
+  state.session = session;
+  state.mode = mode;
+
+  renderList(session, mode);
 
   el("save-code").open = false;
   el("share").hidden = typeof navigator.share !== "function";
@@ -1632,7 +2028,7 @@ async function copyText(text) {
 
 async function copyWithToast(text, message) {
   const copied = await copyText(text);
-  toast(copied ? message : t.toast.copyFailed, copied ? 3200 : 6000);
+  toast(copied ? message : t("toast.copyFailed"), copied ? 3200 : 6000);
 }
 
 function download(filename, text) {
@@ -1648,7 +2044,7 @@ function download(filename, text) {
 }
 
 function codeFile(session) {
-  return `${t.codeFile.header()}${session.recoveryCode}\n`;
+  return `${t("codeFile.header")}${session.recoveryCode}\n`;
 }
 
 async function shareList() {
@@ -1656,7 +2052,7 @@ async function shareList() {
 
   const text = sessionToText(state.session);
   const title = state.session.monthLabel;
-  const filename = t.filenames.list(state.session.month);
+  const filename = t("filenames.list", state.session.month);
 
   try {
     if (typeof navigator.canShare === "function") {
@@ -1669,7 +2065,7 @@ async function shareList() {
     await navigator.share({ title, text });
   } catch (error) {
     if (!error || error.name !== "AbortError") {
-      toast(t.toast.shareFailed);
+      toast(t("toast.shareFailed"));
     }
   }
 }
@@ -1697,12 +2093,12 @@ async function handleCreate(event) {
 
   const month = readMonthInput("create");
   if (!isValidMonth(month)) {
-    setError(el("create-error"), t.errors.monthInvalid);
+    setError(el("create-error"), t("errors.monthInvalid"));
     el("create-month").focus();
     return;
   }
   if (!canDerive()) {
-    setError(el("create-error"), t.errors.crypto);
+    setError(el("create-error"), t("errors.crypto"));
     return;
   }
 
@@ -1712,7 +2108,7 @@ async function handleCreate(event) {
     const session = await createSession(seed, month);
     openCeremony(session, "create");
   } catch (error) {
-    setError(el("create-error"), t.errors.generic);
+    setError(el("create-error"), t("errors.generic"));
   } finally {
     setBusy(el("create-submit"), false);
   }
@@ -1726,17 +2122,17 @@ async function handleRestore(event) {
   const code = el("restore-code").value.trim();
 
   if (!isValidMonth(month)) {
-    setError(el("restore-error"), t.errors.monthInvalid);
+    setError(el("restore-error"), t("errors.monthInvalid"));
     el("restore-month").focus();
     return;
   }
   if (!code) {
-    setError(el("restore-error"), t.errors.codeEmpty);
+    setError(el("restore-error"), t("errors.codeEmpty"));
     el("restore-code").focus();
     return;
   }
   if (!canDerive()) {
-    setError(el("restore-error"), t.errors.crypto);
+    setError(el("restore-error"), t("errors.crypto"));
     return;
   }
 
@@ -1753,9 +2149,9 @@ async function handleRestore(event) {
 
 function rotateCode() {
   if (!state.session) return;
-  if (!window.confirm(t.rotateConfirm)) return;
+  if (!window.confirm(t("rotateConfirm"))) return;
   if (!canDerive()) {
-    toast(t.errors.crypto);
+    toast(t("errors.crypto"));
     return;
   }
 
@@ -1764,14 +2160,15 @@ function rotateCode() {
     const seed = globalThis.crypto.getRandomValues(new Uint8Array(16));
     createSession(seed, month)
       .then((session) => openCeremony(session, "rotate"))
-      .catch(() => toast(t.errors.generic));
+      .catch(() => toast(t("errors.generic")));
   } catch {
-    toast(t.errors.generic);
+    toast(t("errors.generic"));
   }
 }
 
 function startOver() {
   state.session = null;
+  state.mode = "create";
   state.pending = null;
   el("list-body").replaceChildren();
   el("list-code").textContent = "";
@@ -1782,16 +2179,65 @@ function startOver() {
 }
 
 // ---------------------------------------------------------------------------
+// Locale switching
+// ---------------------------------------------------------------------------
+
+function updateLocaleButtons() {
+  for (const code of ["en", "es"]) {
+    el(`lang-${code}`).setAttribute("aria-pressed", String(getLocale() === code));
+  }
+}
+
+function refreshDynamicCopy() {
+  setError(el("create-error"), "");
+  setError(el("restore-error"), "");
+
+  if (!el("view-setup").hidden) {
+    const mode = el("create-form").hidden ? "restore" : "create";
+    el("setup-title").textContent = t(`headings.${mode}`);
+  }
+
+  if (!el("view-list").hidden && state.session) {
+    renderList(state.session, state.mode);
+  }
+
+  if (el("ceremony").open && state.pending) {
+    setCeremonyCopy(state.pending, state.pendingReason);
+  }
+
+  updateLocaleButtons();
+}
+
+function switchLocale(next) {
+  if (getLocale() === next) return;
+  setLocale(next);
+  applyTranslations(document);
+
+  const toastTarget = el("toast");
+  toastTarget.classList.remove("show");
+  toastTarget.textContent = "";
+
+  refreshDynamicCopy();
+}
+
+// ---------------------------------------------------------------------------
 // Wiring
 // ---------------------------------------------------------------------------
 
 function init() {
+  setLocale(resolveLocale());
+  applyTranslations(document);
+  updateLocaleButtons();
+
   const month = currentMonth();
   for (const id of ["create-year", "restore-year"]) {
     populateYearOptions(el(id));
   }
   setMonthInputs("create", month);
   setMonthInputs("restore", month);
+
+  el("lang-en").addEventListener("click", () => switchLocale("en"));
+  el("lang-es").addEventListener("click", () => switchLocale("es"));
 
   el("door-create").addEventListener("click", () => openSetup("create"));
   el("door-restore").addEventListener("click", () => openSetup("restore"));
@@ -1810,14 +2256,14 @@ function init() {
 
   el("ceremony-copy").addEventListener("click", () => {
     if (state.pending) {
-      copyWithToast(state.pending.recoveryCode, t.toast.copiedCode);
+      copyWithToast(state.pending.recoveryCode, t("toast.copiedCode"));
     }
   });
 
   el("ceremony-download").addEventListener("click", () => {
     if (!state.pending) return;
-    download(t.filenames.code(state.pending.month), codeFile(state.pending));
-    toast(t.toast.codeDownloaded);
+    download(t("filenames.code", state.pending.month), codeFile(state.pending));
+    toast(t("toast.codeDownloaded"));
   });
 
   el("ceremony-cancel").addEventListener("click", () => closeCeremony("cancel"));
@@ -1836,7 +2282,7 @@ function init() {
     closeCeremony("continue");
     showList(session, reason);
     if (reason === "rotate") {
-      toast(t.toast.rotated);
+      toast(t("toast.rotated"));
     }
   });
 
@@ -1851,22 +2297,22 @@ function init() {
     const entry = state.session.days.find((item) => item.day === day);
     if (!entry) return;
 
-    copyWithToast(entry.password, t.toast.copiedPassword(day));
+    copyWithToast(entry.password, t("toast.copiedPassword", day));
   });
 
   el("copy-all").addEventListener("click", () => {
     if (state.session) {
-      copyWithToast(sessionToText(state.session), t.toast.copiedAll);
+      copyWithToast(sessionToText(state.session), t("toast.copiedAll"));
     }
   });
 
   el("download-txt").addEventListener("click", () => {
     if (!state.session) return;
     download(
-      t.filenames.list(state.session.month),
+      t("filenames.list", state.session.month),
       sessionToText(state.session),
     );
-    toast(t.toast.listDownloaded);
+    toast(t("toast.listDownloaded"));
   });
 
   el("print").addEventListener("click", () => window.print());
@@ -1874,14 +2320,14 @@ function init() {
 
   el("copy-code").addEventListener("click", () => {
     if (state.session) {
-      copyWithToast(state.session.recoveryCode, t.toast.copiedCode);
+      copyWithToast(state.session.recoveryCode, t("toast.copiedCode"));
     }
   });
 
   el("download-code").addEventListener("click", () => {
     if (!state.session) return;
-    download(t.filenames.code(state.session.month), codeFile(state.session));
-    toast(t.toast.codeDownloaded);
+    download(t("filenames.code", state.session.month), codeFile(state.session));
+    toast(t("toast.codeDownloaded"));
   });
 
   el("rotate").addEventListener("click", rotateCode);
